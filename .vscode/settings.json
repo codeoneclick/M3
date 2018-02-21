@@ -1,0 +1,9 @@
+{
+	"typescript.tsc.autoDetect": "off",
+	"files.exclude": {
+		"C:/Users/sserh/Documents/Unreal/M3Game/.vscode": true,
+		"C:/Users/sserh/Documents/Unreal/M3Game/Content": true,
+		"C:/Users/sserh/Documents/Unreal/M3Game/Intermediate": true,
+		"C:/Users/sserh/Documents/Unreal/M3Game/Saved": true
+	}
+}

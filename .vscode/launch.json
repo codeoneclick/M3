@@ -1,0 +1,114 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "M3Game (Debug)",
+			"request": "launch",
+			"preLaunchTask": "M3Game Win64 Debug Build",
+			"program": "C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\Binaries\\Win64\\M3Game-Win64-Debug.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3Game (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "M3Game Win64 DebugGame Build",
+			"program": "C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\Binaries\\Win64\\M3Game-Win64-DebugGame.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3Game (Development)",
+			"request": "launch",
+			"preLaunchTask": "M3Game Win64 Development Build",
+			"program": "C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\Binaries\\Win64\\M3Game.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3Game (Shipping)",
+			"request": "launch",
+			"preLaunchTask": "M3Game Win64 Shipping Build",
+			"program": "C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\Binaries\\Win64\\M3Game-Win64-Shipping.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3Game (Test)",
+			"request": "launch",
+			"preLaunchTask": "M3Game Win64 Test Build",
+			"program": "C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\Binaries\\Win64\\M3Game-Win64-Test.exe",
+			"args": [
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3GameEditor (Debug)",
+			"request": "launch",
+			"preLaunchTask": "M3GameEditor Win64 Debug Build",
+			"program": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Binaries\\Win64\\UE4Editor-Win64-Debug.exe",
+			"args": [
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-debug"
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3GameEditor (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "M3GameEditor Win64 DebugGame Build",
+			"program": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Binaries\\Win64\\UE4Editor.exe",
+			"args": [
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-debug"
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "M3GameEditor (Development)",
+			"request": "launch",
+			"preLaunchTask": "M3GameEditor Win64 Development Build",
+			"program": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Binaries\\Win64\\UE4Editor.exe",
+			"args": [
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject"
+			],
+			"cwd": "C:\\Program Files\\Epic Games\\UE_4.18",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "C:\\Program Files\\Epic Games\\UE_4.18\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		}
+	]
+}

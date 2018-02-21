@@ -1,0 +1,957 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"taskName": "M3Game Win32 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win32 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win32",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Win64 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Win64",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game IOS Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"IOS",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game Android Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"Android",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Shipping",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3Game HTML5 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3Game",
+				"HTML5",
+				"Test",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3GameEditor Win64 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3GameEditor",
+				"Win64",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3GameEditor Win64 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3GameEditor",
+				"Win64",
+				"Debug",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3GameEditor Win64 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3GameEditor",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3GameEditor Win64 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3GameEditor",
+				"Win64",
+				"DebugGame",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3GameEditor Win64 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"M3GameEditor",
+				"Win64",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		},
+		{
+			"taskName": "M3GameEditor Win64 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"M3GameEditor",
+				"Win64",
+				"Development",
+				"C:\\Users\\sserh\\Documents\\Unreal\\M3Game\\M3Game.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "C:\\Program Files\\Epic Games\\UE_4.18"
+			}
+		}
+	]
+}
