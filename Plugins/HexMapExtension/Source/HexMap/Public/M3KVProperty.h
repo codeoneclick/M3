@@ -25,8 +25,8 @@ public:
 		return Id;
 	};
 
-	void SetId(const std::string& Id) {
-		this->Id = Id;
+	void SetId(const std::string& _Id) {
+		this->Id = _Id;
 	};
 };
 FORWARD_DECL_STRONG(M3KVProperty_INTERFACE)
@@ -71,12 +71,12 @@ public:
 	M3KVProperty(const M3KVProperty&) = delete;
 	M3KVProperty& operator= (const M3KVProperty&) = delete;
 
-	void Set(const T& Value) {
+	void Set(const T& _Value) {
 		if (!Setter)
 		{
 			assert(false);
 		}
-		Setter(Value);
+		Setter(_Value);
 	}
 
 	T Get() const {

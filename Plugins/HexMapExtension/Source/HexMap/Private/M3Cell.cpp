@@ -3,10 +3,18 @@
 #include "M3Cell.h"
 #include "M3CellModel.h"
 #include "M3CellView.h"
+#include "Components/StaticMeshComponent.h"
 
 AM3Cell::AM3Cell()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CellRootComponent"));;
+
+	UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellMeshComponent"));
+	MeshComponent->SetupAttachment(GetRootComponent());
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	CellView = std::make_shared<M3CellView>(this);
 }
 

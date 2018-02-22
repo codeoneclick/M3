@@ -9,6 +9,8 @@
 #include "M3AppEvent.h"
 #include "M3GlobalDispatcher.h"
 
+FORWARD_DECL_STRONG(AM3Scheme_INTERFACE)
+
 class HEXMAP_API M3Model_INTERFACE : public M3KVListener_INTERFACE {
 protected:
 
@@ -22,7 +24,7 @@ public:
 	CTTI_CLASS_GUID(M3Model_INTERFACE, M3Model_INTERFACE::GuidsContainer)
 
 	virtual void Serialize() = 0;
-	virtual void Deserialize() = 0;
+	virtual void Deserialize(AM3Scheme_INTERFACE* Scheme) = 0;
 };
 
 template<typename T>
@@ -93,7 +95,7 @@ public:
 	template<typename TSubmodel>
 	std::shared_ptr<TSubmodel> GetSubmodel() const {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TSubmodel>::value, "TSubmodel must derive from M3Model_INTERFACE");
-		return Submodels[TSubmodel::ClassGuid()];
+		return std::static_pointer_cast<TSubmodel>(Submodels[TSubmodel::ClassGuid()]);
 	};
 
 	template<typename TModel>

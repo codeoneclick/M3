@@ -8,7 +8,7 @@
 FORWARD_DECL_STRONG(M3GlobalDispatcher)
 FORWARD_DECL_STRONG(M3AppEvent_INTERFACE)
 
-class M3GlobalDispatcher
+class HEXMAP_API M3GlobalDispatcher
 {
 private:
 
@@ -38,21 +38,6 @@ public:
 		}
 	};
 
-	void Subscribe(M3AppEvent_INTERFACE_SharedPtr Event) {
-		const auto It = Listeners.find(Event->GetId());
-		if (It == Listeners.end()) {
-			Listeners.insert(std::make_pair(Event->GetId(), std::vector<M3AppEvent_INTERFACE_SharedPtr>()));
-		}
-		Listeners[Event->GetId()].push_back(Event);
-	};
-
-	void Unsubscribe(M3AppEvent_INTERFACE_SharedPtr Event) {
-		const auto It1 = Listeners.find(Event->GetId());
-		if (It1 != Listeners.end()) {
-			const auto It2 = std::find(Listeners[Event->GetId()].begin(), Listeners[Event->GetId()].end(), Event);
-			if (It2 != Listeners[Event->GetId()].end()) {
-				Listeners[Event->GetId()].erase(It2);
-			}
-		}
-	};
+	void Subscribe(M3AppEvent_INTERFACE_SharedPtr Event);
+	void Unsubscribe(M3AppEvent_INTERFACE_SharedPtr Event);
 };

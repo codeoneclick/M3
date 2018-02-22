@@ -35,7 +35,6 @@ public:
 
 USTRUCT(Blueprintable, BlueprintType)
 struct HEXMAP_API FM3BoardAsset : public FM3Asset
-
 {
 	GENERATED_USTRUCT_BODY()
 

@@ -10,16 +10,16 @@ M3View::M3View(AActor* Superview) {
 	this->Superview = Superview;
 }
 
-void M3View::Load(AM3AssetsBundle* Bundle) {
-	this->Bundle = Bundle;
+void M3View::Load(AM3AssetsBundle* _Bundle) {
+	this->Bundle = _Bundle;
 }
 
 AActor* M3View::GetSuperview() const {
 	return Superview;
 }
 
-void M3View::BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel) {
-	this->ViewModel = ViewModel;
+void M3View::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
+	this->ViewModel = _ViewModel;
 
 	const auto Entity = GetViewModel<M3Model<M3Entity>>()->Entity->Get();
 	assert(Entity->IsAssignedToView->Get() == false);

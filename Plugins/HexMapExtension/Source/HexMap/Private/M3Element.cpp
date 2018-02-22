@@ -3,10 +3,19 @@
 #include "M3Element.h"
 #include "M3ElementModel.h"
 #include "M3ElementView.h"
+#include "M3AssetsBundle.h"
+#include "Components/StaticMeshComponent.h"
 
 AM3Element::AM3Element()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ElementRootComponent"));;
+
+	UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ElementMeshComponent"));
+	MeshComponent->SetupAttachment(GetRootComponent());
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	ElementView = std::make_shared<M3ElementView>(this);
 }
 

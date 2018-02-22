@@ -39,6 +39,5 @@ public:
 
 	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_BLUE;
-
 };
 

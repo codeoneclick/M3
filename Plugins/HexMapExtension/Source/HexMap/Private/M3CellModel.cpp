@@ -18,6 +18,6 @@ void M3CellModel::Serialize() {
 
 }
 
-void M3CellModel::Deserialize() {
+void M3CellModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }

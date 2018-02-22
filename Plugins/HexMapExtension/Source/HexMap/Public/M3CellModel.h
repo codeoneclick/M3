@@ -26,5 +26,5 @@ public:
 	void Init();
 
 	void Serialize();
-	void Deserialize();
+	void Deserialize(AM3Scheme_INTERFACE* Scheme);
 };
