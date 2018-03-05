@@ -16,7 +16,7 @@ public:
 
 	PROP_STRONG(public, M3BoardEntity, Cols, int, 0)
 	PROP_STRONG(public, M3BoardEntity, Rows, int, 0)
-	PROP_STRONG(public, M3BoardEntity, Cells, std::vector<M3CellModel_SharedPtr>)
+	PROP_STRONG(public, M3BoardEntity, Cells, std::shared_ptr<std::vector<M3CellModel_SharedPtr>>, std::make_shared<std::vector<M3CellModel_SharedPtr>>())
 };
 
 class HEXMAP_API M3BoardModel : public M3Model<M3BoardEntity>
@@ -32,4 +32,8 @@ public:
 
 	void Serialize();
 	void Deserialize(AM3Scheme_INTERFACE* Scheme);
+
+	PROP_DECL_R(Cols, int)
+	PROP_DECL_R(Rows, int)
+	PROP_DECL_R(Cells, std::shared_ptr<std::vector<M3CellModel_SharedPtr>>)
 };

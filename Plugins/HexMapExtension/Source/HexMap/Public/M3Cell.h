@@ -12,6 +12,7 @@ FORWARD_DECL_STRONG(M3CellView)
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(AM3AssetsBundle)
+FORWARD_DECL_STRONG(AM3ViewDelegates_API)
 
 UCLASS()
 class HEXMAP_API AM3Cell : public AActor
@@ -35,6 +36,7 @@ public:
 
 	void OnLoad(AM3AssetsBundle* Bundle);
 	void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
+	void OnBindViewDelegates(AM3ViewDelegates_API* Delegates_API);
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;

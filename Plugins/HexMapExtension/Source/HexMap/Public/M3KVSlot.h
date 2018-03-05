@@ -12,6 +12,7 @@ class M3KVSlot_INTERFACE : public std::enable_shared_from_this<M3KVSlot_INTERFAC
 public:
 
 	virtual ~M3KVSlot_INTERFACE() = default;
+	virtual void DetachAll() = 0;
 };
 
 template <typename T>
@@ -45,7 +46,7 @@ public:
 		Property->Unsubscribe(Connection);
 	}
 
-	void DetachAll() {
+	void DetachAll() override {
 		for (const auto& Connection : Connections) {
 			Property->Unsubscribe(Connection);
 		}

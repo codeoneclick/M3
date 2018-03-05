@@ -21,9 +21,12 @@ public:
 	}
 
 	void Unsubscribe(const M3KVListener_INTERFACE_SharedPtr& Listener) {
-		std::remove_if(Listeners.begin(), Listeners.end(), [Listener](const M3KVListener_INTERFACE_SharedPtr& aListener) {
-			return aListener == Listener;
-		});
+		const auto& It = std::find(Listeners.begin(), Listeners.end(), Listener);
+		if (It != Listeners.end()) {
+			Listeners.erase(It);
+		} else {
+			assert(false);
+		}
 	}
 
 	void UnsubscribeAll() {

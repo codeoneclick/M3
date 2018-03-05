@@ -28,7 +28,7 @@ public:
 };
 
 template<typename T>
-class M3Model : public M3Model_INTERFACE
+class HEXMAP_API M3Model : public M3Model_INTERFACE
 {
 static_assert(std::is_base_of<M3Entity, T>::value, "T must derive from M3Entity");
 private:
@@ -53,15 +53,29 @@ public:
 		Entity->Set(std::make_shared<T>());
 		Submodels.fill(nullptr);
 	};
-	virtual ~M3Model() = default;
+	virtual ~M3Model() {
+		Parent->Get().reset();
+		Submodels.fill(nullptr);
+	};
 
-	virtual void Init() { };
+	virtual void Init() {
+
+	};
 
 	static void Register() {
 		auto Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
 		Container = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
 		Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
 		TempContainer = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
+	};
+
+	static void Unregister() {
+		if (TempContainer->Get()) {
+			TempContainer->Get()->clear();
+		}
+		if (Container->Get()) {
+			Container->Get()->clear();
+		}
 	};
 
 	static void ApplyContainer() {
@@ -89,7 +103,7 @@ public:
 	void RemoveSubmodel(const std::shared_ptr<TSubmodel>& Submodel) {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TSubmodel>::value, "TSubmodel must derive from M3Model_INTERFACE");
 		Submodels[Submodel->InstanceGuid()] = nullptr;
-		Submodel->Parent->Set(nullptr);
+		Submodel->Parent->Get().reset();
 	};
 
 	template<typename TSubmodel>

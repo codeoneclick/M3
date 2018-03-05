@@ -39,5 +39,14 @@ public:
 
 	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_BLUE;
+
+	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Element_YELLOW;
+
+	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Element_ORANGE;
+
+	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Element_PURPLE;
 };
 

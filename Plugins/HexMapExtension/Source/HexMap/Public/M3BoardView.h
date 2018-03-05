@@ -12,6 +12,7 @@ class HEXMAP_API M3BoardView : public M3View
 public:	
 
 	M3BoardView(AActor* Superview);
+	~M3BoardView();
 
 	CTTI_CLASS_GUID(M3BoardView, M3View_INTERFACE::GuidsContainer)
 

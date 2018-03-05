@@ -6,15 +6,15 @@
 #include "M3AssetsBundle.h"
 #include "Components/StaticMeshComponent.h"
 
-M3CellView::M3CellView(AActor* Superview) : M3View(Superview)
+M3CellView::M3CellView(AActor* _Superview) : M3View(_Superview)
 {
 
 }
 
-void M3CellView::Load(AM3AssetsBundle* Bundle) {
-	M3View::Load(Bundle);
+void M3CellView::Load(AM3AssetsBundle* _Bundle) {
+	M3View::Load(_Bundle);
 
-	AM3BoardAssetsBundle* BoardAssetsBundle = static_cast<AM3BoardAssetsBundle*>(Bundle);
+	AM3BoardAssetsBundle* BoardAssetsBundle = static_cast<AM3BoardAssetsBundle*>(_Bundle);
 
 	TArray<UActorComponent*> MeshesComponents = Superview->GetComponentsByClass(UStaticMeshComponent::StaticClass());
 	for (UActorComponent* ActorComponent : MeshesComponents)
@@ -25,17 +25,11 @@ void M3CellView::Load(AM3AssetsBundle* Bundle) {
 	}
 }
 
-void M3CellView::BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel) {
-	M3View::BindViewModel(ViewModel);
+void M3CellView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
+	M3View::BindViewModel(_ViewModel);
 
 	const auto& CellModel = GetViewModel<M3CellModel>();
 	int Col = CellModel->Entity->Get()->Col->Get();
 	int Row = CellModel->Entity->Get()->Row->Get();
-
-	TArray<UActorComponent*> MeshesComponents = Superview->GetComponentsByClass(UStaticMeshComponent::StaticClass());
-	for (UActorComponent* ActorComponent : MeshesComponents)
-	{
-		UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
-		MeshComponent->SetWorldLocation(FVector(Col * 110, Row * 110, 0));
-	}
+	GetSuperview()->SetActorRelativeLocation(FVector(Col * 110, Row * 110, 0));
 }

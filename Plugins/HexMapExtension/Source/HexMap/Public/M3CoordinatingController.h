@@ -31,4 +31,9 @@ public:
 	void RemoveController(const M3MediatingController_INTERFACE_SharedPtr& Controller);
 	void RemoveController(int Id);
 	M3MediatingController_INTERFACE_SharedPtr GetController(int Id);
+
+	template<typename T> 
+	std::shared_ptr<T> GetControllerAs() {
+		return std::static_pointer_cast<T>(GetController(T::ClassGuid()));
+	};
 };

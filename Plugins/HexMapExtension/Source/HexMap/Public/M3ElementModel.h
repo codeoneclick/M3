@@ -37,4 +37,10 @@ public:
 
 	void Serialize();
 	void Deserialize(AM3Scheme_INTERFACE* Scheme);
+
+	int GetElementId() const;
+
+	void SetState(EM3ElementState State);
+	EM3ElementState GetState() const;
+	bool IsInState(EM3ElementState State) const;
 };

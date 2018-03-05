@@ -14,7 +14,7 @@ AM3Element::AM3Element()
 
 	UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ElementMeshComponent"));
 	MeshComponent->SetupAttachment(GetRootComponent());
-	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	ElementView = std::make_shared<M3ElementView>(this);
 }
@@ -36,6 +36,10 @@ void AM3Element::OnLoad(AM3AssetsBundle* Bundle) {
 void AM3Element::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 	ElementModel = std::static_pointer_cast<M3ElementModel>(Model);
 	ElementView->BindViewModel(ElementModel);
+}
+
+void AM3Element::OnBindViewDelegates(AM3ViewDelegates_API* Delegates_API) {
+	ElementView->BindViewDelegates(Delegates_API);
 }
 
 M3View_INTERFACE_SharedPtr AM3Element::GetView() const {

@@ -5,14 +5,31 @@
 #include "M3BoardView.h"
 #include "M3Cell.h"
 #include "M3Element.h"
+#include "M3TapGestureResponderComponent.h"
+#include "M3PanGestureResponderComponent.h"
 
 AM3Board::AM3Board() {
 	PrimaryActorTick.bCanEverTick = true;
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("BoardRootComponent"));
+	TapGestureResponderComponent = CreateDefaultSubobject<UM3TapGestureResponderComponent>(TEXT("TapGestureResponderComponent"));
+	PanGestureResponderComponent = CreateDefaultSubobject<UM3PanGestureResponderComponent>(TEXT("PanGestureResponderComponent"));
+
 	BoardView = std::make_shared<M3BoardView>(this);
 }
 
 void AM3Board::BeginPlay() {
 	Super::BeginPlay();
+
+	TapGestureResponderComponent = FindComponentByClass<UM3TapGestureResponderComponent>();
+	if (!TapGestureResponderComponent) {
+		UE_LOG(LogTemp, Error, TEXT("Can't find TapGestureResponderComponent"));
+	}
+
+	PanGestureResponderComponent = FindComponentByClass<UM3PanGestureResponderComponent>();
+	if (!PanGestureResponderComponent) {
+		UE_LOG(LogTemp, Error, TEXT("Can't find PanGestureResponderComponent"));
+	}
 }
 
 void AM3Board::OnLoad(AM3AssetsBundle* Bundle) {
@@ -22,6 +39,10 @@ void AM3Board::OnLoad(AM3AssetsBundle* Bundle) {
 void AM3Board::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 	BoardModel = std::static_pointer_cast<M3BoardModel>(Model);
 	BoardView->BindViewModel(BoardModel);
+}
+
+void AM3Board::OnBindViewDelegates(AM3ViewDelegates_API* Delegates_API) {
+	BoardView->BindViewDelegates(Delegates_API);
 }
 
 void AM3Board::Tick(float DeltaTime)

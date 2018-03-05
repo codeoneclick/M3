@@ -39,12 +39,9 @@ void AM3GamePawn::Tick(float DeltaSeconds)
 	}
 }
 
-void AM3GamePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AM3GamePawn::SetupPlayerInputComponent(UInputComponent* InputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("OnResetVR", EInputEvent::IE_Pressed, this, &AM3GamePawn::OnResetVR);
-	PlayerInputComponent->BindAction("TriggerClick", EInputEvent::IE_Pressed, this, &AM3GamePawn::TriggerClick);
+	Super::SetupPlayerInputComponent(InputComponent);
 }
 
 void AM3GamePawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult)

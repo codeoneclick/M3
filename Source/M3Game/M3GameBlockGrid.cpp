@@ -32,7 +32,7 @@ void AM3GameBlockGrid::BeginPlay()
 	Super::BeginPlay();
 
 	// Number of blocks
-	const int32 NumBlocks = Size * Size;
+	/*const int32 NumBlocks = Size * Size;
 
 	// Loop to spawn each block
 	for(int32 BlockIndex=0; BlockIndex<NumBlocks; BlockIndex++)
@@ -51,9 +51,9 @@ void AM3GameBlockGrid::BeginPlay()
 		{
 			NewBlock->OwningGrid = this;
 		}
-	}
+	}*/
 
-	AM3Board* Board = GetWorld()->SpawnActor<AM3Board>(FVector(0, 0, 0), FRotator(0, 0, 0));
+	// AM3Board* Board = GetWorld()->SpawnActor<AM3Board>(FVector(0, 0, 0), FRotator(0, 0, 0));
 	
 }
 

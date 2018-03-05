@@ -129,3 +129,45 @@ public:
 	}
 };
 
+template<typename... ARGS>
+class M3AppEvent_Callback : public M3AppEvent_Callback_INTERFACE {
+public:
+
+	typedef std::function<void(ARGS...)> Callback_t;
+
+protected:
+
+	Callback_t Callback;
+
+public:
+
+	M3AppEvent_Callback(const Callback_t& Callback) {
+		this->Callback = Callback;
+	};
+
+	virtual ~M3AppEvent_Callback() = default;
+
+	void Call(ARGS... Args) {
+		Callback(Args...);
+	}
+};
+
+template<typename... ARGS>
+class M3AppEvent : public M3AppEvent_INTERFACE {
+
+public:
+
+	M3AppEvent(const std::string& Id, const M3AppEvent_Callback_INTERFACE_SharedPtr& Callback) :
+		M3AppEvent_INTERFACE(Id, Callback){
+	}
+
+	void Call(ARGS... Args) {
+		std::static_pointer_cast<M3AppEvent_Callback<ARGS...>>(Callback)->Call(Args...);
+	}
+};
+
+namespace M3Events {
+	extern std::string ON_GAME_STARTED;
+	extern std::string ON_ELEMENT_SWAP_ENDED;
+}
+

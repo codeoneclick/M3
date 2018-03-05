@@ -14,18 +14,22 @@ FORWARD_DECL_CONTAINER(M3ElementModel, M3Model<M3ElementEntity>)
 
 const std::string k_ON_CELLS_CONTAINER_CHANGED = "ON_CELLS_CONTAINER_CHANGED";
 const std::string k_ON_ELEMENTS_CONTAINER_CHANGED = "ON_ELEMENTS_CONTAINER_CHANGED";
+const std::string k_ON_SIZE_CHANGED = "ON_SIZE_CHANGED";
 
-M3BoardView::M3BoardView(AActor* Superview) : M3View(Superview)
-{
+M3BoardView::M3BoardView(AActor* Superview) : M3View(Superview) {
 
 }
 
-void M3BoardView::Load(AM3AssetsBundle* Bundle) {
-	M3View::Load(Bundle);
+M3BoardView::~M3BoardView() {
+
 }
 
-void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel) {
-	M3View::BindViewModel(ViewModel);
+void M3BoardView::Load(AM3AssetsBundle* _Bundle) {
+	M3View::Load(_Bundle);
+}
+
+void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
+	M3View::BindViewModel(_ViewModel);
 
 	const auto& BoardModel = GetViewModel<M3BoardModel>();
 	const auto& BoardEntity = BoardModel->Entity->Get();
@@ -35,8 +39,10 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel) {
 	CellsContainerSlot->Attach(M3CellModel::Container, [this](const M3CellModel_Container& Value) {
 		for (const auto& It : *Value.get()) {
 			AM3Cell* Cell = GetSuperview()->GetWorld()->SpawnActor<AM3Cell>(FVector(0, 0, 0), FRotator(0, 0, 0));
+			Cell->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
 			Cell->OnLoad(Bundle);
 			Cell->OnBindViewModel(It);
+			Cell->OnBindViewDelegates(Delegates);
 			AddSubview(Cell->GetView());
 		}
 	});
@@ -46,9 +52,25 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel) {
 	ElementsContainerSlot->Attach(M3ElementModel::Container, [this](const M3ElementModel_Container& Value) {
 		for (const auto& It : *Value.get()) {
 			AM3Element* Element = GetSuperview()->GetWorld()->SpawnActor<AM3Element>(FVector(0, 0, 0), FRotator(0, 0, 0));
+			Element->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
 			Element->OnLoad(Bundle);
 			Element->OnBindViewModel(It);
+			Element->OnBindViewDelegates(Delegates);
 			AddSubview(Element->GetView());
 		}
+	});
+
+	std::shared_ptr<M3KVMultiSlot<int>> SizeSlot = std::make_shared<M3KVMultiSlot<int>>();
+	Slots[k_ON_SIZE_CHANGED] = SizeSlot;
+	SizeSlot->Attach(BoardEntity->Cols, [this](const int& Value) {
+		FVector CurrentLocation = GetSuperview()->GetActorLocation();
+		float LocationX = -Value * 100 * 0.5;
+		GetSuperview()->SetActorLocation(FVector(LocationX, CurrentLocation.Y, CurrentLocation.Z));
+	});
+
+	SizeSlot->Attach(BoardEntity->Rows, [this](const int& Value) {
+		FVector CurrentLocation = GetSuperview()->GetActorLocation();
+		float LocationY = -Value * 100 * 0.5;
+		GetSuperview()->SetActorLocation(FVector(CurrentLocation.X, LocationY, CurrentLocation.Z));
 	});
 }

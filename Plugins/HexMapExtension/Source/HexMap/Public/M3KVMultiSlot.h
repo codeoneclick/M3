@@ -37,10 +37,10 @@ public:
 		});
 	};
 
-	void DetachAll() {
-		for (const auto& It : Connections) {
-			It->first->Unsubscribe(It->second);
-		}
+	void DetachAll() override {
+		std::for_each(Connections.begin(), Connections.end(), [](const std::pair<std::shared_ptr<M3KVProperty<T>>, std::shared_ptr<M3KVConnection<T>>>& It) {
+			It.first->Unsubscribe(It.second);
+		});
 		Connections.clear();
 	};
 };

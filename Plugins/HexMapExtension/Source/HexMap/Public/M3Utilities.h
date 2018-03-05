@@ -73,6 +73,16 @@ return #__prop__; \
 #define PROP_STATIC_INIT(__class__, __prop__, __type__, ...) \
 std::shared_ptr<M3KVProperty<__type__>> __class__::__prop__ = std::make_shared<M3KVProperty<__type__>>(__VA_ARGS__); \
 
+#define PROP_DECL_R(__prop__, __type__, ...) \
+__type__ Get##__prop__() const { \
+return Entity->Get()->##__prop__->Get(); \
+} \
+
+#define PROP_DECL_W(__prop__, __type__, ...) \
+void Set##__prop__(const __type__##& Value) { \
+Entity->Get()->##__prop__->Set(Value); \
+} \
+
 #define FORWARD_DECL_STRONG(__class__) \
 class __class__; \
 typedef std::shared_ptr<__class__> __class__##_SharedPtr; \

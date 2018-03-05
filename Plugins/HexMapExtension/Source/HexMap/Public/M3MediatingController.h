@@ -13,8 +13,8 @@ protected:
 
 public:
 
-	M3MediatingController_INTERFACE() = default;
-	virtual ~M3MediatingController_INTERFACE() = default;
+	M3MediatingController_INTERFACE();
+	virtual ~M3MediatingController_INTERFACE();
 
 	virtual bool CanBeExecuted() const = 0;
 	virtual void Execute(float Deltatime) = 0;
@@ -32,8 +32,8 @@ protected:
 
 public:
 
-	M3MediatingController() = default;
-	~M3MediatingController() = default;
+	M3MediatingController();
+	virtual ~M3MediatingController();
 
 	void Subscribe(M3AppEvent_INTERFACE_SharedPtr Event);
 	void Unsubscribe(M3AppEvent_INTERFACE_SharedPtr Event);
