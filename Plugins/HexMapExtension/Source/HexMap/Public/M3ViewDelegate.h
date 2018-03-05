@@ -8,20 +8,16 @@
 #include "M3ViewDelegate.generated.h"
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Delegates))
-class HEXMAP_API UM3ViewDelegate_INTERFACE : public UActorComponent {
+class HEXMAP_API UM3ViewDelegate_INTERFACE : public UObject {
 
 	GENERATED_BODY()
 
 protected:
 
-	virtual void BeginPlay() override;
-
 public:
 
 	UM3ViewDelegate_INTERFACE();
 	virtual ~UM3ViewDelegate_INTERFACE() = default;
-
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual int ViewSTTI() const;
 };

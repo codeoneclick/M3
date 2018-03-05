@@ -2,19 +2,8 @@
 
 #include "M3ViewDelegate.h"
 
-UM3ViewDelegate_INTERFACE::UM3ViewDelegate_INTERFACE()
-{
-	PrimaryComponentTick.bCanEverTick = true;
-}
+UM3ViewDelegate_INTERFACE::UM3ViewDelegate_INTERFACE() {
 
-void UM3ViewDelegate_INTERFACE::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void UM3ViewDelegate_INTERFACE::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 int UM3ViewDelegate_INTERFACE::ViewSTTI() const {

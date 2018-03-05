@@ -18,13 +18,13 @@ enum class EM3CellAppointment : uint8 {
 UENUM(BlueprintType)
 enum class EM3ElementId : uint8 {
 	UNKNOWN UMETA(DisplayName = "Unknown"),
-	SPAWNER UMETA(DisplayName = "Spawner"),
-	ELEMENT_RED UMETA(DisplayName = "Element RED"),
-	ELEMENT_GREEN UMETA(DisplayName = "Element GREEN"),
-	ELEMENT_BLUE UMETA(DisplayName = "Element BLUE"),
-	ELEMENT_YELLOW UMETA(DisplayName = "Element YELLOW"),
-	ELEMENT_ORANGE UMETA(DisplayName = "Element ORANGE"),
-	ELEMENT_PURPLE UMETA(DisplayName = "Element PURPLE"),
+	ELEMENT_SPAWNER UMETA(DisplayName = "Element Spawner"),
+	ELEMENT_RED UMETA(DisplayName = "Element Red"),
+	ELEMENT_GREEN UMETA(DisplayName = "Element Green"),
+	ELEMENT_BLUE UMETA(DisplayName = "Element Blue"),
+	ELEMENT_YELLOW UMETA(DisplayName = "Element Yellow"),
+	ELEMENT_ORANGE UMETA(DisplayName = "Element Orange"),
+	ELEMENT_PURPLE UMETA(DisplayName = "Element Purple"),
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Scheme))
