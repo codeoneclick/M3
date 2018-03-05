@@ -19,7 +19,7 @@ void M3ElementModel::Serialize() {
 
 }
 
-void M3ElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+void M3ElementModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
 
 }
 

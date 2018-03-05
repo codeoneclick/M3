@@ -10,7 +10,7 @@
 
 FORWARD_DECL_STRONG(AM3Board)
 FORWARD_DECL_STRONG(AM3AssetsBundle)
-FORWARD_DECL_STRONG(AM3Scheme_INTERFACE)
+FORWARD_DECL_STRONG(UM3Scheme_INTERFACE)
 FORWARD_DECL_STRONG(AM3ViewDelegates_API)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -37,7 +37,7 @@ public:
 	void CreateModels();
 	void CreateControllers();
 	void CreateViews(AM3AssetsBundle* AssetsBundle, AM3ViewDelegates_API* Delegates_API);
-	void OnModelChanged(AM3Scheme_INTERFACE* Scheme);
+	void OnModelChanged(UM3Scheme_INTERFACE* Scheme);
 
 	void OnStart();
 };

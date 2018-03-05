@@ -26,7 +26,7 @@ void M3SharedModel::Serialize() {
 
 }
 
-void M3SharedModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+void M3SharedModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
 	for (const auto& Submodel : Submodels) {
 		if (Submodel) {
 			Submodel->Deserialize(Scheme);

@@ -19,21 +19,30 @@ void UM3BoardGeneratorComponent::TickComponent(float DeltaTime, ELevelTick TickT
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
+UM3BoardScheme* UM3BoardGeneratorComponent::Generate(AM3App* App) {
 
-void UM3BoardGeneratorComponent::Generate(AM3App* App) {
-	AM3BoardScheme* BoardScheme = App->Scheme;
+	const auto BoardScheme = NewObject<UM3BoardScheme>(App, App->BoardScheme_BP);
+
 	int Cols = BoardScheme->Cols;
 	int Rows = BoardScheme->Rows;
 
 	BoardScheme->Cells.SetNum(Cols * Rows);
 	for (int i = 0; i < Cols; ++i) {
 		for (int j = 0; j < Rows; ++j) {
-			AM3CellScheme* CellScheme = GetWorld()->SpawnActor<AM3CellScheme>(FVector(0, 0, 0), FRotator(0, 0, 0));
+
+			UM3CellScheme* CellScheme = NewObject<UM3CellScheme>(App, App->CellScheme_BP);
 			CellScheme->Col = i;
 			CellScheme->Row = j;
 			BoardScheme->Cells[i + j * Cols] = CellScheme;
 		}
 	}
+
+	const auto ElementRedScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementRedScheme_BP);
+	const auto ElementGreenScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementGreenScheme_BP);
+	const auto ElementBlueScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementBlueScheme_BP);
+	const auto ElementYellowScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementYellowScheme_BP);
+	const auto ElementOrangeScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementOrangeScheme_BP);
+	const auto ElementPurpleScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementPurpleScheme_BP);
 
 	const auto& ElementIds = BoardScheme->ElementIds.Array();
 
@@ -54,27 +63,27 @@ void UM3BoardGeneratorComponent::Generate(AM3App* App) {
 
 			switch (ElementId) {
 				case EM3ElementId::ELEMENT_RED: {
-					BoardScheme->Cells[i + j * Cols]->AddAppointment(App->CellElementREDScheme);
+					BoardScheme->Cells[i + j * Cols]->AddAppointment(ElementRedScheme);
 				}
 				break;
 				case EM3ElementId::ELEMENT_GREEN: {
-					BoardScheme->Cells[i + j * Cols]->AddAppointment(App->CellElementGREENScheme);
+					BoardScheme->Cells[i + j * Cols]->AddAppointment(ElementGreenScheme);
 				}
 				break;
 				case EM3ElementId::ELEMENT_BLUE: {
-					BoardScheme->Cells[i + j * Cols]->AddAppointment(App->CellElementBLUEScheme);
+					BoardScheme->Cells[i + j * Cols]->AddAppointment(ElementBlueScheme);
 				}
 				break;
 				case EM3ElementId::ELEMENT_YELLOW: {
-					BoardScheme->Cells[i + j * Cols]->AddAppointment(App->CellElementYELLOWScheme);
+					BoardScheme->Cells[i + j * Cols]->AddAppointment(ElementYellowScheme);
 				}
 				break;
 				case EM3ElementId::ELEMENT_ORANGE: {
-					BoardScheme->Cells[i + j * Cols]->AddAppointment(App->CellElementORANGEScheme);
+					BoardScheme->Cells[i + j * Cols]->AddAppointment(ElementOrangeScheme);
 				}
 				break;
 				case EM3ElementId::ELEMENT_PURPLE: {
-					BoardScheme->Cells[i + j * Cols]->AddAppointment(App->CellElementPURPLEScheme);
+					BoardScheme->Cells[i + j * Cols]->AddAppointment(ElementPurpleScheme);
 				}
 				break;
 				default:
@@ -82,5 +91,7 @@ void UM3BoardGeneratorComponent::Generate(AM3App* App) {
 			}
 		}
 	}
+
+	return BoardScheme;
 }
 

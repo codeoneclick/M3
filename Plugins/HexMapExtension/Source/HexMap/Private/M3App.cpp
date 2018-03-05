@@ -46,12 +46,12 @@ void AM3App::BeginPlay()
 	CustomInputComponent->BindTouch(IE_Pressed, this, &AM3App::OnTouchPressed);
 	CustomInputComponent->BindTouch(IE_Released, this, &AM3App::OnTouchReleased);
 
-	BoardGeneratorComponent->Generate(this);
+	const auto BoardScheme = BoardGeneratorComponent->Generate(this);
 
 	CoordinatingComponent->CreateModels();
 	CoordinatingComponent->CreateControllers();
 	CoordinatingComponent->CreateViews(AssetsBundle, Delegates_API);
-	CoordinatingComponent->OnModelChanged(Scheme);
+	CoordinatingComponent->OnModelChanged(BoardScheme);
 
 	CoordinatingComponent->OnStart();
 }

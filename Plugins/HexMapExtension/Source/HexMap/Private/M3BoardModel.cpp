@@ -27,9 +27,9 @@ void M3BoardModel::Serialize() {
 
 }
 
-void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+void M3BoardModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
 
-	AM3BoardScheme* BoardScheme = static_cast<AM3BoardScheme*>(Scheme);
+	UM3BoardScheme* BoardScheme = static_cast<UM3BoardScheme*>(Scheme);
 
 	int Cols = BoardScheme->Cols;
 	int Rows = BoardScheme->Rows;
@@ -50,7 +50,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 			CellModel->Entity->Get()->Col->Set(i);
 			CellModel->Entity->Get()->Row->Set(j);
 
-			AM3CellAppointmentScheme* Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::ELEMENT);
+			UM3CellAppointmentScheme* Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::ELEMENT);
 			if (Appointment) {
 				M3ElementModel_SharedPtr ElementModel = std::make_shared<M3ElementModel>();
 				ElementModel->Init();

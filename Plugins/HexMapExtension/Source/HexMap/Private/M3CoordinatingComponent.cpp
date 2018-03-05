@@ -67,7 +67,7 @@ void UM3CoordinatingComponent::CreateViews(AM3AssetsBundle* AssetsBundle, AM3Vie
 	Board->OnBindViewDelegates(Delegates_API);
 }
 
-void UM3CoordinatingComponent::OnModelChanged(AM3Scheme_INTERFACE* Scheme) {
+void UM3CoordinatingComponent::OnModelChanged(UM3Scheme_INTERFACE* Scheme) {
 	M3SharedModel::GetInstance()->Deserialize(Scheme);
 }
 

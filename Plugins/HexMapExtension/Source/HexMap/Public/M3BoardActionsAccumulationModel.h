@@ -43,7 +43,7 @@ public:
 	void Init() override;
 
 	void Serialize() override;
-	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
+	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
 
 	void PushAction(EM3AccumulationAction Action);
 	bool HasActions() const;

@@ -8,8 +8,9 @@
 #include "M3BoardGeneratorComponent.generated.h"
 
 FORWARD_DECL_STRONG(AM3App)
+FORWARD_DECL_STRONG(UM3BoardScheme)
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HEXMAP_API UM3BoardGeneratorComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -26,5 +27,5 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void Generate(AM3App* App);
+	UM3BoardScheme* Generate(AM3App* App);
 };

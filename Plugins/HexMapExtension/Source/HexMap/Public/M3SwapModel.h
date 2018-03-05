@@ -27,7 +27,7 @@ public:
 	CTTI_CLASS_GUID(M3PotentialSwapModel, M3Model_INTERFACE::GuidsContainer)
 
 	void Serialize() override;
-	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
+	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
 
 	void Init() override;
 
@@ -73,7 +73,7 @@ public:
 	PROP_DECL_R(PotentialSwaps, std::shared_ptr<std::vector<M3PotentialSwapModel_SharedPtr>>)
 
 	void Serialize() override;
-	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
+	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
 
 	void Init() override;
 

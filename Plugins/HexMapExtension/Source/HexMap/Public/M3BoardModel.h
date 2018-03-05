@@ -31,7 +31,7 @@ public:
 	void Init();
 
 	void Serialize();
-	void Deserialize(AM3Scheme_INTERFACE* Scheme);
+	void Deserialize(UM3Scheme_INTERFACE* Scheme);
 
 	PROP_DECL_R(Cols, int)
 	PROP_DECL_R(Rows, int)
