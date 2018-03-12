@@ -14,8 +14,6 @@ AM3Cell::AM3Cell()
 	UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellMeshComponent"));
 	MeshComponent->SetupAttachment(GetRootComponent());
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	CellView = std::make_shared<M3CellView>(this);
 }
 
 void AM3Cell::BeginPlay()
@@ -28,7 +26,8 @@ void AM3Cell::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AM3Cell::OnLoad(AM3AssetsBundle* Bundle) {
+void AM3Cell::OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle) {
+	CellView = std::make_shared<M3CellView>(ViewFactory, this);
 	CellView->Load(Bundle);
 }
 
@@ -37,8 +36,8 @@ void AM3Cell::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 	CellView->BindViewModel(CellModel);
 }
 
-void AM3Cell::OnBindViewDelegates(AM3ViewDelegates_API* Delegates_API) {
-	CellView->BindViewDelegates(Delegates_API);
+void AM3Cell::OnBindViewDelegate() {
+	CellView->BindViewDelegate(nullptr);
 }
 
 M3View_INTERFACE_SharedPtr AM3Cell::GetView() const {

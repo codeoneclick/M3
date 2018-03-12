@@ -8,6 +8,7 @@
 #include "M3CellModel.h"
 
 FORWARD_DECL_STRONG(M3CellModel)
+FORWARD_DECL_STRONG(M3ElementModel)
 
 class M3BoardEntity : public M3Entity {
 public:
@@ -21,6 +22,10 @@ public:
 
 class HEXMAP_API M3BoardModel : public M3Model<M3BoardEntity>
 {
+private:
+
+	void CreateHole(int Col, int Row);
+
 public:
 
 	M3BoardModel();
@@ -28,12 +33,19 @@ public:
 
 	CTTI_CLASS_GUID(M3BoardModel, M3Model_INTERFACE::GuidsContainer)
 
+	PROP_DECL_R(Cols, int)
+	PROP_DECL_R(Rows, int)
+	PROP_DECL_R(Cells, std::shared_ptr<std::vector<M3CellModel_SharedPtr>>)
+
 	void Init();
 
 	void Serialize();
 	void Deserialize(UM3Scheme_INTERFACE* Scheme);
 
-	PROP_DECL_R(Cols, int)
-	PROP_DECL_R(Rows, int)
-	PROP_DECL_R(Cells, std::shared_ptr<std::vector<M3CellModel_SharedPtr>>)
+	M3CellModel_SharedPtr GetCell(int Col, int Row) const;
+	M3ElementModel_SharedPtr GetElement(int Col, int Row) const;
+
+	void RemoveMatched();
+
+	static void MoveElement(const M3CellModel_SharedPtr& From, const M3CellModel_SharedPtr& To);
 };

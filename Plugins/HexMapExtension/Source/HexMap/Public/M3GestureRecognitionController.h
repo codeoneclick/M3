@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "M3MediatingController.h"
 #include "InputCoreTypes.h"
+#include "M3PanGestureResponderComponent.h"
 
 class HEXMAP_API M3GestureRecognitionController : public M3MediatingController
 {
@@ -13,7 +14,7 @@ protected:
 	class AActor* InteractionView = nullptr;
 
 	void OnTapGesture(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void OnPanGesture(const FVector Location, const FVector Delta);
+	void OnPanGesture(EM3PanState State, const FVector Location, const FVector Delta);
 
 public:
 

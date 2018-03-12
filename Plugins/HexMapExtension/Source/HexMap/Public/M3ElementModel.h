@@ -38,9 +38,17 @@ public:
 	void Serialize();
 	void Deserialize(UM3Scheme_INTERFACE* Scheme);
 
+	void Reset();
+
 	int GetElementId() const;
 
 	void SetState(EM3ElementState State);
 	EM3ElementState GetState() const;
 	bool IsInState(EM3ElementState State) const;
+
+	bool IsInIdle() const;
+	bool CanMatch() const;
+	bool CanDrop() const;
+
+	bool IsDropBlocked() const;
 };

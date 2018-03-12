@@ -9,7 +9,9 @@
 enum EM3Gesture {
 	UNKNOWN = 0,
 	TAP,
+	PAN_START,
 	PAN,
+	PAN_END,
 };
 
 struct M3Gesture {
@@ -25,6 +27,8 @@ public:
 	CTTI_CLASS_GUID(M3GestureEntity, M3Entity::GuidsContainer)
 
 	PROP_STRONG(public, M3GestureEntity, Gestures, std::shared_ptr<std::list<M3Gesture>>, std::make_shared<std::list<M3Gesture>>())
+	PROP_STRONG(public, M3GestureEntity, IsPanned, bool, false)
+	PROP_STRONG(public, M3GestureEntity, IsInterrupted, bool, false)
 };
 
 
@@ -42,6 +46,12 @@ public:
 	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
 
 	void Init();
+
+	PROP_DECL_R(IsPanned, bool)
+	PROP_DECL_W(IsPanned, bool)
+
+	PROP_DECL_R(IsInterrupted, bool)
+	PROP_DECL_W(IsInterrupted, bool)
 
 	int GetGesturesNum() const;
 

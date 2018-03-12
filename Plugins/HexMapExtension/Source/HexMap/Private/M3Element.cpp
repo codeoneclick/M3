@@ -6,8 +6,7 @@
 #include "M3AssetsBundle.h"
 #include "Components/StaticMeshComponent.h"
 
-AM3Element::AM3Element()
-{
+AM3Element::AM3Element() {
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ElementRootComponent"));;
@@ -15,21 +14,18 @@ AM3Element::AM3Element()
 	UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ElementMeshComponent"));
 	MeshComponent->SetupAttachment(GetRootComponent());
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
-	ElementView = std::make_shared<M3ElementView>(this);
 }
 
-void AM3Element::BeginPlay()
-{
+void AM3Element::BeginPlay() {
 	Super::BeginPlay();
 }
 
-void AM3Element::Tick(float DeltaTime)
-{
+void AM3Element::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-void AM3Element::OnLoad(AM3AssetsBundle* Bundle) {
+void AM3Element::OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle) {
+	ElementView = std::make_shared<M3ElementView>(ViewFactory, this);
 	ElementView->Load(Bundle);
 }
 
@@ -38,8 +34,11 @@ void AM3Element::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 	ElementView->BindViewModel(ElementModel);
 }
 
-void AM3Element::OnBindViewDelegates(AM3ViewDelegates_API* Delegates_API) {
-	ElementView->BindViewDelegates(Delegates_API);
+void AM3Element::OnBindViewDelegate() {
+	if (Delegate_BP) {
+		Delegate = NewObject<UM3ViewDelegate_INTERFACE>(this, Delegate_BP);
+		ElementView->BindViewDelegate(Delegate);
+	}
 }
 
 M3View_INTERFACE_SharedPtr AM3Element::GetView() const {

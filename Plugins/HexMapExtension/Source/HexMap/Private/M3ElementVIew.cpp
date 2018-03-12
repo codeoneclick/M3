@@ -6,6 +6,8 @@
 #include "M3ElementModel.h"
 #include "M3AssetsBundle.h"
 #include "M3Scheme.h"
+#include "M3SwapModel.h"
+#include "M3SharedModel.h"
 #include "Components/StaticMeshComponent.h"
 
 const std::string k_ON_ELEMENT_STATE_CHANGED = "ON_ELEMENT_STATE_CHANGED";
@@ -15,10 +17,20 @@ FORWARD_DECL_STRONG(M3ElementModel)
 
 UM3ElementViewAccessor::UM3ElementViewAccessor() {
 	OnSwapEndedDelegate.BindUFunction(this, FName("OnSwapEnded"));
+	OnMatchEndedDelegate.BindUFunction(this, FName("OnMatchEnded"));
+	OnDropEndedDelegate.BindUFunction(this, FName("OnDropEnded"));
 }
 
 void UM3ElementViewAccessor::OnSwapEnded() {
 	OnSwapEndedCallback.ExecuteIfBound();
+}
+
+void UM3ElementViewAccessor::OnMatchEnded() {
+	OnMatchEndedCallback.ExecuteIfBound();
+}
+
+void UM3ElementViewAccessor::OnDropEnded() {
+	OnDropEndedCallback.ExecuteIfBound();
 }
 
 UM3ElementViewDelegate::UM3ElementViewDelegate() {
@@ -31,22 +43,31 @@ int UM3ElementViewDelegate::ViewSTTI() const {
 	return static_cast<int>(M3ElementView::ClassGuid());
 }
 
-int UNIQUE_ID = 0;
-M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {
-	std::stringstream UNIQUE_ID_STRING_STREAM;
-	UNIQUE_ID_STRING_STREAM << "ELEMENT_ACCESSOR_" << UNIQUE_ID;
-	std::string UNIQUE_ID_STRING = UNIQUE_ID_STRING_STREAM.str();
-	Accessor = NewObject<UM3ElementViewAccessor>(_Superview, FName(UNIQUE_ID_STRING.c_str(), UNIQUE_ID_STRING.length()));
-	Accessor->View = _Superview;
+M3ElementView::M3ElementView(UM3ViewFactory* _ViewFactory, AActor* _Superview) : M3View(_ViewFactory, _Superview) {
 
-	Accessor->OnSwapEndedCallback.BindLambda([this]() {
-		UE_LOG(LogTemp, Error, TEXT("Swap ended callback"));
-		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_SWAP_ENDED, GetViewModel<M3ElementModel>());
-	});
 }
 
-void M3ElementView::Load(AM3AssetsBundle* _Bundle) {
+void M3ElementView::Load(UM3AssetsBundle* _Bundle) {
 	M3View::Load(_Bundle);
+
+	Accessor = NewObject<UM3ElementViewAccessor>(Superview);
+	Accessor->View = Superview;
+	Accessor->ElementSize = 110;
+
+	Accessor->OnSwapEndedCallback.BindLambda([=]() {
+		const auto ElementModel = GetViewModel<M3ElementModel>();
+		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_SWAP_ENDED, ElementModel);
+	});
+
+	Accessor->OnMatchEndedCallback.BindLambda([=]() {
+		const auto ElementModel = GetViewModel<M3ElementModel>();
+		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_MATCH_ENDED, ElementModel);
+	});
+
+	Accessor->OnDropEndedCallback.BindLambda([=]() {
+		const auto ElementModel = GetViewModel<M3ElementModel>();
+		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_DROP_ENDED, ElementModel);
+	});
 }
 
 void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
@@ -56,18 +77,45 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 
 	std::shared_ptr<M3KVSlot<EM3ElementState>> OnElementStateChangedSlot = std::make_shared<M3KVSlot<EM3ElementState>>(ElementEntity->State);
 	Slots[k_ON_ELEMENT_STATE_CHANGED] = OnElementStateChangedSlot;
-	OnElementStateChangedSlot->Attach([this] (EM3ElementState State) {
+	OnElementStateChangedSlot->Attach([=] (EM3ElementState State) {
+		const auto Delegate = GetDelegate<UM3ElementViewDelegate>();
+		assert(Delegate != nullptr);
+
 		switch (State) {
-		case EM3ElementState::SWAPPING: {
-			const auto Delegate = GetDelegate<UM3ElementViewDelegate>();
-			assert(Delegate != nullptr);
-			if (Delegate) {
-				Delegate->OnSwap(Accessor);
-			}
-		}
-		    break;
-		default:
-			break;
+			case EM3ElementState::SWAPPING:
+				if (Delegate) {
+					const auto SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
+					Accessor->IsPosibleToSwap = SwapModel->IsPossibleToSwap();
+
+					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+
+					const auto OppositeElementModel = SwapModel->GetSwapElementA() == GetViewModel<M3ElementModel>() ? SwapModel->GetSwapElementB() : SwapModel->GetSwapElementA();
+					
+					Accessor->OppositeCol = OppositeElementModel->GetParent<M3CellModel>()->GetCol();
+					Accessor->OppositeRow = OppositeElementModel->GetParent<M3CellModel>()->GetRow();
+
+					Delegate->OnSwap(Accessor);
+				}
+				break;
+			case EM3ElementState::MATCHING:
+				if (Delegate) {
+					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+
+					Delegate->OnMatch(Accessor);
+				}
+				break;
+			case EM3ElementState::DROPPING:
+				if (Delegate) {
+					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+
+					Delegate->OnDrop(Accessor);
+				}
+				break;
+			default:
+				break;
 		}
 	});
 
@@ -83,7 +131,7 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 
 	GetSuperview()->SetActorRelativeLocation(FVector(Col * 110, Row * 110, 0));
 
-	AM3BoardAssetsBundle* BoardAssetsBundle = static_cast<AM3BoardAssetsBundle*>(Bundle);
+	UM3BoardAssetsBundle* BoardAssetsBundle = static_cast<UM3BoardAssetsBundle*>(Bundle);
 
 	TArray<UActorComponent*> MeshesComponents = Superview->GetComponentsByClass(UStaticMeshComponent::StaticClass());
 	for (UActorComponent* ActorComponent : MeshesComponents)

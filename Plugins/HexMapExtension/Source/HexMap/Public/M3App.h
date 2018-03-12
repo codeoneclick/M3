@@ -9,11 +9,11 @@
 
 FORWARD_DECL_STRONG(UM3CoordinatingComponent)
 FORWARD_DECL_STRONG(UM3BoardGeneratorComponent)
-FORWARD_DECL_STRONG(AM3BoardAssetsBundle)
+FORWARD_DECL_STRONG(UM3BoardAssetsBundle)
 FORWARD_DECL_STRONG(UM3BoardScheme)
 FORWARD_DECL_STRONG(UM3CellScheme)
 FORWARD_DECL_STRONG(UM3CellAppointmentScheme)
-FORWARD_DECL_STRONG(AM3ViewDelegates_API)
+FORWARD_DECL_STRONG(UM3ViewFactory)
 
 UCLASS()
 class HEXMAP_API AM3App : public AActor
@@ -47,11 +47,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
 	class UM3PanGestureRecognizerComponent* PanGestureRecognizerComponent;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
-	AM3BoardAssetsBundle* AssetsBundle;
+	UPROPERTY(EditAnywhere, Category = "M3View")
+	TSubclassOf<UM3ViewFactory> ViewFactory_BP;
 
-	UPROPERTY(Category = "M3Delegates", EditAnywhere, BlueprintReadWrite)
-	AM3ViewDelegates_API* Delegates_API;
+	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UM3BoardAssetsBundle> AssetsBundle_BP;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3BoardScheme> BoardScheme_BP;

@@ -95,6 +95,7 @@ public:
 			const auto Instance = M3Model_INTERFACE::shared_from_this();
 			Submodel->Parent->Set(std::static_pointer_cast<M3Model<T>>(Instance));
 		} else {
+			UE_LOG(LogTemp, Error, TEXT("Can't add same model to Shared Model"));
 			assert(false);
 		}
 	};
@@ -105,6 +106,14 @@ public:
 		Submodels[Submodel->InstanceGuid()] = nullptr;
 		Submodel->Parent->Get().reset();
 	};
+
+	void RemoveAllSubmodels() {
+		std::for_each(Submodels.begin(), Submodels.end(), [=](const M3Model_INTERFACE_SharedPtr& Submodel) {
+			if (Submodel) {
+				RemoveSubmodel(std::static_pointer_cast<M3Model>(Submodel));
+			}
+		});
+	}
 
 	template<typename TSubmodel>
 	std::shared_ptr<TSubmodel> GetSubmodel() const {

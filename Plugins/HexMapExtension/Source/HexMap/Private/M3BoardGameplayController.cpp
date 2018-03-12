@@ -6,6 +6,7 @@
 #include "M3ElementModel.h"
 #include "M3CellModel.h"
 #include "M3SwapModel.h"
+#include "M3ChainModel.h"
 #include "M3BoardActionsAccumulationModel.h"
 #include "M3SharedModel.h"
 
@@ -17,6 +18,14 @@ M3BoardGameplayController::M3BoardGameplayController() {
 	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementSwapEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementSwapEnded, this, std::placeholders::_1));
 	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr>> OnElementSwapEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr>>(M3Events::ON_ELEMENT_SWAP_ENDED, OnElementSwapEndedCallback);
 	Subscribe(OnElementSwapEndedEvent);
+
+	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementMatchEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementMatchEnded, this, std::placeholders::_1));
+	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr>> OnElementMatchEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr>>(M3Events::ON_ELEMENT_MATCH_ENDED, OnElementMatchEndedCallback);
+	Subscribe(OnElementMatchEndedEvent);
+
+	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementDropEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementDropEnded, this, std::placeholders::_1));
+	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr>> OnElementDropEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr>>(M3Events::ON_ELEMENT_DROP_ENDED, OnElementDropEndedCallback);
+	Subscribe(OnElementDropEndedEvent);
 }
 
 M3BoardGameplayController::~M3BoardGameplayController() {
@@ -25,6 +34,19 @@ M3BoardGameplayController::~M3BoardGameplayController() {
 void M3BoardGameplayController::GeneratePotentialSwaps() {
 	const auto SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
 	SwapModel->GeneratePotentialSwaps();
+}
+
+void M3BoardGameplayController::DetectMatches() {
+	const auto BoardModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>();
+	const auto ChainModel = M3SharedModel::GetInstance()->GetSubmodel<M3ChainModel>();
+
+	ChainModel->DetectHorizontalMatches(BoardModel);
+	ChainModel->DetectVerticalMatches(BoardModel);
+}
+
+void M3BoardGameplayController::CreateHoles() {
+	const auto BoardModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>();
+	BoardModel->RemoveMatched();
 }
 
 bool M3BoardGameplayController::CanBeExecuted() const {
@@ -38,15 +60,20 @@ void M3BoardGameplayController::Execute(float Deltatime) {
 	while (!Actions->empty()) {
 		const auto Action = Actions->front();
 		Actions->pop_front();
-		switch (Action.Action)
-		{
-			case EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED: {
+		switch (Action.Action) {
+			case EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED:
+			case EM3AccumulationAction::ON_ELEMENT_DROP_ENDED:
 				M3BoardGameplayController::GeneratePotentialSwaps();
-			}
+				M3BoardGameplayController::DetectMatches();
 				break;
+			case EM3AccumulationAction::ON_ELEMENT_MATCH_ENDED:
+				M3BoardGameplayController::CreateHoles();
+				M3BoardGameplayController::GeneratePotentialSwaps();
+				break;
+
 			default:
 				break;
-			}
+		}
 	}
 }
 
@@ -58,4 +85,18 @@ void M3BoardGameplayController::OnElementSwapEnded(const M3ElementModel_SharedPt
 	ElementModel->SetState(EM3ElementState::IDLE);
 	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
 	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED);
+}
+
+void M3BoardGameplayController::OnElementMatchEnded(const M3ElementModel_SharedPtr& ElementModel) {
+	ElementModel->SetState(EM3ElementState::IDLE);
+	ElementModel->SetState(EM3ElementState::REMOVING);
+
+	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
+	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_MATCH_ENDED);
+}
+
+void M3BoardGameplayController::OnElementDropEnded(const M3ElementModel_SharedPtr& ElementModel) {
+	ElementModel->SetState(EM3ElementState::IDLE);
+	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
+	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_DROP_ENDED);
 }

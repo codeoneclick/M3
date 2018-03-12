@@ -5,24 +5,26 @@
 #include "M3Entity.h"
 #include "M3KVSlot.h"
 #include "M3ViewDelegate.h"
-#include "M3ViewDelegates_API.h"
 #include "Engine/World.h"
 
 std::set<uintptr_t> M3View_INTERFACE::GuidsContainer;
 
-M3View::M3View(AActor* Superview) {
-	this->Superview = Superview;
+M3View::M3View(UM3ViewFactory* _ViewFactory, AActor* _Superview) {
+	Superview = _Superview;
+	ViewFactory = _ViewFactory;
 }
 
 M3View::~M3View() {
+
+	Delegate = nullptr;
 	Superview = nullptr;
+
 	Parent.reset();
 
 	for (const auto& Slot : Slots) {
 		Slot.second->DetachAll();
 	}
 	Slots.clear();
-
 	Subviews.clear();
 }
 
@@ -30,16 +32,12 @@ AActor* M3View::GetSuperview() const {
 	return Superview;
 }
 
-void M3View::Load(AM3AssetsBundle* _Bundle) {
+void M3View::Load(UM3AssetsBundle* _Bundle) {
 	this->Bundle = _Bundle;
 }
 
-void M3View::BindViewDelegates(AM3ViewDelegates_API* API) {
-	Delegates = API;
-	const auto DelegateBP = API->GetDelegate(InstanceGuid());
-	if (DelegateBP) {
-		Delegate = NewObject<UM3ViewDelegate_INTERFACE>(Superview, DelegateBP);
-	}
+void M3View::BindViewDelegate(UM3ViewDelegate_INTERFACE* _Delegate) {
+	Delegate = _Delegate;
 }
 
 void M3View::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {

@@ -9,10 +9,10 @@ class HEXMAP_API M3CellView : public M3View
 {
 public:
 
-	M3CellView(AActor* Superview);
+	M3CellView(UM3ViewFactory* ViewFactory, AActor* Superview);
 
 	CTTI_CLASS_GUID(M3CellView, M3View_INTERFACE::GuidsContainer)
 
-	void Load(AM3AssetsBundle* Bundle);
+	void Load(UM3AssetsBundle* Bundle);
 	void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);
 };

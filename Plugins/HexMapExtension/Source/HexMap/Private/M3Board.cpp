@@ -14,8 +14,6 @@ AM3Board::AM3Board() {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("BoardRootComponent"));
 	TapGestureResponderComponent = CreateDefaultSubobject<UM3TapGestureResponderComponent>(TEXT("TapGestureResponderComponent"));
 	PanGestureResponderComponent = CreateDefaultSubobject<UM3PanGestureResponderComponent>(TEXT("PanGestureResponderComponent"));
-
-	BoardView = std::make_shared<M3BoardView>(this);
 }
 
 void AM3Board::BeginPlay() {
@@ -32,7 +30,8 @@ void AM3Board::BeginPlay() {
 	}
 }
 
-void AM3Board::OnLoad(AM3AssetsBundle* Bundle) {
+void AM3Board::OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle) {
+	BoardView = std::make_shared<M3BoardView>(ViewFactory, this);
 	BoardView->Load(Bundle);
 }
 
@@ -41,8 +40,8 @@ void AM3Board::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 	BoardView->BindViewModel(BoardModel);
 }
 
-void AM3Board::OnBindViewDelegates(AM3ViewDelegates_API* Delegates_API) {
-	BoardView->BindViewDelegates(Delegates_API);
+void AM3Board::OnBindViewDelegate() {
+	BoardView->BindViewDelegate(nullptr);
 }
 
 void AM3Board::Tick(float DeltaTime)

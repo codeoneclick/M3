@@ -7,7 +7,7 @@
 #include "InputCoreTypes.h"
 #include "M3TapGestureRecognizerComponent.generated.h"
 
-UCLASS( Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class HEXMAP_API UM3TapGestureRecognizerComponent : public UActorComponent
 {
 GENERATED_BODY()

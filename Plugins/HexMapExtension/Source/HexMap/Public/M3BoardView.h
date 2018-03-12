@@ -11,11 +11,11 @@ class HEXMAP_API M3BoardView : public M3View
 	
 public:	
 
-	M3BoardView(AActor* Superview);
+	M3BoardView(UM3ViewFactory* _ViewFactory, AActor* _Superview);
 	~M3BoardView();
 
 	CTTI_CLASS_GUID(M3BoardView, M3View_INTERFACE::GuidsContainer)
 
-	void Load(AM3AssetsBundle* Bundle);
+	void Load(UM3AssetsBundle* Bundle);
 	void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);
 };

@@ -5,20 +5,18 @@
 #include "M3Scheme.h"
 #include "Engine/World.h"
 
-UM3BoardGeneratorComponent::UM3BoardGeneratorComponent()
-{
+UM3BoardGeneratorComponent::UM3BoardGeneratorComponent() {
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UM3BoardGeneratorComponent::BeginPlay()
-{
+void UM3BoardGeneratorComponent::BeginPlay() {
 	Super::BeginPlay();
 }
 
-void UM3BoardGeneratorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
+void UM3BoardGeneratorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
+
 UM3BoardScheme* UM3BoardGeneratorComponent::Generate(AM3App* App) {
 
 	const auto BoardScheme = NewObject<UM3BoardScheme>(App, App->BoardScheme_BP);

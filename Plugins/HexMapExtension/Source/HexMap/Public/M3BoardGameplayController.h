@@ -12,11 +12,15 @@ class HEXMAP_API M3BoardGameplayController : public M3MediatingController
 private:
 
 	static void GeneratePotentialSwaps();
+	static void DetectMatches();
+	static void CreateHoles();
 
 protected:
 
 	void OnGameStarted();
 	void OnElementSwapEnded(const M3ElementModel_SharedPtr& ElementModel);
+	void OnElementMatchEnded(const M3ElementModel_SharedPtr& ElementModel);
+	void OnElementDropEnded(const M3ElementModel_SharedPtr& ElementModel);
 
 public:
 

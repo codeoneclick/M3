@@ -7,7 +7,6 @@
 #include "InputCoreTypes.h"
 #include "M3PanGestureRecognizerComponent.generated.h"
 
-
 UCLASS( Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HEXMAP_API UM3PanGestureRecognizerComponent : public UActorComponent
 {
@@ -19,6 +18,7 @@ public:
 
 private:
 
+	bool bIsPanned = false;
 	bool bIsInterrupted = false;
 	float PrevTouchLocationX = 0.f;
 	float PrevTouchLocationY = 0.f;

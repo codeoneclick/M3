@@ -6,15 +6,15 @@
 #include "M3AssetsBundle.h"
 #include "Components/StaticMeshComponent.h"
 
-M3CellView::M3CellView(AActor* _Superview) : M3View(_Superview)
+M3CellView::M3CellView(UM3ViewFactory* _ViewFactory, AActor* _Superview) : M3View(_ViewFactory, _Superview)
 {
 
 }
 
-void M3CellView::Load(AM3AssetsBundle* _Bundle) {
+void M3CellView::Load(UM3AssetsBundle* _Bundle) {
 	M3View::Load(_Bundle);
 
-	AM3BoardAssetsBundle* BoardAssetsBundle = static_cast<AM3BoardAssetsBundle*>(_Bundle);
+	UM3BoardAssetsBundle* BoardAssetsBundle = static_cast<UM3BoardAssetsBundle*>(_Bundle);
 
 	TArray<UActorComponent*> MeshesComponents = Superview->GetComponentsByClass(UStaticMeshComponent::StaticClass());
 	for (UActorComponent* ActorComponent : MeshesComponents)

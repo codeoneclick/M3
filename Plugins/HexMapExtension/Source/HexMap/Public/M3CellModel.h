@@ -6,7 +6,7 @@
 #include "M3Entity.h"
 #include "M3Model.h"
 
-class M3CellEntity : public M3Entity {
+class HEXMAP_API M3CellEntity : public M3Entity {
 public:
 
 	CTTI_CLASS_GUID(M3CellEntity, M3Entity::GuidsContainer)
@@ -23,8 +23,14 @@ public:
 
 	CTTI_CLASS_GUID(M3CellModel, M3Model<M3CellEntity>::GuidsContainer)
 
+	PROP_DECL_R(Col, int);
+	PROP_DECL_R(Row, int);
+
 	void Init();
 
 	void Serialize();
 	void Deserialize(UM3Scheme_INTERFACE* Scheme);
+
+	bool IsContainElement();
+	bool CanContainElement();
 };

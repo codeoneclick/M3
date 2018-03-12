@@ -5,13 +5,13 @@
 #include "M3CoordinatingComponent.h"
 #include "M3BoardGeneratorComponent.h"
 #include "M3AssetsBundle.h"
+#include "M3ViewFactory.h"
 #include "M3Scheme.h"
 #include "Engine/World.h"
 #include "M3TapGestureRecognizerComponent.h"
 #include "M3PanGestureRecognizerComponent.h"
 
-AM3App::AM3App()
-{
+AM3App::AM3App() {
 	PrimaryActorTick.bCanEverTick = true;
 
 	CoordinatingComponent = CreateDefaultSubobject<UM3CoordinatingComponent>(TEXT("CoordinatingComponent"));
@@ -21,8 +21,7 @@ AM3App::AM3App()
 	PanGestureRecognizerComponent = CreateDefaultSubobject<UM3PanGestureRecognizerComponent>(TEXT("PanGestureRecognizerComponent"));
 }
 
-void AM3App::BeginPlay()
-{
+void AM3App::BeginPlay() {
 	Super::BeginPlay();
 
 	CoordinatingComponent = static_cast<UM3CoordinatingComponent*>(GetComponentByClass(UM3CoordinatingComponent::StaticClass()));
@@ -47,28 +46,27 @@ void AM3App::BeginPlay()
 	CustomInputComponent->BindTouch(IE_Released, this, &AM3App::OnTouchReleased);
 
 	const auto BoardScheme = BoardGeneratorComponent->Generate(this);
+	const auto AssetsBundle = NewObject<UM3AssetsBundle>(this, AssetsBundle_BP);
+	const auto ViewFactory = NewObject<UM3ViewFactory>(this, ViewFactory_BP);
 
 	CoordinatingComponent->CreateModels();
 	CoordinatingComponent->CreateControllers();
-	CoordinatingComponent->CreateViews(AssetsBundle, Delegates_API);
+	CoordinatingComponent->CreateViews(ViewFactory, AssetsBundle);
 	CoordinatingComponent->OnModelChanged(BoardScheme);
 
 	CoordinatingComponent->OnStart();
 }
 
-void AM3App::Tick(float DeltaTime)
-{
+void AM3App::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-void AM3App::OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
+void AM3App::OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location) {
 	TapGestureRecognizerComponent->OnTouchPressed(FingerIndex, Location);
 	PanGestureRecognizerComponent->OnTouchPressed(FingerIndex, Location);
 }
 
-void AM3App::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
+void AM3App::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location) {
 	TapGestureRecognizerComponent->OnTouchReleased(FingerIndex, Location);
 	PanGestureRecognizerComponent->OnTouchReleased(FingerIndex, Location);
 }

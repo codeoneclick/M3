@@ -50,8 +50,8 @@ bool M3SwapModel::CanSwapElementWithElementId(const std::shared_ptr<std::vector<
 
 bool M3SwapModel::CanSwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB) {
 	bool Result = false;
-	const auto& CellA = ElementA->GetParent<M3CellModel>();
-	const auto& CellB = ElementB->GetParent<M3CellModel>();
+	const auto CellA = ElementA->GetParent<M3CellModel>();
+	const auto CellB = ElementB->GetParent<M3CellModel>();
 
 	const int swapHorizontal = FMath::Abs(CellA->Entity->Get()->Col->Get() - CellB->Entity->Get()->Col->Get());
 	const int swapVertical = FMath::Abs(CellA->Entity->Get()->Row->Get() - CellB->Entity->Get()->Row->Get());
@@ -188,9 +188,10 @@ void M3SwapModel::GeneratePotentialSwaps() {
 }
 
 void M3SwapModel::AddSwapElement(const M3ElementModel_SharedPtr& Element) {
-	if (GetSwapElementA() != nullptr &&
-		GetSwapElementA() != Element) {
-		if (M3SwapModel::CanSwapElements(GetSwapElementA(), Element)) {
+	const auto SwapElementA = GetSwapElementA();
+	if (SwapElementA != nullptr &&
+		SwapElementA != Element) {
+		if (M3SwapModel::CanSwapElements(SwapElementA, Element)) {
 			Entity->Get()->SwapElementB->Set(Element);
 		} else {
 			Entity->Get()->SwapElementA->Set(Element);

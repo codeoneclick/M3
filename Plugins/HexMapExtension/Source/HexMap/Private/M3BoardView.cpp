@@ -7,6 +7,7 @@
 #include "M3KVMultiSlot.h"
 #include "M3Element.h"
 #include "M3Cell.h"
+#include "M3ViewFactory.h"
 #include "Engine/World.h"
 
 FORWARD_DECL_CONTAINER(M3CellModel, M3Model<M3CellEntity>)
@@ -16,7 +17,7 @@ const std::string k_ON_CELLS_CONTAINER_CHANGED = "ON_CELLS_CONTAINER_CHANGED";
 const std::string k_ON_ELEMENTS_CONTAINER_CHANGED = "ON_ELEMENTS_CONTAINER_CHANGED";
 const std::string k_ON_SIZE_CHANGED = "ON_SIZE_CHANGED";
 
-M3BoardView::M3BoardView(AActor* Superview) : M3View(Superview) {
+M3BoardView::M3BoardView(UM3ViewFactory* _ViewFactory, AActor* _Superview) : M3View(_ViewFactory, _Superview) {
 
 }
 
@@ -24,7 +25,7 @@ M3BoardView::~M3BoardView() {
 
 }
 
-void M3BoardView::Load(AM3AssetsBundle* _Bundle) {
+void M3BoardView::Load(UM3AssetsBundle* _Bundle) {
 	M3View::Load(_Bundle);
 }
 
@@ -38,11 +39,11 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	Slots[k_ON_CELLS_CONTAINER_CHANGED] = CellsContainerSlot;
 	CellsContainerSlot->Attach(M3CellModel::Container, [this](const M3CellModel_Container& Value) {
 		for (const auto& It : *Value.get()) {
-			AM3Cell* Cell = GetSuperview()->GetWorld()->SpawnActor<AM3Cell>(FVector(0, 0, 0), FRotator(0, 0, 0));
+			AM3Cell* Cell = ViewFactory->CreateCell(GetSuperview()->GetWorld());
 			Cell->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
-			Cell->OnLoad(Bundle);
+			Cell->OnLoad(ViewFactory, Bundle);
 			Cell->OnBindViewModel(It);
-			Cell->OnBindViewDelegates(Delegates);
+			Cell->OnBindViewDelegate();
 			AddSubview(Cell->GetView());
 		}
 	});
@@ -51,11 +52,11 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	Slots[k_ON_ELEMENTS_CONTAINER_CHANGED] = ElementsContainerSlot;
 	ElementsContainerSlot->Attach(M3ElementModel::Container, [this](const M3ElementModel_Container& Value) {
 		for (const auto& It : *Value.get()) {
-			AM3Element* Element = GetSuperview()->GetWorld()->SpawnActor<AM3Element>(FVector(0, 0, 0), FRotator(0, 0, 0));
+			AM3Element* Element = ViewFactory->CreateElement(GetSuperview()->GetWorld());
 			Element->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
-			Element->OnLoad(Bundle);
+			Element->OnLoad(ViewFactory, Bundle);
 			Element->OnBindViewModel(It);
-			Element->OnBindViewDelegates(Delegates);
+			Element->OnBindViewDelegate();
 			AddSubview(Element->GetView());
 		}
 	});

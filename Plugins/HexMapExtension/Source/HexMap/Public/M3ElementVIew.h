@@ -10,25 +10,57 @@
 DECLARE_DYNAMIC_DELEGATE(FElementViewAnimationDelegate);
 DECLARE_DELEGATE(FElementViewAnimationCallback);
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup = (Accessors))
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Accessors))
 class HEXMAP_API UM3ElementViewAccessor : public UObject {
 private:
 
 	GENERATED_BODY()
 
-	UFUNCTION(BlueprintCallable, Category = "Delegates")
+	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
 	void OnSwapEnded();
+	
+	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	void OnMatchEnded();
+
+	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	void OnDropEnded();
 
 public:
 
 	UM3ElementViewAccessor();
 
-	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
 	AActor* View = nullptr;
 
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	int CurrentCol = -1;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	int CurrentRow = -1;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	int OppositeCol = -1;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	int OppositeRow = -1;
+
 	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
+	int ElementSize = -1;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	bool IsPosibleToSwap = false;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnSwapEndedDelegate;
 	FElementViewAnimationCallback OnSwapEndedCallback;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	FElementViewAnimationDelegate OnMatchEndedDelegate;
+	FElementViewAnimationCallback OnMatchEndedCallback;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	FElementViewAnimationDelegate OnDropEndedDelegate;
+	FElementViewAnimationCallback OnDropEndedCallback;
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Delegates))
@@ -45,8 +77,14 @@ public:
 
 	int ViewSTTI() const override;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Delegates")
+	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
 	void OnSwap(UM3ElementViewAccessor* Accessor);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	void OnMatch(UM3ElementViewAccessor* Accessor);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	void OnDrop(UM3ElementViewAccessor* Accessor);
 };
 
 class HEXMAP_API M3ElementView : public M3View
@@ -57,10 +95,10 @@ private:
 
 public:
 
-	M3ElementView(AActor* Superview);
+	M3ElementView(UM3ViewFactory* _ViewFactory, AActor* _Superview);
 
 	CTTI_CLASS_GUID(M3ElementView, M3View_INTERFACE::GuidsContainer)
 
-	void Load(AM3AssetsBundle* Bundle);
+	void Load(UM3AssetsBundle* Bundle);
 	void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);
 };

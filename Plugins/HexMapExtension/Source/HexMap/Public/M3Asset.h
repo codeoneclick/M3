@@ -7,8 +7,7 @@
 #include "M3Asset.generated.h"
 
 UENUM(BlueprintType)
-enum class EM3Asset : uint8
-{
+enum class EM3Asset : uint8 {
 	UNKNOWN UMETA(DisplayName = "Unknown"),
 	BIN UMETA(DisplayName = "Bin"),
 	MATERIAL UMETA(DispalyName = "Material"),

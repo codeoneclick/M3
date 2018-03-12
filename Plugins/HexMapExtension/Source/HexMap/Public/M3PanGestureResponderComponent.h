@@ -6,7 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "M3PanGestureResponderComponent.generated.h"
 
-DECLARE_DELEGATE_TwoParams(FM3OnPanDelegateSignature, const FVector, const FVector)
+UENUM(BlueprintType)
+enum class EM3PanState : uint8 {
+	START UMETA(DisplayName = "Start"),
+	MOVE UMETA(DisplayName = "Move"),
+	END UMETA(DisplayName = "End"),
+};
+
+DECLARE_DELEGATE_ThreeParams(FM3OnPanDelegateSignature, EM3PanState, const FVector, const FVector)
 
 UCLASS( Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HEXMAP_API UM3PanGestureResponderComponent : public UActorComponent

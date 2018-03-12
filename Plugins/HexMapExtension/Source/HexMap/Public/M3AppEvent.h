@@ -169,5 +169,7 @@ public:
 namespace M3Events {
 	extern std::string ON_GAME_STARTED;
 	extern std::string ON_ELEMENT_SWAP_ENDED;
+	extern std::string ON_ELEMENT_MATCH_ENDED;
+	extern std::string ON_ELEMENT_DROP_ENDED;
 }
 

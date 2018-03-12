@@ -23,6 +23,11 @@ void M3ElementModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
 
 }
 
+void M3ElementModel::Reset() {
+	Entity->Get()->ElementId->Set(-1);
+	Entity->Get()->State->Set(EM3ElementState::IDLE);
+}
+
 int M3ElementModel::GetElementId() const {
 	return Entity->Get()->ElementId->Get();
 }
@@ -53,4 +58,20 @@ EM3ElementState M3ElementModel::GetState() const {
 
 bool M3ElementModel::IsInState(EM3ElementState State) const {
 	return GetState() == State;
+}
+
+bool M3ElementModel::IsInIdle() const {
+	return IsInState(EM3ElementState::IDLE);
+}
+
+bool M3ElementModel::CanMatch() const {
+	return IsInState(EM3ElementState::IDLE);
+}
+
+bool M3ElementModel::CanDrop() const {
+	return IsInState(EM3ElementState::IDLE);
+}
+
+bool M3ElementModel::IsDropBlocked() const {
+	return false;
 }

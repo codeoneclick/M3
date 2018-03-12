@@ -8,25 +8,20 @@
 #include "M3AssetsBundle.generated.h"
 
 UCLASS()
-class HEXMAP_API AM3AssetsBundle : public AActor
+class HEXMAP_API UM3AssetsBundle : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	AM3AssetsBundle();
-	~AM3AssetsBundle();
 };
 
 UCLASS()
-class HEXMAP_API AM3BoardAssetsBundle : public AM3AssetsBundle
+class HEXMAP_API UM3BoardAssetsBundle : public UM3AssetsBundle
 {
 	GENERATED_BODY()
 
 public:
-
-	AM3BoardAssetsBundle();
-	~AM3BoardAssetsBundle();
 
 	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Cell;

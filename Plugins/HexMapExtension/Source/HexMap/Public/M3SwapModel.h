@@ -56,8 +56,6 @@ private:
 
 	static bool CanSwapElementWithElementId(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, int ElementId);
 	static bool CanSwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB);
-	static void SwapElements(const M3CellModel_SharedPtr& CellA, const M3CellModel_SharedPtr& CellB);
-	static void SwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB);
 
 	bool HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row);
 
@@ -71,6 +69,9 @@ public:
 	PROP_DECL_R(SwapElementA, M3ElementModel_SharedPtr)
 	PROP_DECL_R(SwapElementB, M3ElementModel_SharedPtr)
 	PROP_DECL_R(PotentialSwaps, std::shared_ptr<std::vector<M3PotentialSwapModel_SharedPtr>>)
+
+	static void SwapElements(const M3CellModel_SharedPtr& CellA, const M3CellModel_SharedPtr& CellB);
+	static void SwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB);
 
 	void Serialize() override;
 	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;

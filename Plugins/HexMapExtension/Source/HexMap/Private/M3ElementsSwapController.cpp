@@ -38,17 +38,39 @@ void M3ElementsSwapController::Execute(float Deltatime) {
 
 	while (GestureModel->GetGesturesNum() != 0) {
 		M3Gesture CurrentGesture = GestureModel->PopGesture();
+
+		if (CurrentGesture.Gesture == EM3Gesture::PAN_START) {
+			SwapModel->ResetSwapElements();
+		}
+
 		const FVector2D ScreenSpaceLocation(CurrentGesture.Location);
 		PC->GetHitResultAtScreenPosition(ScreenSpaceLocation, PC->CurrentClickTraceChannel, false, Hit);
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor) {
 			for (const auto& ElementView : ElementViews) {
 				if (ElementView->GetSuperview() == HitActor) {
-					UE_LOG(LogTemp, Error, TEXT("Hit Element"));
-					ElementView->GetViewModel<M3ElementModel>()->Entity->Get()->State->Set(EM3ElementState::SWAPPING);
+					
+					const auto ElementModel = ElementView->GetViewModel<M3ElementModel>();
+					SwapModel->AddSwapElement(ElementModel);
+					const auto SwapElementA = SwapModel->GetSwapElementA();
+					const auto SwapElementB = SwapModel->GetSwapElementB();
+
+					if (SwapElementA && SwapElementB) {
+						SwapElementA->SetState(EM3ElementState::SWAPPING);
+						SwapElementB->SetState(EM3ElementState::SWAPPING);
+						GestureModel->SetIsInterrupted(true);
+						if (SwapModel->IsPossibleToSwap()) {
+							SwapModel->SwapElements(SwapElementA, SwapElementB);
+						}
+						SwapModel->ResetSwapElements();
+					}
 					break;
 				}
 			}
+		}
+
+		if (CurrentGesture.Gesture == EM3Gesture::PAN_END) {
+			SwapModel->ResetSwapElements();
 		}
 	}
 }

@@ -31,13 +31,34 @@ void M3GestureRecognitionController::SetInteractionView(class AActor* _Interacti
 }
 
 void M3GestureRecognitionController::OnTapGesture(const ETouchIndex::Type FingerIndex, const FVector Location) {
-	UE_LOG(LogTemp, Error, TEXT("Tap"));
 	const auto& GestureModel = M3SharedModel::GetInstance()->GetSubmodel<M3GestureModel>();
-	GestureModel->PushGesture(EM3Gesture::TAP, Location);
+	if (!GestureModel->GetIsPanned() && !GestureModel->GetIsInterrupted()) {
+		GestureModel->PushGesture(EM3Gesture::TAP, Location);
+	}
 }
 
-void M3GestureRecognitionController::OnPanGesture(const FVector Location, const FVector Delta) {
-	UE_LOG(LogTemp, Error, TEXT("Pan"));
+void M3GestureRecognitionController::OnPanGesture(EM3PanState State, const FVector Location, const FVector Delta) {
 	const auto& GestureModel = M3SharedModel::GetInstance()->GetSubmodel<M3GestureModel>();
-	GestureModel->PushGesture(EM3Gesture::PAN, Location);
+	switch (State) {
+	case EM3PanState::START:
+		GestureModel->PushGesture(EM3Gesture::PAN_START, Location);
+		GestureModel->SetIsPanned(true);
+		GestureModel->SetIsInterrupted(false);
+		break;
+	case EM3PanState::MOVE:
+		if (!GestureModel->GetIsInterrupted()) {
+			GestureModel->PushGesture(EM3Gesture::PAN, Location);
+		}
+		break;
+	case EM3PanState::END:
+		if (!GestureModel->GetIsInterrupted()) {
+			GestureModel->PushGesture(EM3Gesture::PAN_END, Location);
+		}
+		GestureModel->SetIsInterrupted(false);
+		GestureModel->SetIsPanned(false);
+		break;
+	default:
+		break;
+	}
+	
 }

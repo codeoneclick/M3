@@ -9,9 +9,9 @@
 #include "M3CoordinatingComponent.generated.h"
 
 FORWARD_DECL_STRONG(AM3Board)
-FORWARD_DECL_STRONG(AM3AssetsBundle)
+FORWARD_DECL_STRONG(UM3AssetsBundle)
 FORWARD_DECL_STRONG(UM3Scheme_INTERFACE)
-FORWARD_DECL_STRONG(AM3ViewDelegates_API)
+FORWARD_DECL_STRONG(UM3ViewFactory)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HEXMAP_API UM3CoordinatingComponent : public UActorComponent, public M3CoordinatingController
@@ -36,7 +36,7 @@ public:
 
 	void CreateModels();
 	void CreateControllers();
-	void CreateViews(AM3AssetsBundle* AssetsBundle, AM3ViewDelegates_API* Delegates_API);
+	void CreateViews(UM3ViewFactory* ViewFactory, UM3AssetsBundle* AssetsBundle);
 	void OnModelChanged(UM3Scheme_INTERFACE* Scheme);
 
 	void OnStart();

@@ -37,4 +37,5 @@ public:
 
 	void Subscribe(M3AppEvent_INTERFACE_SharedPtr Event);
 	void Unsubscribe(M3AppEvent_INTERFACE_SharedPtr Event);
+	void UnsubscribeAll();
 };
