@@ -25,6 +25,9 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
 	void OnDropEnded();
 
+	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	void OnSpawnEnded();
+
 public:
 
 	UM3ElementViewAccessor();
@@ -45,7 +48,7 @@ public:
 	int OppositeRow = -1;
 
 	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
-	int ElementSize = -1;
+	FVector2D ElementSize = FVector2D(-1, -1);
 
 	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
 	bool IsPosibleToSwap = false;
@@ -61,6 +64,10 @@ public:
 	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnDropEndedDelegate;
 	FElementViewAnimationCallback OnDropEndedCallback;
+
+	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	FElementViewAnimationDelegate OnSpawnEndedDelegate;
+	FElementViewAnimationCallback OnSpawnEndedCallback;
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Delegates))
@@ -85,6 +92,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
 	void OnDrop(UM3ElementViewAccessor* Accessor);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	void OnSpawn(UM3ElementViewAccessor* Accessor);
 };
 
 class HEXMAP_API M3ElementView : public M3View
@@ -93,9 +103,12 @@ private:
 
 	UM3ElementViewAccessor* Accessor = nullptr;
 
+	void SetElementVisual(int ElementId);
+
 public:
 
-	M3ElementView(UM3ViewFactory* _ViewFactory, AActor* _Superview);
+	M3ElementView(AActor* _Superview);
+	~M3ElementView();
 
 	CTTI_CLASS_GUID(M3ElementView, M3View_INTERFACE::GuidsContainer)
 

@@ -9,6 +9,7 @@
 #include "M3SwapModel.h"
 #include "M3SharedModel.h"
 #include "Components/StaticMeshComponent.h"
+#include "M3BoardSettingsModel.h"
 
 const std::string k_ON_ELEMENT_STATE_CHANGED = "ON_ELEMENT_STATE_CHANGED";
 const std::string k_ON_ELEMENT_ID_CHANGED = "ON_ELEMENT_ID_CHANGED";
@@ -19,6 +20,7 @@ UM3ElementViewAccessor::UM3ElementViewAccessor() {
 	OnSwapEndedDelegate.BindUFunction(this, FName("OnSwapEnded"));
 	OnMatchEndedDelegate.BindUFunction(this, FName("OnMatchEnded"));
 	OnDropEndedDelegate.BindUFunction(this, FName("OnDropEnded"));
+	OnSpawnEndedDelegate.BindUFunction(this, FName("OnSpawnEnded"));
 }
 
 void UM3ElementViewAccessor::OnSwapEnded() {
@@ -33,6 +35,10 @@ void UM3ElementViewAccessor::OnDropEnded() {
 	OnDropEndedCallback.ExecuteIfBound();
 }
 
+void UM3ElementViewAccessor::OnSpawnEnded() {
+	OnSpawnEndedCallback.ExecuteIfBound();
+}
+
 UM3ElementViewDelegate::UM3ElementViewDelegate() {
 }
 
@@ -43,16 +49,20 @@ int UM3ElementViewDelegate::ViewSTTI() const {
 	return static_cast<int>(M3ElementView::ClassGuid());
 }
 
-M3ElementView::M3ElementView(UM3ViewFactory* _ViewFactory, AActor* _Superview) : M3View(_ViewFactory, _Superview) {
+M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {
 
+}
+
+M3ElementView::~M3ElementView() {
+	Accessor->RemoveFromRoot();
 }
 
 void M3ElementView::Load(UM3AssetsBundle* _Bundle) {
 	M3View::Load(_Bundle);
 
-	Accessor = NewObject<UM3ElementViewAccessor>(Superview);
+	Accessor = NewObject<UM3ElementViewAccessor>();
+	Accessor->AddToRoot();
 	Accessor->View = Superview;
-	Accessor->ElementSize = 110;
 
 	Accessor->OnSwapEndedCallback.BindLambda([=]() {
 		const auto ElementModel = GetViewModel<M3ElementModel>();
@@ -68,10 +78,20 @@ void M3ElementView::Load(UM3AssetsBundle* _Bundle) {
 		const auto ElementModel = GetViewModel<M3ElementModel>();
 		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_DROP_ENDED, ElementModel);
 	});
+
+	Accessor->OnSpawnEndedCallback.BindLambda([=]() {
+		const auto ElementModel = GetViewModel<M3ElementModel>();
+		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_SPAWN_ENDED, ElementModel);
+	});
 }
 
 void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	M3View::BindViewModel(_ViewModel);
+
+	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
+
+	Accessor->ElementSize = BoardSettingsModel->GetElementSize();
+
 	const auto& ElementModel = GetViewModel<M3ElementModel>();
 	const auto& ElementEntity = ElementModel->Entity->Get();
 
@@ -114,6 +134,14 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 					Delegate->OnDrop(Accessor);
 				}
 				break;
+			case EM3ElementState::SPAWNING:
+				if (Delegate) {
+					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+
+					Delegate->OnSpawn(Accessor);
+				}
+				break;
 			default:
 				break;
 		}
@@ -121,54 +149,53 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 
 	std::shared_ptr<M3KVSlot<int>> OnElementIdChangedSlot = std::make_shared<M3KVSlot<int>>(ElementEntity->ElementId);
 	Slots[k_ON_ELEMENT_ID_CHANGED] = OnElementIdChangedSlot;
-	OnElementIdChangedSlot->Attach([](int Id) {
-		// TODO:
+	OnElementIdChangedSlot->Attach([=](int Id) {
+		if (Id != -1) {
+			SetElementVisual(Id);
+		}
 	});
 
 	const auto& CellModel = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>();
 	int Col = CellModel->Entity->Get()->Col->Get();
 	int Row = CellModel->Entity->Get()->Row->Get();
 
-	GetSuperview()->SetActorRelativeLocation(FVector(Col * 110, Row * 110, 0));
+	GetSuperview()->SetActorRelativeLocation(FVector(Row * BoardSettingsModel->GetElementSize().Y, Col * BoardSettingsModel->GetElementSize().X, 0));
+	SetElementVisual(ElementModel->GetElementId());
+}
 
+void M3ElementView::SetElementVisual(int ElementId) {
 	UM3BoardAssetsBundle* BoardAssetsBundle = static_cast<UM3BoardAssetsBundle*>(Bundle);
 
 	TArray<UActorComponent*> MeshesComponents = Superview->GetComponentsByClass(UStaticMeshComponent::StaticClass());
 	for (UActorComponent* ActorComponent : MeshesComponents)
 	{
 		UStaticMeshComponent* MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
-		switch (static_cast<EM3ElementId>(ElementEntity->ElementId->Get()))
+		switch (static_cast<EM3ElementId>(ElementId))
 		{
-		case EM3ElementId::ELEMENT_RED: {
+		case EM3ElementId::ELEMENT_RED:
 			MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
 			MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
-		}
-		break;
-		case EM3ElementId::ELEMENT_GREEN: {
+			break;
+		case EM3ElementId::ELEMENT_GREEN:
 			MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
 			MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
-		}
-		break;
-		case EM3ElementId::ELEMENT_BLUE: {
+			break;
+		case EM3ElementId::ELEMENT_BLUE:
 			MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
 			MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
-		}
-		break;
-		case EM3ElementId::ELEMENT_YELLOW: {
+			break;
+		case EM3ElementId::ELEMENT_YELLOW:
 			MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
 			MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
-		}
-		break;
-		case EM3ElementId::ELEMENT_ORANGE: {
+			break;
+		case EM3ElementId::ELEMENT_ORANGE:
 			MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
 			MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
-		}
-		break;
-		case EM3ElementId::ELEMENT_PURPLE: {
+			break;
+		case EM3ElementId::ELEMENT_PURPLE:
 			MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
 			MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
-		}
-		break;
+			break;
 		default:
 			break;
 		}

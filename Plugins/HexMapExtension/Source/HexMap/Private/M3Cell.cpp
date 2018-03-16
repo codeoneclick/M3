@@ -26,8 +26,8 @@ void AM3Cell::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AM3Cell::OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle) {
-	CellView = std::make_shared<M3CellView>(ViewFactory, this);
+void AM3Cell::OnLoad(UM3AssetsBundle* Bundle) {
+	CellView = std::make_shared<M3CellView>(this);
 	CellView->Load(Bundle);
 }
 

@@ -50,7 +50,7 @@ public:
 	void Init();
 
 	void Serialize();
-	void Deserialize(UM3Scheme_INTERFACE* Scheme);
+	void Deserialize(AM3Scheme_INTERFACE* Scheme);
 
 	void DetectHorizontalMatches(const M3BoardModel_SharedPtr& BoardModel);
 	void DetectVerticalMatches(const M3BoardModel_SharedPtr& BoardModel);

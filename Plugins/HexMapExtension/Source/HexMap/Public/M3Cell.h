@@ -12,7 +12,6 @@ FORWARD_DECL_STRONG(M3CellView)
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
-FORWARD_DECL_STRONG(UM3ViewFactory)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Views))
 class HEXMAP_API AM3Cell : public AActor
@@ -34,7 +33,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle);
+	void OnLoad(UM3AssetsBundle* Bundle);
 	void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
 	void OnBindViewDelegate();
 

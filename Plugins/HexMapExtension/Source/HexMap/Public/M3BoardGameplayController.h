@@ -21,6 +21,7 @@ protected:
 	void OnElementSwapEnded(const M3ElementModel_SharedPtr& ElementModel);
 	void OnElementMatchEnded(const M3ElementModel_SharedPtr& ElementModel);
 	void OnElementDropEnded(const M3ElementModel_SharedPtr& ElementModel);
+	void OnElementSpawnEnded(const M3ElementModel_SharedPtr& ElementModel);
 
 public:
 

@@ -24,8 +24,8 @@ void AM3Element::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-void AM3Element::OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle) {
-	ElementView = std::make_shared<M3ElementView>(ViewFactory, this);
+void AM3Element::OnLoad(UM3AssetsBundle* Bundle) {
+	ElementView = std::make_shared<M3ElementView>(this);
 	ElementView->Load(Bundle);
 }
 

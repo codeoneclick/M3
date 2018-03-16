@@ -34,5 +34,5 @@ public:
 	void Init();
 
 	void Serialize();
-	void Deserialize(UM3Scheme_INTERFACE* Scheme);
+	void Deserialize(AM3Scheme_INTERFACE* Scheme);
 };

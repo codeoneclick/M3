@@ -9,9 +9,8 @@
 
 std::set<uintptr_t> M3View_INTERFACE::GuidsContainer;
 
-M3View::M3View(UM3ViewFactory* _ViewFactory, AActor* _Superview) {
+M3View::M3View(AActor* _Superview) {
 	Superview = _Superview;
-	ViewFactory = _ViewFactory;
 }
 
 M3View::~M3View() {

@@ -2,6 +2,7 @@
 
 #include "M3CoordinatingComponent.h"
 #include "Engine/World.h"
+#include "M3AssetsBundle.h"
 #include "M3Board.h"
 #include "M3ViewFactory.h"
 #include "M3BoardModel.h"
@@ -12,6 +13,7 @@
 #include "M3SwapModel.h"
 #include "M3BoardStateModel.h"
 #include "M3BoardActionsAccumulationModel.h"
+#include "M3BoardSettingsModel.h"
 #include "M3SharedModel.h"
 #include "M3GestureRecognitionController.h"
 #include "M3ElementsSwapController.h"
@@ -19,6 +21,7 @@
 #include "M3BoardActionsAccumController.h"
 #include "M3ElementsMatchController.h"
 #include "M3ElementsDropController.h"
+#include "M3ElementsSpawnController.h"
 
 UM3CoordinatingComponent::UM3CoordinatingComponent() {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -33,6 +36,7 @@ UM3CoordinatingComponent::~UM3CoordinatingComponent() {
 	M3BoardActionsAccumulationModel::Unregister();
 	M3ChainModel::Unregister();
 	M3BoardStateModel::Unregister();
+	M3BoardSettingsModel::Unregister();
 
 	M3SharedModel::GetInstance()->RemoveAllSubmodels();
 }
@@ -47,6 +51,8 @@ void UM3CoordinatingComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 }
 
 void UM3CoordinatingComponent::CreateModels() {
+
+	M3BoardSettingsModel::Register();
 	M3BoardModel::Register();
 	M3CellModel::Register();
 	M3ElementModel::Register();
@@ -56,6 +62,7 @@ void UM3CoordinatingComponent::CreateModels() {
 	M3ChainModel::Register();
 	M3BoardStateModel::Register();
 
+	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardSettingsModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3GestureModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3SwapModel>());
@@ -71,16 +78,17 @@ void UM3CoordinatingComponent::CreateControllers() {
 	AddController(std::make_shared<M3BoardActionsAccumController>());
 	AddController(std::make_shared<M3ElementsMatchController>());
 	AddController(std::make_shared<M3ElementsDropController>());
+	AddController(std::make_shared<M3ElementsSpawnController>());
 }
 
-void UM3CoordinatingComponent::CreateViews(UM3ViewFactory* ViewFactory, UM3AssetsBundle* AssetsBundle) {
-	Board = ViewFactory->CreateBoard(GetWorld());
-	Board->OnLoad(ViewFactory, AssetsBundle);
+void UM3CoordinatingComponent::CreateViews(UM3AssetsBundle* _Bundle) {
+	Board = static_cast<UM3BoardAssetsBundle*>(_Bundle)->ConstructBoard(GetWorld());
+	Board->OnLoad(_Bundle);
 	Board->OnBindViewModel(M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>());
 	Board->OnBindViewDelegate();
 }
 
-void UM3CoordinatingComponent::OnModelChanged(UM3Scheme_INTERFACE* Scheme) {
+void UM3CoordinatingComponent::OnModelChanged(AM3Scheme_INTERFACE* Scheme) {
 	M3SharedModel::GetInstance()->Deserialize(Scheme);
 }
 

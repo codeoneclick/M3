@@ -12,7 +12,7 @@ void M3GestureModel::Serialize() {
 
 }
 
-void M3GestureModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3GestureModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 

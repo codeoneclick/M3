@@ -15,7 +15,7 @@ M3PotentialSwapModel::~M3PotentialSwapModel() {
 void M3PotentialSwapModel::Serialize() {
 }
 
-void M3PotentialSwapModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3PotentialSwapModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 }
 
 void M3PotentialSwapModel::Init() {
@@ -30,7 +30,7 @@ M3SwapModel::~M3SwapModel() {
 void M3SwapModel::Serialize() {
 }
 
-void M3SwapModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3SwapModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 }
 
 void M3SwapModel::Init() {

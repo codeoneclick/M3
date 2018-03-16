@@ -10,10 +10,9 @@
 
 FORWARD_DECL_STRONG(AM3Board)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
-FORWARD_DECL_STRONG(UM3Scheme_INTERFACE)
-FORWARD_DECL_STRONG(UM3ViewFactory)
+FORWARD_DECL_STRONG(AM3Scheme_INTERFACE)
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HEXMAP_API UM3CoordinatingComponent : public UActorComponent, public M3CoordinatingController
 {
 	GENERATED_BODY()
@@ -36,8 +35,8 @@ public:
 
 	void CreateModels();
 	void CreateControllers();
-	void CreateViews(UM3ViewFactory* ViewFactory, UM3AssetsBundle* AssetsBundle);
-	void OnModelChanged(UM3Scheme_INTERFACE* Scheme);
+	void CreateViews(UM3AssetsBundle* AssetsBundle);
+	void OnModelChanged(AM3Scheme_INTERFACE* Scheme);
 
 	void OnStart();
 };

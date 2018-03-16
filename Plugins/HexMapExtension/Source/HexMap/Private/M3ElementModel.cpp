@@ -19,7 +19,7 @@ void M3ElementModel::Serialize() {
 
 }
 
-void M3ElementModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3ElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 
@@ -33,8 +33,11 @@ int M3ElementModel::GetElementId() const {
 }
 
 void M3ElementModel::SetState(EM3ElementState State) {
-	if (Entity->Get()->State->Get() != EM3ElementState::IDLE) {
+	if (State != EM3ElementState::IDLE) {
 		assert(Entity->Get()->State->Get() == EM3ElementState::IDLE);
+		if (Entity->Get()->State->Get() != EM3ElementState::IDLE) {
+			UE_LOG(LogTemp, Error, TEXT("Wrong element state!"));
+		}
 	}
 	switch (State) {
 	case EM3ElementState::SPAWNING:

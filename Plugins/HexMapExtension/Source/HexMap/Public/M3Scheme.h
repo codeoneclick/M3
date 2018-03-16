@@ -13,6 +13,7 @@ enum class EM3CellAppointment : uint8 {
 	FUNCTIONAL UMETA(DisplayName = "Functional"),
 	ELEMENT UMETA(DispalyName = "Element"),
 	BLOCKER UMETA(DispalyName = "Blocker"),
+	SUPERELEMENT UMETA(DispalyName = "Superelement"),
 };
 
 UENUM(BlueprintType)
@@ -27,67 +28,104 @@ enum class EM3ElementId : uint8 {
 	ELEMENT_PURPLE UMETA(DisplayName = "Element Purple"),
 };
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup = (Scheme))
-class HEXMAP_API UM3Scheme_INTERFACE : public UObject {
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Scheme))
+class HEXMAP_API AM3Scheme_INTERFACE : public AActor {
 	GENERATED_BODY()
 
 public:
 
 };
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup = (Scheme))
-class HEXMAP_API UM3CellAppointmentScheme : public UM3Scheme_INTERFACE {
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Scheme))
+class HEXMAP_API AM3CellAppointmentScheme : public AM3Scheme_INTERFACE {
 
 	GENERATED_BODY()
 
 public:
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	EM3CellAppointment Appointment;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	EM3ElementId Id;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	int GroupId;
 };
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup = (Scheme))
-class HEXMAP_API UM3CellScheme : public UM3Scheme_INTERFACE {
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Scheme))
+class HEXMAP_API AM3CellScheme : public AM3Scheme_INTERFACE {
 
 	GENERATED_BODY()
 
+protected:
+
+	virtual void BeginPlay() override;
+
 public:
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	AM3CellScheme();
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	int Col;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	int Row;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
-	TSet<UM3CellAppointmentScheme*> Appointments;
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	TArray<AM3CellAppointmentScheme*> Appointments;
 
-	void AddAppointment(UM3CellAppointmentScheme* Appointment);
-	UM3CellAppointmentScheme* GetAppointment(EM3CellAppointment AppointmentId) const;
+	void AddAppointment(AM3CellAppointmentScheme* Appointment);
+	AM3CellAppointmentScheme* GetAppointment(EM3CellAppointment AppointmentId) const;
+
+#if WITH_EDITOR
+
+	static AM3CellAppointmentScheme* EdModeSelectedAppointmentScheme;
+
+	void OnEditorMousePressed();
+	void OnEditorMouseReleased();
+	void OnEditorTick(float DeltaTime);
+
+#endif
 };
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup = (Scheme))
-class HEXMAP_API UM3BoardScheme : public UM3Scheme_INTERFACE {
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Scheme))
+class HEXMAP_API AM3BoardScheme : public AM3Scheme_INTERFACE {
 
 	GENERATED_BODY()
 
 public:
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Cols;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Rows;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
-	TArray<UM3CellScheme*> Cells;
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	FVector2D ElementSize;
 
-	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* ElementRedScheme;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* ElementGreenScheme;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* ElementBlueScheme;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* ElementYellowScheme;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* ElementOrangeScheme;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* ElementPurpleScheme;
+
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	TArray<AM3CellScheme*> Cells;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
 	TSet<EM3ElementId> ElementIds;
 };

@@ -18,7 +18,7 @@ void M3ChainModel::Serialize() {
 
 }
 
-void M3ChainModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3ChainModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 

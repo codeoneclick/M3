@@ -43,7 +43,7 @@ public:
 	CTTI_CLASS_GUID(M3GestureModel, M3Model_INTERFACE::GuidsContainer)
 
 	void Serialize() override;
-	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
 	void Init();
 

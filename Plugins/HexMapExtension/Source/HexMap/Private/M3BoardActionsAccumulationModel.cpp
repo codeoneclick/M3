@@ -16,7 +16,7 @@ void M3BoardActionsAccumulationModel::Serialize() {
 
 }
 
-void M3BoardActionsAccumulationModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3BoardActionsAccumulationModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 

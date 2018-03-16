@@ -84,7 +84,7 @@ class FHMMeshSceneProxy : public FPrimitiveSceneProxy
 {
 public:
 
-	FHMMeshSceneProxy(UHMMeshComponent* Component) :
+	/*FHMMeshSceneProxy(UHMMeshComponent* Component) :
 		FPrimitiveSceneProxy(Component),
 		MaterialRelevance(Component->GetMaterialRelevance(GetScene().GetFeatureLevel()))
 	{
@@ -210,7 +210,7 @@ private:
 	FHMIBO IndexBuffer;
 	FHMVertexFactory VertexFactory;
 
-	FMaterialRelevance MaterialRelevance;
+	FMaterialRelevance MaterialRelevance;*/
 };
 
 UHMMeshComponent::UHMMeshComponent(const FObjectInitializer& ObjectInitializer)
@@ -249,10 +249,10 @@ void UHMMeshComponent::ClearTriangles()
 FPrimitiveSceneProxy* UHMMeshComponent::CreateSceneProxy()
 {
 	FPrimitiveSceneProxy* Proxy = nullptr;
-	if (Triangles.Num() > 0)
+	/*if (Triangles.Num() > 0)
 	{
 		Proxy = new FHMMeshSceneProxy(this);
-	}
+	}*/
 	return Proxy;
 }
 

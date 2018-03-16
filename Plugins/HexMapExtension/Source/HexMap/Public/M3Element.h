@@ -12,7 +12,6 @@ FORWARD_DECL_STRONG(M3ElementView)
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
-FORWARD_DECL_STRONG(UM3ViewFactory)
 FORWARD_DECL_STRONG(UM3ViewDelegate_INTERFACE)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Views))
@@ -41,7 +40,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle);
+	void OnLoad(UM3AssetsBundle* Bundle);
 	void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
 	void OnBindViewDelegate();
 

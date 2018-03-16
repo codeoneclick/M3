@@ -30,8 +30,8 @@ void AM3Board::BeginPlay() {
 	}
 }
 
-void AM3Board::OnLoad(UM3ViewFactory* ViewFactory, UM3AssetsBundle* Bundle) {
-	BoardView = std::make_shared<M3BoardView>(ViewFactory, this);
+void AM3Board::OnLoad(UM3AssetsBundle* Bundle) {
+	BoardView = std::make_shared<M3BoardView>(this);
 	BoardView->Load(Bundle);
 }
 

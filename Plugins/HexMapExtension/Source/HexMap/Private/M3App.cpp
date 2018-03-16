@@ -3,7 +3,6 @@
 #include "M3App.h"
 #include "M3Board.h"
 #include "M3CoordinatingComponent.h"
-#include "M3BoardGeneratorComponent.h"
 #include "M3AssetsBundle.h"
 #include "M3ViewFactory.h"
 #include "M3Scheme.h"
@@ -14,8 +13,10 @@
 AM3App::AM3App() {
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("M3AppRootComponent"));
+	RootComponent->SetMobility(EComponentMobility::Static);
+
 	CoordinatingComponent = CreateDefaultSubobject<UM3CoordinatingComponent>(TEXT("CoordinatingComponent"));
-	BoardGeneratorComponent = CreateDefaultSubobject<UM3BoardGeneratorComponent>(TEXT("BoardGeneratorComponent"));
 
 	TapGestureRecognizerComponent = CreateDefaultSubobject<UM3TapGestureRecognizerComponent>(TEXT("TapGestureRecognizerComponent"));
 	PanGestureRecognizerComponent = CreateDefaultSubobject<UM3PanGestureRecognizerComponent>(TEXT("PanGestureRecognizerComponent"));
@@ -26,8 +27,6 @@ void AM3App::BeginPlay() {
 
 	CoordinatingComponent = static_cast<UM3CoordinatingComponent*>(GetComponentByClass(UM3CoordinatingComponent::StaticClass()));
 	assert(CoordinatingComponent != nullptr);
-	BoardGeneratorComponent = static_cast<UM3BoardGeneratorComponent*>(GetComponentByClass(UM3BoardGeneratorComponent::StaticClass()));
-	assert(BoardGeneratorComponent != nullptr);
 
 	TapGestureRecognizerComponent = FindComponentByClass<UM3TapGestureRecognizerComponent>();
 	if (!TapGestureRecognizerComponent) {
@@ -45,13 +44,11 @@ void AM3App::BeginPlay() {
 	CustomInputComponent->BindTouch(IE_Pressed, this, &AM3App::OnTouchPressed);
 	CustomInputComponent->BindTouch(IE_Released, this, &AM3App::OnTouchReleased);
 
-	const auto BoardScheme = BoardGeneratorComponent->Generate(this);
-	const auto AssetsBundle = NewObject<UM3AssetsBundle>(this, AssetsBundle_BP);
-	const auto ViewFactory = NewObject<UM3ViewFactory>(this, ViewFactory_BP);
+	AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(this, AssetsBundle_BP));
 
 	CoordinatingComponent->CreateModels();
 	CoordinatingComponent->CreateControllers();
-	CoordinatingComponent->CreateViews(ViewFactory, AssetsBundle);
+	CoordinatingComponent->CreateViews(AssetsBundle);
 	CoordinatingComponent->OnModelChanged(BoardScheme);
 
 	CoordinatingComponent->OnStart();

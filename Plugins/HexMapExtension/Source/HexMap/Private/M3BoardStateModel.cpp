@@ -17,7 +17,7 @@ void M3BoardStateModel::Serialize() {
 
 }
 
-void M3BoardStateModel::Deserialize(UM3Scheme_INTERFACE* Scheme) {
+void M3BoardStateModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 

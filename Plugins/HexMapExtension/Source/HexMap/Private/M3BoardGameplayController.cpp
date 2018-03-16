@@ -26,6 +26,10 @@ M3BoardGameplayController::M3BoardGameplayController() {
 	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementDropEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementDropEnded, this, std::placeholders::_1));
 	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr>> OnElementDropEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr>>(M3Events::ON_ELEMENT_DROP_ENDED, OnElementDropEndedCallback);
 	Subscribe(OnElementDropEndedEvent);
+
+	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementSpawnEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementSpawnEnded, this, std::placeholders::_1));
+	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr>> OnElementSpawnEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr>>(M3Events::ON_ELEMENT_SPAWN_ENDED, OnElementSpawnEndedCallback);
+	Subscribe(OnElementSpawnEndedEvent);
 }
 
 M3BoardGameplayController::~M3BoardGameplayController() {
@@ -63,6 +67,7 @@ void M3BoardGameplayController::Execute(float Deltatime) {
 		switch (Action.Action) {
 			case EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED:
 			case EM3AccumulationAction::ON_ELEMENT_DROP_ENDED:
+			case EM3AccumulationAction::ON_ELEMENT_SPAWN_ENDED:
 				M3BoardGameplayController::GeneratePotentialSwaps();
 				M3BoardGameplayController::DetectMatches();
 				break;
@@ -99,4 +104,10 @@ void M3BoardGameplayController::OnElementDropEnded(const M3ElementModel_SharedPt
 	ElementModel->SetState(EM3ElementState::IDLE);
 	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
 	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_DROP_ENDED);
+}
+
+void M3BoardGameplayController::OnElementSpawnEnded(const M3ElementModel_SharedPtr& ElementModel) {
+	ElementModel->SetState(EM3ElementState::IDLE);
+	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
+	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_SPAWN_ENDED);
 }

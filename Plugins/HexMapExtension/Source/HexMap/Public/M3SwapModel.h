@@ -27,7 +27,7 @@ public:
 	CTTI_CLASS_GUID(M3PotentialSwapModel, M3Model_INTERFACE::GuidsContainer)
 
 	void Serialize() override;
-	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
 	void Init() override;
 
@@ -74,7 +74,7 @@ public:
 	static void SwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB);
 
 	void Serialize() override;
-	void Deserialize(UM3Scheme_INTERFACE* Scheme) override;
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
 	void Init() override;
 

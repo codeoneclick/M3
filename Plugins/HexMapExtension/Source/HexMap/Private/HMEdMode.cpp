@@ -11,12 +11,15 @@
 #include "Toolkits/ToolkitManager.h"
 #include "HMTile.h"
 #include "HMGrid.h"
+#include "M3Scheme.h"
 #include "HMEdModeProperties.h"
 
 FEditorModeID FHMEdMode::EM_HexMap(TEXT("EM_HexMap"));
 
-FHMEdMode::FHMEdMode()
-{
+FHMEdMode::FHMEdMode() {
+	EdModeProps_CreateBoard = NewObject<UM3EdModeProps_CreateBoard>(GetTransientPackage(), TEXT("EdModelProps_CreateBoard"), RF_Transactional | RF_MarkAsRootSet);
+	EdModeProps_BoardScheme = NewObject<UM3EdModeProps_BoardScheme>(GetTransientPackage(), TEXT("EdModelProps_BoardScheme"), RF_Transactional | RF_MarkAsRootSet);
+
 	EdModePropertiesSetTileSize = NewObject<UHMEdModePropertiesSetTileSize>(GetTransientPackage(), TEXT("EdModePropertiesSetTileSize"), RF_Transactional | RF_MarkAsRootSet);
 	EdModePropertiesAddCircle = NewObject<UHMEdModePropertiesAddCircle>(GetTransientPackage(), TEXT("EdModePropertiesAddCircle"), RF_Transactional | RF_MarkAsRootSet);
 	EdModePropertiesAddRectangle = NewObject<UHMEdModePropertiesAddRectangle>(GetTransientPackage(), TEXT("EdModePropertiesAddRectangle"), RF_Transactional | RF_MarkAsRootSet);
@@ -45,37 +48,26 @@ void FHMEdMode::Exit()
 	FEdMode::Exit();
 }
 
-void FHMEdMode::Tick(FEditorViewportClient* ViewportClient, float DeltaTime)
-{
+void FHMEdMode::Tick(FEditorViewportClient* ViewportClient, float DeltaTime) {
 	FEdMode::Tick(ViewportClient, DeltaTime);
-	for (TActorIterator<AHMTile> It(ViewportClient->GetWorld()); It; ++It)
-	{
-		AHMTile* Tile = *It;
-		Tile->OnEditorTick(DeltaTime);
-	}
-	for (TActorIterator<AHMGrid> It(ViewportClient->GetWorld()); It; ++It)
-	{
-		AHMGrid* Grid = *It;
-		Grid->OnEditorTick(DeltaTime);
+	for (TActorIterator<AM3CellScheme> It(ViewportClient->GetWorld()); It; ++It) {
+		AM3CellScheme* Actor = *It;
+		Actor->OnEditorTick(DeltaTime);
 	}
 }
 
-bool FHMEdMode::StartTracking(FEditorViewportClient* ViewportClient, FViewport* InViewport)
-{
-	for (TActorIterator<AHMTile> It(ViewportClient->GetWorld()); It; ++It)
-	{
-		AHMTile* Tile = *It;
-		Tile->OnEditorMousePressed();
+bool FHMEdMode::StartTracking(FEditorViewportClient* ViewportClient, FViewport* InViewport) {
+	for (TActorIterator<AM3CellScheme> It(ViewportClient->GetWorld()); It; ++It) {
+		AM3CellScheme* Actor = *It;
+		Actor->OnEditorMousePressed();
 	}
 	return FEdMode::StartTracking(ViewportClient, InViewport);
 }
 
-bool FHMEdMode::EndTracking(FEditorViewportClient* ViewportClient, FViewport* InViewport)
-{
-	for (TActorIterator<AHMTile> It(ViewportClient->GetWorld()); It; ++It)
-	{
-		AHMTile* Tile = *It;
-		Tile->OnEditorMouseReleased();
+bool FHMEdMode::EndTracking(FEditorViewportClient* ViewportClient, FViewport* InViewport) {
+	for (TActorIterator<AM3CellScheme> It(ViewportClient->GetWorld()); It; ++It) {
+		AM3CellScheme* Actor = *It;
+		Actor->OnEditorMouseReleased();
 	}
 	return FEdMode::EndTracking(ViewportClient, InViewport);
 }

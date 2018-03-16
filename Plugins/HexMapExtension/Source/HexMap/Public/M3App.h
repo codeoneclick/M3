@@ -8,12 +8,10 @@
 #include "M3App.generated.h"
 
 FORWARD_DECL_STRONG(UM3CoordinatingComponent)
-FORWARD_DECL_STRONG(UM3BoardGeneratorComponent)
 FORWARD_DECL_STRONG(UM3BoardAssetsBundle)
-FORWARD_DECL_STRONG(UM3BoardScheme)
-FORWARD_DECL_STRONG(UM3CellScheme)
-FORWARD_DECL_STRONG(UM3CellAppointmentScheme)
-FORWARD_DECL_STRONG(UM3ViewFactory)
+FORWARD_DECL_STRONG(AM3BoardScheme)
+FORWARD_DECL_STRONG(AM3CellScheme)
+FORWARD_DECL_STRONG(AM3CellAppointmentScheme)
 
 UCLASS()
 class HEXMAP_API AM3App : public AActor
@@ -38,45 +36,45 @@ public:
 	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
 	UM3CoordinatingComponent* CoordinatingComponent;
 
-	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
-	UM3BoardGeneratorComponent* BoardGeneratorComponent;
-
 	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
 	class UM3TapGestureRecognizerComponent* TapGestureRecognizerComponent;
 
 	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
 	class UM3PanGestureRecognizerComponent* PanGestureRecognizerComponent;
 
-	UPROPERTY(EditAnywhere, Category = "M3View")
-	TSubclassOf<UM3ViewFactory> ViewFactory_BP;
-
 	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3BoardAssetsBundle> AssetsBundle_BP;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3BoardScheme> BoardScheme_BP;
+	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UM3BoardAssetsBundle* AssetsBundle;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellScheme> CellScheme_BP; 
+	TSubclassOf<AM3BoardScheme> BoardScheme_BP;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementSpawnerScheme_BP;
+	AM3BoardScheme* BoardScheme;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementRedScheme_BP;
+	TSubclassOf<AM3CellScheme> CellScheme_BP; 
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementGreenScheme_BP;
+	TSubclassOf<AM3CellAppointmentScheme> FunctionalSpawnScheme_BP;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementBlueScheme_BP;
+	TSubclassOf<AM3CellAppointmentScheme> ElementRedScheme_BP;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementYellowScheme_BP;
+	TSubclassOf<AM3CellAppointmentScheme> ElementGreenScheme_BP;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementOrangeScheme_BP;
+	TSubclassOf<AM3CellAppointmentScheme> ElementBlueScheme_BP;
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3CellAppointmentScheme> ElementPurpleScheme_BP;
+	TSubclassOf<AM3CellAppointmentScheme> ElementYellowScheme_BP;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> ElementOrangeScheme_BP;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> ElementPurpleScheme_BP;
 };

@@ -11,7 +11,6 @@ FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
 FORWARD_DECL_STRONG(UM3ViewDelegate_INTERFACE)
-FORWARD_DECL_STRONG(UM3ViewFactory)
 FORWARD_DECL_WEAK(M3View_INTERFACE)
 
 class HEXMAP_API M3View_INTERFACE : public std::enable_shared_from_this<M3View_INTERFACE> {
@@ -61,15 +60,13 @@ protected:
 
 	AActor* Superview = nullptr;
 
-	UM3ViewFactory* ViewFactory;
-
 	std::unordered_map<std::string, M3KVSlot_INTERFACE_SharedPtr> Slots;
 
 public:
 
 	CTTI_CLASS_GUID(M3View, M3View_INTERFACE::GuidsContainer)
 	
-	M3View(UM3ViewFactory* ViewFactory, AActor* Superview);
+	M3View(AActor* Superview);
 	virtual ~M3View();
 	
 	virtual void Load(UM3AssetsBundle* Bundle);

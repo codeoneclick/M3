@@ -17,9 +17,10 @@ void UM3BoardGeneratorComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-UM3BoardScheme* UM3BoardGeneratorComponent::Generate(AM3App* App) {
+AM3BoardScheme* UM3BoardGeneratorComponent::Generate(AM3App* App) {
 
-	const auto BoardScheme = NewObject<UM3BoardScheme>(App, App->BoardScheme_BP);
+	const auto BoardScheme = GetWorld()->SpawnActor<AM3BoardScheme>(App->BoardScheme_BP);
+	BoardScheme->AttachToActor(App, FAttachmentTransformRules::KeepWorldTransform);
 
 	int Cols = BoardScheme->Cols;
 	int Rows = BoardScheme->Rows;
@@ -28,19 +29,27 @@ UM3BoardScheme* UM3BoardGeneratorComponent::Generate(AM3App* App) {
 	for (int i = 0; i < Cols; ++i) {
 		for (int j = 0; j < Rows; ++j) {
 
-			UM3CellScheme* CellScheme = NewObject<UM3CellScheme>(App, App->CellScheme_BP);
+			AM3CellScheme* CellScheme = GetWorld()->SpawnActor<AM3CellScheme>(App->CellScheme_BP);
+			CellScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 			CellScheme->Col = i;
 			CellScheme->Row = j;
 			BoardScheme->Cells[i + j * Cols] = CellScheme;
 		}
 	}
 
-	const auto ElementRedScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementRedScheme_BP);
-	const auto ElementGreenScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementGreenScheme_BP);
-	const auto ElementBlueScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementBlueScheme_BP);
-	const auto ElementYellowScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementYellowScheme_BP);
-	const auto ElementOrangeScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementOrangeScheme_BP);
-	const auto ElementPurpleScheme = NewObject<UM3CellAppointmentScheme>(App, App->ElementPurpleScheme_BP);
+	const auto ElementRedScheme = GetWorld()->SpawnActor<AM3CellAppointmentScheme>(App->ElementRedScheme_BP);
+	const auto ElementGreenScheme = GetWorld()->SpawnActor<AM3CellAppointmentScheme>(App->ElementGreenScheme_BP);
+	const auto ElementBlueScheme = GetWorld()->SpawnActor<AM3CellAppointmentScheme>(App->ElementBlueScheme_BP);
+	const auto ElementYellowScheme = GetWorld()->SpawnActor<AM3CellAppointmentScheme>(App->ElementYellowScheme_BP);
+	const auto ElementOrangeScheme = GetWorld()->SpawnActor<AM3CellAppointmentScheme>(App->ElementOrangeScheme_BP);
+	const auto ElementPurpleScheme = GetWorld()->SpawnActor<AM3CellAppointmentScheme>(App->ElementPurpleScheme_BP);
+
+	ElementRedScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+	ElementGreenScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+	ElementBlueScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+	ElementYellowScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+	ElementOrangeScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+	ElementPurpleScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 
 	const auto& ElementIds = BoardScheme->ElementIds.Array();
 

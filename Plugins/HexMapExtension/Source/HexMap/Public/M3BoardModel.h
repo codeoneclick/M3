@@ -37,10 +37,10 @@ public:
 	PROP_DECL_R(Rows, int)
 	PROP_DECL_R(Cells, std::shared_ptr<std::vector<M3CellModel_SharedPtr>>)
 
-	void Init();
+	void Init() override;
 
-	void Serialize();
-	void Deserialize(UM3Scheme_INTERFACE* Scheme);
+	void Serialize() override;
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
 	M3CellModel_SharedPtr GetCell(int Col, int Row) const;
 	M3ElementModel_SharedPtr GetElement(int Col, int Row) const;
