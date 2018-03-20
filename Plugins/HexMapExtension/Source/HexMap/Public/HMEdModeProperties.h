@@ -78,8 +78,6 @@ class HEXMAP_API UHMEdModePropertiesTileBatchApplier : public UObject
 
 public:
 
-	UPROPERTY(Category = "Applier Blueprint", EditAnywhere, meta = (ShowForTools = "Tool_Apply_BP"), BlueprintReadWrite)
-	TSubclassOf<class AHMTileBatchApplier> Applier_BP;
 };
 
 UCLASS()
@@ -94,13 +92,13 @@ public:
 };
 
 UCLASS()
-class HEXMAP_API UM3EdModeProps_CreateBoard : public UObject
+class HEXMAP_API UM3EdModeProps_BoardCreate : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	UM3EdModeProps_CreateBoard();
+	UM3EdModeProps_BoardCreate();
 
 	UPROPERTY(Category = "Size", EditAnywhere, meta = (ShowForTools = "Tool_M3", ClampMin = 3, ClampMax = 12), BlueprintReadWrite)
 	int Cols = 10;
@@ -140,11 +138,13 @@ public:
 };
 
 UCLASS()
-class HEXMAP_API UM3EdModeProps_BoardScheme : public UObject
-{
+class HEXMAP_API UM3EdModeProps_BoardScheme : public UObject {
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	int Turns;
 
 	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
 	bool RedElementExist;
@@ -171,35 +171,93 @@ public:
 	bool CollectRedElements;
 
 	UPROPERTY(Category = "Goals", meta = (ShowForTools = "Tool_M3", ClampMin = 1, ClampMax = 1000), EditAnywhere, BlueprintReadWrite)
-	int RedElementsCount;
+	int RedElementsQuantity;
 
 	UPROPERTY(Category = "Goals", EditAnywhere, BlueprintReadWrite)
 	bool CollectGreenElements;
 
 	UPROPERTY(Category = "Goals", meta = (ShowForTools = "Tool_M3", ClampMin = 1, ClampMax = 1000), EditAnywhere, BlueprintReadWrite)
-	int GreenElementsCount;
+	int GreenElementsQuantity;
 
 	UPROPERTY(Category = "Goals", EditAnywhere, BlueprintReadWrite)
 	bool CollectBlueElements;
 
 	UPROPERTY(Category = "Goals", meta = (ShowForTools = "Tool_M3", ClampMin = 1, ClampMax = 1000), EditAnywhere, BlueprintReadWrite)
-	int BlueElementsCount;
+	int BlueElementsQuantity;
 
 	UPROPERTY(Category = "Goals", EditAnywhere, BlueprintReadWrite)
 	bool CollectYellowElements;
 
 	UPROPERTY(Category = "Goals", meta = (ShowForTools = "Tool_M3", ClampMin = 1, ClampMax = 1000), EditAnywhere, BlueprintReadWrite)
-	int YellowElementsCount;
+	int YellowElementsQuantity;
 
 	UPROPERTY(Category = "Goals", EditAnywhere, BlueprintReadWrite)
 	bool CollectOrangeElements;
 
 	UPROPERTY(Category = "Goals", meta = (ShowForTools = "Tool_M3", ClampMin = 1, ClampMax = 1000), EditAnywhere, BlueprintReadWrite)
-	int OrangeElementsCount;
+	int OrangeElementsQuantity;
 
 	UPROPERTY(Category = "Goals", EditAnywhere, BlueprintReadWrite)
 	bool CollectPurpleElements;
 
 	UPROPERTY(Category = "Goals", meta = (ShowForTools = "Tool_M3", ClampMin = 1, ClampMax = 1000), EditAnywhere, BlueprintReadWrite)
-	int PurpleElementsCount;
+	int PurpleElementsQuantity;
+};
+
+UCLASS()
+class HEXMAP_API UM3EdModeProps_BoardReskin : public UObject
+{
+	GENERATED_BODY()
+
+protected:
+
+#if WITH_EDITOR
+
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& Event) override;
+
+#endif
+
+public:
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<UM3BoardAssetsBundle> AssetsBundle_BP;
+
+	UPROPERTY(Category = "Bundle", VisibleAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadOnly)
+	UM3BoardAssetsBundle* AssetsBundle;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* RedElementMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* RedElementMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* GreenElementMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* GreenElementMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlueElementMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlueElementMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* YellowElementMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* YellowElementMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* OrangeElementMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* OrangeElementMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* PurpleElementMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* PurpleElementMesh;
 };

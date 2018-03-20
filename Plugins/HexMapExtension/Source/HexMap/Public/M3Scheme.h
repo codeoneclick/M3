@@ -62,17 +62,24 @@ protected:
 
 	virtual void BeginPlay() override;
 
+#if WITH_EDITOR
+
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& Event) override;
+	virtual void EditorApplyTranslation(const FVector & DeltaTranslation, bool bAltDown, bool bShiftDown, bool bCtrlDown) override;
+
+#endif
+
 public:
 
 	AM3CellScheme();
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Col;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Row;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	TArray<AM3CellAppointmentScheme*> Appointments;
 
 	void AddAppointment(AM3CellAppointmentScheme* Appointment);
@@ -87,6 +94,24 @@ public:
 	void OnEditorTick(float DeltaTime);
 
 #endif
+};
+
+
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Scheme))
+class HEXMAP_API AM3GoalScheme : public AM3Scheme_INTERFACE {
+
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	EM3ElementId Id;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	int Quantity;
+
+	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	bool Enabled;
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Scheme))
@@ -126,6 +151,14 @@ public:
 	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	TArray<AM3CellScheme*> Cells;
 
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	int Turns;
+
+	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	TArray<AM3GoalScheme*> Goals;
+
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
 	TSet<EM3ElementId> ElementIds;
+
+	AM3GoalScheme* GetGoalScheme(UWorld* World, EM3ElementId Id);
 };

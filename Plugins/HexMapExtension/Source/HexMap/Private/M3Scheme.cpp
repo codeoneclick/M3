@@ -21,11 +21,19 @@ AM3CellAppointmentScheme* AM3CellScheme::EdModeSelectedAppointmentScheme = nullp
 
 AM3CellScheme::AM3CellScheme() {
 	PrimaryActorTick.bCanEverTick = true;
+	
 }
 
 void AM3CellScheme::BeginPlay() {
 	Super::BeginPlay();
 	SetActorHiddenInGame(true);
+
+	UStaticMeshComponent* MeshComponent = nullptr;
+	TArray<UActorComponent*> MeshesComponents = GetComponentsByClass(UStaticMeshComponent::StaticClass());
+	for (UActorComponent* ActorComponent : MeshesComponents) {
+		MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
+		MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 void AM3CellScheme::AddAppointment(AM3CellAppointmentScheme* _Appointment) {
@@ -57,6 +65,18 @@ AM3CellAppointmentScheme* AM3CellScheme::GetAppointment(EM3CellAppointment Appoi
 }
 
 #if WITH_EDITOR
+
+void AM3CellScheme::PostEditChangeProperty(struct FPropertyChangedEvent& Event) {
+	Super::PostEditChangeProperty(Event);
+	FName PropertyName = (Event.Property != nullptr) ? Event.Property->GetFName() : NAME_None;
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(AM3CellScheme, Col) ||
+		PropertyName == GET_MEMBER_NAME_CHECKED(AM3CellScheme, Row)) {
+	}
+}
+
+void AM3CellScheme::EditorApplyTranslation(const FVector & DeltaTranslation, bool bAltDown, bool bShiftDown, bool bCtrlDown) {
+	// Super::EditorApplyTranslation(DeltaTranslation, bAltDown, bShiftDown, bCtrlDown);
+}
 
 void AM3CellScheme::OnEditorTick(float DeltaTime) {
 
@@ -129,3 +149,22 @@ void AM3CellScheme::OnEditorMouseReleased() {
 }
 
 #endif
+
+AM3GoalScheme* AM3BoardScheme::GetGoalScheme(UWorld* World, EM3ElementId Id) {
+	AM3GoalScheme* GoalScheme = nullptr;
+	for (const auto Goal : Goals) {
+		if (Goal->Id == Id) {
+			GoalScheme = Goal;
+			break;
+		}
+	}
+	if (!GoalScheme) {
+		GoalScheme = World->SpawnActor<AM3GoalScheme>(FVector(0.f), FRotator(0.f));
+		GoalScheme->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+		GoalScheme->Id = Id;
+		GoalScheme->Quantity = 0;
+		GoalScheme->Enabled = false;
+		Goals.Add(GoalScheme);
+	}
+	return GoalScheme;
+}

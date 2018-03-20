@@ -4,7 +4,6 @@
 #include "M3Board.h"
 #include "M3CoordinatingComponent.h"
 #include "M3AssetsBundle.h"
-#include "M3ViewFactory.h"
 #include "M3Scheme.h"
 #include "Engine/World.h"
 #include "M3TapGestureRecognizerComponent.h"
@@ -43,8 +42,6 @@ void AM3App::BeginPlay() {
 
 	CustomInputComponent->BindTouch(IE_Pressed, this, &AM3App::OnTouchPressed);
 	CustomInputComponent->BindTouch(IE_Released, this, &AM3App::OnTouchReleased);
-
-	AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(this, AssetsBundle_BP));
 
 	CoordinatingComponent->CreateModels();
 	CoordinatingComponent->CreateControllers();

@@ -17,8 +17,9 @@
 FEditorModeID FHMEdMode::EM_HexMap(TEXT("EM_HexMap"));
 
 FHMEdMode::FHMEdMode() {
-	EdModeProps_CreateBoard = NewObject<UM3EdModeProps_CreateBoard>(GetTransientPackage(), TEXT("EdModelProps_CreateBoard"), RF_Transactional | RF_MarkAsRootSet);
+	EdModeProps_BoardCreate = NewObject<UM3EdModeProps_BoardCreate>(GetTransientPackage(), TEXT("EdModelProps_BoardCreate"), RF_Transactional | RF_MarkAsRootSet);
 	EdModeProps_BoardScheme = NewObject<UM3EdModeProps_BoardScheme>(GetTransientPackage(), TEXT("EdModelProps_BoardScheme"), RF_Transactional | RF_MarkAsRootSet);
+	EdModeProps_BoardReskin = NewObject<UM3EdModeProps_BoardReskin>(GetTransientPackage(), TEXT("EdModelProps_BoardReskin"), RF_Transactional | RF_MarkAsRootSet);
 
 	EdModePropertiesSetTileSize = NewObject<UHMEdModePropertiesSetTileSize>(GetTransientPackage(), TEXT("EdModePropertiesSetTileSize"), RF_Transactional | RF_MarkAsRootSet);
 	EdModePropertiesAddCircle = NewObject<UHMEdModePropertiesAddCircle>(GetTransientPackage(), TEXT("EdModePropertiesAddCircle"), RF_Transactional | RF_MarkAsRootSet);

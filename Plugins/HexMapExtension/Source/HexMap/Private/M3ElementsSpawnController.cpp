@@ -6,6 +6,7 @@
 #include "M3ElementModel.h"
 #include "M3CellModel.h"
 #include "M3SharedModel.h"
+#include "M3BoardSettingsModel.h"
 #include "M3Scheme.h"
 
 M3ElementsSpawnController::M3ElementsSpawnController() {
@@ -22,6 +23,7 @@ bool M3ElementsSpawnController::CanBeExecuted() const {
 void M3ElementsSpawnController::Execute(float Deltatime) {
 	const auto& Board = M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>();
 	const auto& BoardState = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
+	const auto& BoardSettings = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
 
 	int PreviousElementId = -1;
 
@@ -35,7 +37,8 @@ void M3ElementsSpawnController::Execute(float Deltatime) {
 			Cell->AddSubmodel(Element);
 			int ElementRandomId = -1;
 			do {
-				ElementRandomId = FMath::RandRange(static_cast<int>(EM3ElementId::ELEMENT_RED), static_cast<int>(EM3ElementId::ELEMENT_BLUE));
+				int ElementRandomIndex = FMath::RandRange(0, BoardSettings->GetElementIds()->size() - 1);
+				ElementRandomId = static_cast<int>(BoardSettings->GetElementIds()->data()[ElementRandomIndex]);
 			} while (ElementRandomId == PreviousElementId);
 
 			PreviousElementId = ElementRandomId;

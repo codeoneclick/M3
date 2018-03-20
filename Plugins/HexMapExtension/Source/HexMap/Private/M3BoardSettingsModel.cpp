@@ -20,4 +20,8 @@ void M3BoardSettingsModel::Serialize() {
 void M3BoardSettingsModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 	const auto BoardScheme = static_cast<AM3BoardScheme*>(Scheme);
 	Entity->Get()->ElementSize->Set(BoardScheme->ElementSize);
+	for (const auto ElementId : BoardScheme->ElementIds) {
+		Entity->Get()->ElementIds->Get()->push_back(ElementId);
+	}
+	Entity->Get()->Turns->Set(BoardScheme->Turns);
 }

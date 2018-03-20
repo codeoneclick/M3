@@ -9,6 +9,7 @@
 #include "M3SwapModel.h"
 #include "M3SharedModel.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "M3BoardSettingsModel.h"
 
 const std::string k_ON_ELEMENT_STATE_CHANGED = "ON_ELEMENT_STATE_CHANGED";

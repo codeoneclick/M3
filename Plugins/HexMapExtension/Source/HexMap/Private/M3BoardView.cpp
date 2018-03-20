@@ -8,7 +8,6 @@
 #include "M3KVMultiSlot.h"
 #include "M3Element.h"
 #include "M3Cell.h"
-#include "M3ViewFactory.h"
 #include "Engine/World.h"
 #include "M3SharedModel.h"
 #include "M3BoardSettingsModel.h"

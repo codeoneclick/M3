@@ -31,8 +31,6 @@ public:
 	PROP_STRONG(public, M3GestureEntity, IsInterrupted, bool, false)
 };
 
-
-
 class HEXMAP_API M3GestureModel : public M3Model<M3GestureEntity>
 {
 public:

@@ -2,9 +2,19 @@
 
 #include "HMEdModeProperties.h"
 #include "M3Scheme.h"
+#include "M3AssetsBundle.h"
 #include "UObject/ConstructorHelpers.h"
 
-UM3EdModeProps_CreateBoard::UM3EdModeProps_CreateBoard() {
+#if WITH_EDITOR
+
+#include "EngineUtils.h"
+#include "Engine/Selection.h"
+#include "Editor.h"
+#include "EditorModeManager.h"
+
+#endif
+
+UM3EdModeProps_BoardCreate::UM3EdModeProps_BoardCreate() {
 	static ConstructorHelpers::FClassFinder<AM3BoardScheme> BoardScheme_BP_RESOURCE(TEXT("Class'/HexMap/M3BoardScheme_BP.M3BoardScheme_BP_C'"));
 	BoardScheme_BP = BoardScheme_BP_RESOURCE.Class;
 
@@ -31,4 +41,33 @@ UM3EdModeProps_CreateBoard::UM3EdModeProps_CreateBoard() {
 
 	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentElementPurpleScheme_BP_RESOURCE(TEXT("Class'/HexMap/M3AppointmentElementPurple_BP.M3AppointmentElementPurple_BP_C'"));
 	ElementPurpleScheme_BP = AppointmentElementPurpleScheme_BP_RESOURCE.Class;
+}
+
+void UM3EdModeProps_BoardReskin::PostEditChangeProperty(struct FPropertyChangedEvent& Event) {
+	Super::PostEditChangeProperty(Event);
+	FName PropertyName = (Event.Property != nullptr) ? Event.Property->GetFName() : NAME_None;
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(UM3EdModeProps_BoardReskin, AssetsBundle_BP)) {
+		if (AssetsBundle_BP) {
+			UWorld* World = GEditor->GetEditorWorldContext().World();
+			AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(this, AssetsBundle_BP));
+
+			RedElementMaterial = AssetsBundle->Element_RED.Material;
+			RedElementMesh = AssetsBundle->Element_RED.Mesh;
+
+			GreenElementMaterial = AssetsBundle->Element_GREEN.Material;
+			GreenElementMesh = AssetsBundle->Element_GREEN.Mesh;
+
+			BlueElementMaterial = AssetsBundle->Element_BLUE.Material;
+			BlueElementMesh = AssetsBundle->Element_BLUE.Mesh;
+
+			YellowElementMaterial = AssetsBundle->Element_YELLOW.Material;
+			YellowElementMesh = AssetsBundle->Element_YELLOW.Mesh;
+
+			OrangeElementMaterial = AssetsBundle->Element_ORANGE.Material;
+			OrangeElementMesh = AssetsBundle->Element_ORANGE.Mesh;
+
+			PurpleElementMaterial = AssetsBundle->Element_PURPLE.Material;
+			PurpleElementMesh = AssetsBundle->Element_PURPLE.Mesh;
+		}
+	}
 }

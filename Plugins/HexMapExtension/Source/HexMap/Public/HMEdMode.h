@@ -24,8 +24,9 @@ public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
-	class UM3EdModeProps_CreateBoard* EdModeProps_CreateBoard;
+	class UM3EdModeProps_BoardCreate* EdModeProps_BoardCreate;
 	class UM3EdModeProps_BoardScheme* EdModeProps_BoardScheme;
+	class UM3EdModeProps_BoardReskin* EdModeProps_BoardReskin;
 
 	class UHMEdModePropertiesSetTileSize* EdModePropertiesSetTileSize;
 	class UHMEdModePropertiesAddCircle* EdModePropertiesAddCircle;

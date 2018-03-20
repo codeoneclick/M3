@@ -31,7 +31,7 @@ void M3ElementsSwapController::Execute(float Deltatime) {
 	const auto& SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
 	const auto Board = static_cast<AM3Board*>(InteractionView);
 	const auto BoardView = Board->GetView();
-	const auto ElementViews = BoardView->GetSubviews<M3ElementView>();
+	const auto InteractionViews = BoardView->GetSubviews<M3ElementView>();
 
 	const auto PC = Board->GetWorld()->GetFirstPlayerController();
 	FHitResult Hit;
@@ -47,10 +47,10 @@ void M3ElementsSwapController::Execute(float Deltatime) {
 		PC->GetHitResultAtScreenPosition(ScreenSpaceLocation, PC->CurrentClickTraceChannel, false, Hit);
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor) {
-			for (const auto& ElementView : ElementViews) {
-				if (ElementView->GetSuperview() == HitActor) {
+			for (const auto& InteractionView : InteractionViews) {
+				if (InteractionView->GetSuperview() == HitActor) {
 					
-					const auto ElementModel = ElementView->GetViewModel<M3ElementModel>();
+					const auto ElementModel = InteractionView->GetViewModel<M3ElementModel>();
 					SwapModel->AddSwapElement(ElementModel);
 					const auto SwapElementA = SwapModel->GetSwapElementA();
 					const auto SwapElementB = SwapModel->GetSwapElementB();
