@@ -1,0 +1,30 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "M3",
+	"Description": "Match3 Plugin",
+	"Category": "Editor",
+	"CreatedBy": "Serhii Serhiiv",
+	"CreatedByURL": "s.serhiiv@gmail.com",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "s.serhiiv@gmail.com",
+	"EngineVersion": "4.19.0",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": true,
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/eb647863a1664469aa5c212294afd890",
+	"Modules": [
+		{
+			"Name": "M3",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win32",
+				"Win64",
+				"HTML5"
+			]
+		}
+	]
+}
