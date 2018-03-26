@@ -1,26 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "M3Scheme.h"
-
-#if WITH_EDITOR
-
 #include "M3App.h"
-#include "EngineUtils.h"
-#include "Engine/Selection.h"
-#include "Editor.h"
-#include "EditorModeManager.h"
 #include "M3AssetsBundle.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 
-#endif
-
 #if WITH_EDITOR
 
-AM3CellAppointmentScheme* AM3CellScheme::EdModeSelectedAppointmentScheme = nullptr;
+#include "EngineUtils.h"
+#include "Engine/Selection.h"
+#include "Editor.h"
+#include "EditorModeManager.h"
 
 #endif
+
+AM3CellAppointmentScheme* AM3CellScheme::EdModeSelectedAppointmentScheme = nullptr;
 
 AM3CellScheme::AM3CellScheme() {
 	PrimaryActorTick.bCanEverTick = true;

@@ -52,6 +52,8 @@ UM3EdModeProps_BoardCreate::UM3EdModeProps_BoardCreate() {
 	ElementPurpleScheme_BP = AppointmentElementPurpleScheme_BP_RESOURCE.Class;
 }
 
+#if WITH_EDITOR
+
 void UM3EdModeProps_BoardReskin::PostEditChangeProperty(struct FPropertyChangedEvent& Event) {
 	Super::PostEditChangeProperty(Event);
 	FName PropertyName = (Event.Property != nullptr) ? Event.Property->GetFName() : NAME_None;
@@ -83,3 +85,5 @@ void UM3EdModeProps_BoardReskin::PostEditChangeProperty(struct FPropertyChangedE
 		}
 	}
 }
+
+#endif

@@ -27,7 +27,7 @@ void M3GoalsController::Execute(float Deltatime) {
 void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop) {
 	const auto GoalsModel = M3SharedModel::GetInstance()->GetSubmodel<M3GoalsModel>();
 	const auto ElementModel = std::static_pointer_cast<M3ElementModel>(Model);
-	for (int i = 0; i < GoalsModel->GetGoals()->size(); ++i) {
+	for (size_t i = 0; i < GoalsModel->GetGoals()->size(); ++i) {
 		/*if (static_cast<int>(GoalsModel->GetGoals()->data()[i].Id) == ElementModel->GetId()) {
 			if (GoalsModel->GetGoals()->data()[i].Quantity < GoalsModel->GetGoals()->data()[i].MaxQuantity) {
 				GoalsModel->GetGoals()->data()[i].Quantity++;

@@ -165,7 +165,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 M3CellModel_SharedPtr M3BoardModel::GetCell(int Col, int Row) const {
 	M3CellModel_SharedPtr CellModel = nullptr;
-	int Index = Col + Row * GetCols();
+	size_t Index = Col + Row * GetCols();
 	if (Index < Entity->Get()->Cells->Get()->size()) {
 		CellModel = Entity->Get()->Cells->Get()->data()[Index];
 	}

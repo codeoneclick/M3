@@ -118,9 +118,9 @@ public:
 	AM3CellAppointmentScheme* GetAppointment(EM3CellAppointment AppointmentId) const;
 	bool IsAppointmentExist(EM3CellAppointment AppointmentId) const;
 
-#if WITH_EDITOR
-
 	static AM3CellAppointmentScheme* EdModeSelectedAppointmentScheme;
+
+#if WITH_EDITOR
 
 	void OnEditorMousePressed();
 	void OnEditorMouseReleased();
