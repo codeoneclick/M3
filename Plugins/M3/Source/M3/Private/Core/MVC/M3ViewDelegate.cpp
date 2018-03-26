@@ -5,7 +5,3 @@
 UM3ViewDelegate_INTERFACE::UM3ViewDelegate_INTERFACE() {
 
 }
-
-int UM3ViewDelegate_INTERFACE::ViewSTTI() const {
-	return -1;
-}

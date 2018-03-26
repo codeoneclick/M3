@@ -11,10 +11,25 @@
 
 FORWARD_DECL_STRONG(AM3Scheme_INTERFACE)
 
+class M3_API M3ModelComponent_INTERFACE {
+protected:
+
+	static std::set<uintptr_t> GuidsContainer;
+
+public:
+
+	M3ModelComponent_INTERFACE() = default;
+	virtual ~M3ModelComponent_INTERFACE() = default;
+
+	CTTI_CLASS_GUID(M3ModelComponent_INTERFACE, M3ModelComponent_INTERFACE::GuidsContainer)
+};
+
 class M3_API M3Model_INTERFACE : public M3KVListener_INTERFACE {
 protected:
 
 	static std::set<uintptr_t> GuidsContainer;
+
+	std::array<std::shared_ptr<M3ModelComponent_INTERFACE>, std::numeric_limits<uint8_t>::max()> Components;
 
 public:
 
@@ -23,8 +38,32 @@ public:
 
 	CTTI_CLASS_GUID(M3Model_INTERFACE, M3Model_INTERFACE::GuidsContainer)
 
+	virtual void Init() = 0;
 	virtual void Serialize() = 0;
 	virtual void Deserialize(AM3Scheme_INTERFACE* Scheme) = 0;
+	virtual void Reset() = 0;
+
+	void AddComponent(const std::shared_ptr<M3ModelComponent_INTERFACE>& Component) {
+		Components[Component->InstanceGuid()] = Component;
+	};
+
+	void RemoveComponent(const std::shared_ptr<M3ModelComponent_INTERFACE>& Component) {
+		Components[Component->InstanceGuid()] = nullptr;
+	};
+
+	void RemoveAllComponents() {
+		for (const auto Component : Components) {
+			if (Component) {
+				Components[Component->InstanceGuid()] = nullptr;
+			}
+		}
+	};
+
+	template<typename TComponent>
+	std::shared_ptr<TComponent> GetComponent() const {
+		static_assert(std::is_base_of<M3ModelComponent_INTERFACE, TComponent>::value, "TComponent must derive from M3ModelComponent_INTERFACE");
+		return std::static_pointer_cast<TComponent>(Components[TComponent::ClassGuid()]);
+	};
 };
 
 template<typename T>
@@ -34,6 +73,7 @@ static_assert(std::is_base_of<M3Entity, T>::value, "T must derive from M3Entity"
 private:
 
 	PROP_STATIC(public, M3Model<T>, TempContainer, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>)
+	PROP_STATIC(public, M3Model<T>, Pool, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>)
 
 protected:
 
@@ -58,15 +98,42 @@ public:
 		Submodels.fill(nullptr);
 	};
 
-	virtual void Init() {
+	template<typename RESULT>
+	static std::shared_ptr<RESULT> Construct() {
+		std::shared_ptr<RESULT> Result = nullptr;
+		if (Pool->Get()->size() != 0) {
+			Result = std::static_pointer_cast<RESULT>(Pool->Get()->back());
+			Pool->Get()->pop_back();
+		} else {
+			Result = std::make_shared<RESULT>();
+		}
+		Result->Init();
+		Result->AddToContainer();
+		return Result;
+	}
+	
+	virtual void Init() override {
 
 	};
+
+	virtual void Reset() override {
+		std::for_each(Submodels.begin(), Submodels.end(), [=](const M3Model_INTERFACE_SharedPtr& Submodel) {
+			if (Submodel) {
+				Submodel->Reset();
+				RemoveSubmodel(std::static_pointer_cast<M3Model>(Submodel));
+			}
+		});
+		Pool->Get()->push_back(std::static_pointer_cast<M3Model>(shared_from_this()));
+		RemoveFromContainer();
+	}
 
 	static void Register() {
 		auto Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
 		Container = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
 		Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
 		TempContainer = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
+		Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
+		Pool = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
 	};
 
 	static void Unregister() {
@@ -75,6 +142,9 @@ public:
 		}
 		if (Container->Get()) {
 			Container->Get()->clear();
+		}
+		if (Pool->Get()) {
+			Pool->Get()->clear();
 		}
 	};
 
@@ -86,6 +156,13 @@ public:
 		const auto Instance = M3Model_INTERFACE::shared_from_this();
 		TempContainer->Get()->push_back(std::static_pointer_cast<M3Model<T>>(Instance));
 	};
+
+	void RemoveFromContainer() {
+		const auto Instance = M3Model_INTERFACE::shared_from_this();
+		std::remove_if(TempContainer->Get()->begin(), TempContainer->Get()->end(), [=](const std::shared_ptr<M3Model<T>> Model) {
+			return Instance == Model;
+		});
+	}
 
 	template<typename TSubmodel>
 	void AddSubmodel(const std::shared_ptr<TSubmodel>& Submodel) {
@@ -113,7 +190,7 @@ public:
 				RemoveSubmodel(std::static_pointer_cast<M3Model>(Submodel));
 			}
 		});
-	}
+	};
 
 	template<typename TSubmodel>
 	std::shared_ptr<TSubmodel> GetSubmodel() const {
@@ -148,6 +225,9 @@ PROP_STATIC_INIT(M3Model<T>, Container, std::shared_ptr<std::vector<std::shared_
 
 template<typename T>
 PROP_STATIC_INIT(M3Model<T>, TempContainer, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>, nullptr)
+
+template<typename T>
+PROP_STATIC_INIT(M3Model<T>, Pool, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>, nullptr)
 
 #define SUBSCRIBE_PROP(__class__, __prop__) \
 Subscribe(Entity->Get()->__prop__, __class__::PROPERTY_ID_##__prop__()); \

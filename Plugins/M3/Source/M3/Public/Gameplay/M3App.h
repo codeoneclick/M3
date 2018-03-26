@@ -53,28 +53,4 @@ public:
 
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	AM3BoardScheme* BoardScheme;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellScheme> CellScheme_BP; 
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> FunctionalSpawnScheme_BP;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> ElementRedScheme_BP;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> ElementGreenScheme_BP;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> ElementBlueScheme_BP;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> ElementYellowScheme_BP;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> ElementOrangeScheme_BP;
-
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3CellAppointmentScheme> ElementPurpleScheme_BP;
 };

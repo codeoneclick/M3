@@ -29,14 +29,14 @@ void M3ChainModel::DetectHorizontalMatches(const M3BoardModel_SharedPtr& BoardMo
 	for (int Row = 0; Row < Rows; Row++) {
 		for (int Col = 0; Col < Cols - 2;) {
 			const auto ElementModel = BoardModel->GetElement(Col, Row);
-			if (ElementModel && ElementModel->CanMatch()) {
-				const int ElementId = ElementModel->GetElementId();
+			if (ElementModel && ElementModel->CanMatch() && ElementModel->GetColor() != EM3ElementColor::NONE) {
+				EM3ElementColor Color = ElementModel->GetColor();
 				if (BoardModel->GetElement(Col + 1, Row) &&
 					BoardModel->GetElement(Col + 1, Row)->CanMatch() &&
-					BoardModel->GetElement(Col + 1, Row)->GetElementId() == ElementId &&
+					BoardModel->GetElement(Col + 1, Row)->GetColor() == Color &&
 					BoardModel->GetElement(Col + 2, Row) &&
 					BoardModel->GetElement(Col + 2, Row)->CanMatch() &&
-					BoardModel->GetElement(Col + 2, Row)->GetElementId() == ElementId) {
+					BoardModel->GetElement(Col + 2, Row)->GetColor() == Color) {
 
 					const auto Chain = std::make_shared<M3Chain>();
 					Chain->Chain = EM3Chain::HORIZONTAL;
@@ -44,7 +44,7 @@ void M3ChainModel::DetectHorizontalMatches(const M3BoardModel_SharedPtr& BoardMo
 					do {
 						Chain->Elements.push_back(BoardModel->GetElement(Col, Row));
 						if (Col + 1 < Cols && BoardModel->GetElement(Col + 1, Row) &&
-							BoardModel->GetElement(Col + 1, Row)->GetElementId() == ElementId &&
+							BoardModel->GetElement(Col + 1, Row)->GetColor() == Color &&
 							!BoardModel->GetElement(Col + 1, Row)->IsInIdle()) {
 
 							bIsMutableChain = true;
@@ -53,7 +53,7 @@ void M3ChainModel::DetectHorizontalMatches(const M3BoardModel_SharedPtr& BoardMo
 						Col++;
 					} while (Col < Cols && BoardModel->GetElement(Col, Row) &&
 						BoardModel->GetElement(Col, Row)->CanMatch() &&
-						BoardModel->GetElement(Col, Row)->GetElementId() == ElementId);
+						BoardModel->GetElement(Col, Row)->GetColor() == Color);
 					if (!bIsMutableChain) {
 						PushChain(Chain);
 					}
@@ -72,14 +72,14 @@ void M3ChainModel::DetectVerticalMatches(const M3BoardModel_SharedPtr& BoardMode
 	for (int Col = 0; Col < Cols; Col++) {
 		for (int Row = 0; Row < Rows - 2;) {
 			const auto ElementModel = BoardModel->GetElement(Col, Row);
-			if (ElementModel && ElementModel->CanMatch()) {
-				const int ElementId = ElementModel->GetElementId();
+			if (ElementModel && ElementModel->CanMatch() && ElementModel->GetColor() != EM3ElementColor::NONE) {
+				EM3ElementColor Color = ElementModel->GetColor();
 				if (BoardModel->GetElement(Col, Row + 1) &&
 					BoardModel->GetElement(Col, Row + 1)->CanMatch() &&
-					BoardModel->GetElement(Col, Row + 1)->GetElementId() == ElementId &&
+					BoardModel->GetElement(Col, Row + 1)->GetColor() == Color &&
 					BoardModel->GetElement(Col, Row + 2) &&
 					BoardModel->GetElement(Col, Row + 2)->CanMatch() &&
-					BoardModel->GetElement(Col, Row + 2)->GetElementId() == ElementId) {
+					BoardModel->GetElement(Col, Row + 2)->GetColor() == Color) {
 
 					const auto Chain = std::make_shared<M3Chain>();
 					Chain->Chain = EM3Chain::VERTICAL;
@@ -87,7 +87,7 @@ void M3ChainModel::DetectVerticalMatches(const M3BoardModel_SharedPtr& BoardMode
 					do {
 						Chain->Elements.push_back(BoardModel->GetElement(Col, Row));
 						if (Row + 1 < Rows && BoardModel->GetElement(Col, Row + 1) &&
-							BoardModel->GetElement(Col, Row + 1)->GetElementId() == ElementId &&
+							BoardModel->GetElement(Col, Row + 1)->GetColor() == Color &&
 							!BoardModel->GetElement(Col, Row + 1)->IsInIdle()) {
 
 							bIsMutableChain = true;
@@ -96,7 +96,7 @@ void M3ChainModel::DetectVerticalMatches(const M3BoardModel_SharedPtr& BoardMode
 						Row++;
 					} while (Row < Rows && BoardModel->GetElement(Col, Row) &&
 						BoardModel->GetElement(Col, Row)->CanMatch() &&
-						BoardModel->GetElement(Col, Row)->GetElementId() == ElementId);
+						BoardModel->GetElement(Col, Row)->GetColor() == Color);
 					if (!bIsMutableChain) {
 						PushChain(Chain);
 					}
@@ -130,8 +130,7 @@ M3Chain_SharedPtr M3ChainModel::PopChain() {
 	if (Entity->Get()->HorizontalChains->Get()->size() != 0) {
 		Chain = Entity->Get()->HorizontalChains->Get()->back();
 		Entity->Get()->HorizontalChains->Get()->pop_back();
-	}
-	else if (Entity->Get()->VerticalChains->Get()->size() != 0) {
+	} else if (Entity->Get()->VerticalChains->Get()->size() != 0) {
 		Chain = Entity->Get()->VerticalChains->Get()->back();
 		Entity->Get()->VerticalChains->Get()->pop_back();
 	}

@@ -14,6 +14,8 @@
 #include "M3BoardActionsAccumulationModel.h"
 #include "M3BoardSettingsModel.h"
 #include "M3GoalsModel.h"
+#include "M3RegularelementModel.h"
+#include "M3SuperelementModel.h"
 #include "M3SharedModel.h"
 #include "M3GestureRecognitionController.h"
 #include "M3ElementsSwapController.h"
@@ -23,6 +25,7 @@
 #include "M3ElementsDropController.h"
 #include "M3ElementsSpawnController.h"
 #include "M3GoalsController.h"
+#include "M3GameStateController.h"
 
 UM3CoordinatingComponent::UM3CoordinatingComponent() {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -39,6 +42,7 @@ UM3CoordinatingComponent::~UM3CoordinatingComponent() {
 	M3BoardStateModel::Unregister();
 	M3BoardSettingsModel::Unregister();
 	M3GoalsModel::Unregister();
+	M3RegularelementModel::Unregister();
 
 	M3SharedModel::GetInstance()->RemoveAllSubmodels();
 }
@@ -64,6 +68,7 @@ void UM3CoordinatingComponent::CreateModels() {
 	M3ChainModel::Register();
 	M3BoardStateModel::Register();
 	M3GoalsModel::Register();
+	M3RegularelementModel::Register();
 
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardSettingsModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardModel>());
@@ -84,6 +89,7 @@ void UM3CoordinatingComponent::CreateControllers() {
 	AddController(std::make_shared<M3ElementsDropController>());
 	AddController(std::make_shared<M3ElementsSpawnController>());
 	AddController(std::make_shared<M3GoalsController>());
+	AddController(std::make_shared<M3GameStateController>());
 }
 
 void UM3CoordinatingComponent::CreateViews(UM3AssetsBundle* _Bundle) {

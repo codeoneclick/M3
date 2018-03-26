@@ -18,7 +18,7 @@ private:
 protected:
 
 	void OnGameStarted();
-	void OnElementSwapEnded(const M3ElementModel_SharedPtr& ElementModel);
+	void OnElementSwapEnded(const M3ElementModel_SharedPtr& ElementModel, bool IsPossibleToSwap);
 	void OnElementMatchEnded(const M3ElementModel_SharedPtr& ElementModel);
 	void OnElementDropEnded(const M3ElementModel_SharedPtr& ElementModel);
 	void OnElementSpawnEnded(const M3ElementModel_SharedPtr& ElementModel);

@@ -15,35 +15,64 @@ enum EM3ElementState {
 	REMOVING,
 };
 
+enum EM3ElementColor {
+	NONE = 0,
+	RED,
+	GREEN,
+	BLUE,
+	YELLOW,
+	ORANGE,
+	PURPLE
+};
+
+class M3ElementModelColorComponent_INTERFACE {
+public:
+	virtual EM3ElementColor GetColor() = 0;
+};
+
+class M3ElementModelColorComponent : public M3ModelComponent_INTERFACE {
+private:
+
+	std::shared_ptr<M3ElementModelColorComponent_INTERFACE> Owner = nullptr;
+
+public:
+
+	M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner);
+	EM3ElementColor GetColor();
+};
+
 class M3ElementEntity : public M3Entity {
 public:
 
 	CTTI_CLASS_GUID(M3ElementEntity, M3Entity::GuidsContainer)
 
-	PROP_STRONG(public, M3ElementEntity, ElementId, int, -1)
 	PROP_STRONG(public, M3ElementEntity, State, EM3ElementState, EM3ElementState::IDLE)
 };
 
 class M3_API M3ElementModel : public M3Model<M3ElementEntity>
 {
+private:
+
+
 public:
+
+	CTTI_CLASS_GUID(M3ElementModel, M3Model_INTERFACE::GuidsContainer)
 
 	M3ElementModel();
 	~M3ElementModel();
 
-	CTTI_CLASS_GUID(M3ElementModel, M3Model_INTERFACE::GuidsContainer)
+	void Init() override;
 
-	void Init();
+	void Serialize() override;
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
-	void Serialize();
-	void Deserialize(AM3Scheme_INTERFACE* Scheme);
+	void Reset() override;
 
-	void Reset();
-
-	int GetElementId() const;
+	EM3ElementColor GetColor();
 
 	void SetState(EM3ElementState State);
 	EM3ElementState GetState() const;
+
 	bool IsInState(EM3ElementState State) const;
 
 	bool IsInIdle() const;

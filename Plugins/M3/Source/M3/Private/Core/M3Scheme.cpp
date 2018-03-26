@@ -10,6 +10,9 @@
 #include "Editor.h"
 #include "EditorModeManager.h"
 #include "M3AssetsBundle.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInstance.h"
 
 #endif
 
@@ -21,7 +24,20 @@ AM3CellAppointmentScheme* AM3CellScheme::EdModeSelectedAppointmentScheme = nullp
 
 AM3CellScheme::AM3CellScheme() {
 	PrimaryActorTick.bCanEverTick = true;
-	
+
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellClosedMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellClosed.M3_SM_CellClosed'"));
+	CellClosedMesh = CellClosedMesh_RESOURCE.Get();
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellHoleMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellHole.M3_SM_CellHole'"));
+	CellHoleMesh = CellHoleMesh_RESOURCE.Get();
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellRandomMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellRandom.M3_SM_CellRandom'"));
+	CellRandomMesh = CellRandomMesh_RESOURCE.Get();
+
+	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellClosedMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_BLACK.M3_MI_BLACK'"));
+	CellClosedMaterial = CellClosedMaterial_RESOURCE.Get();
+	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellHoleMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_GRAY.M3_MI_GRAY'"));
+	CellHoleMaterial = CellHoleMaterial_RESOURCE.Get();
+	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellRandomMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_PURPLE.M3_MI_PURPLE'"));
+	CellRandomMaterial = CellRandomMaterial_RESOURCE.Get();
 }
 
 void AM3CellScheme::BeginPlay() {
@@ -62,6 +78,10 @@ AM3CellAppointmentScheme* AM3CellScheme::GetAppointment(EM3CellAppointment Appoi
 	}
 
 	return Appointment;
+}
+
+bool AM3CellScheme::IsAppointmentExist(EM3CellAppointment AppointmentId) const {
+	return AM3CellScheme::GetAppointment(AppointmentId) != nullptr;
 }
 
 #if WITH_EDITOR
@@ -112,33 +132,52 @@ void AM3CellScheme::OnEditorMouseReleased() {
 					}
 
 					if (MeshComponent) {
-						switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
-						case EM3ElementId::ELEMENT_RED:
-							MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
-							MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
-							break;
-						case EM3ElementId::ELEMENT_GREEN:
-							MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
-							MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
-							break;
-						case EM3ElementId::ELEMENT_BLUE:
-							MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
-							MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
-							break;
-						case EM3ElementId::ELEMENT_YELLOW:
-							MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
-							MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
-							break;
-						case EM3ElementId::ELEMENT_ORANGE:
-							MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
-							MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
-							break;
-						case EM3ElementId::ELEMENT_PURPLE:
-							MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
-							MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
-							break;
-						default:
-							break;
+						if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::REGULARELEMENT) {
+							switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
+							case EM3ElementId::ELEMENT_RED:
+								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
+								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
+								break;
+							case EM3ElementId::ELEMENT_GREEN:
+								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
+								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
+								break;
+							case EM3ElementId::ELEMENT_BLUE:
+								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
+								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
+								break;
+							case EM3ElementId::ELEMENT_YELLOW:
+								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
+								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
+								break;
+							case EM3ElementId::ELEMENT_ORANGE:
+								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
+								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
+								break;
+							case EM3ElementId::ELEMENT_PURPLE:
+								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
+								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
+								break;
+							default:
+								break;
+							}
+						} else if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::FUNCTIONAL) {
+							switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
+							case EM3ElementId::CELL_CLOSED:
+								MeshComponent->SetStaticMesh(CellClosedMesh);
+								MeshComponent->SetMaterial(0, CellClosedMaterial);
+								break;
+							case EM3ElementId::CELL_HOLE:
+								MeshComponent->SetStaticMesh(CellHoleMesh);
+								MeshComponent->SetMaterial(0, CellHoleMaterial);
+								break;
+							case EM3ElementId::CELL_RANDOM:
+								MeshComponent->SetStaticMesh(CellRandomMesh);
+								MeshComponent->SetMaterial(0, CellRandomMaterial);
+								break;
+							default:
+								break;
+							}
 						}
 					}
 					GEditor->SelectNone(true, true);
@@ -150,7 +189,7 @@ void AM3CellScheme::OnEditorMouseReleased() {
 
 #endif
 
-AM3GoalScheme* AM3BoardScheme::GetGoalScheme(UWorld* World, EM3ElementId Id) {
+AM3GoalScheme* AM3BoardScheme::GetGoalScheme(UWorld* World, EM3GoalId Id) {
 	AM3GoalScheme* GoalScheme = nullptr;
 	for (const auto Goal : Goals) {
 		if (Goal->Id == Id) {

@@ -23,5 +23,12 @@ void M3BoardSettingsModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 	for (const auto ElementId : BoardScheme->ElementIds) {
 		Entity->Get()->ElementIds->Get()->push_back(ElementId);
 	}
-	Entity->Get()->Turns->Set(BoardScheme->Turns);
+	Entity->Get()->Duration->Set(BoardScheme->Duration);
+	Entity->Get()->IsTurnBased->Set(BoardScheme->IsTurnBased);
+	Entity->Get()->OneMatchScores->Set(BoardScheme->OneMatchScores);
+	Entity->Get()->IsUseComboMatchScores->Set(BoardScheme->IsUseComboMatchScores);
+	Entity->Get()->ComboMatchScoresMultiplier->Set(BoardScheme->ComboMatchScoresMultiplier);
+	Entity->Get()->Star1Scores->Set(BoardScheme->Star1Scores);
+	Entity->Get()->Star2Scores->Set(BoardScheme->Star2Scores);
+	Entity->Get()->Star3Scores->Set(BoardScheme->Star3Scores);
 }

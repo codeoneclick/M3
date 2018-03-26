@@ -10,6 +10,7 @@
 
 AM3Board::AM3Board() {
 	PrimaryActorTick.bCanEverTick = true;
+	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("BoardRootComponent"));
 	TapGestureResponderComponent = CreateDefaultSubobject<UM3TapGestureResponderComponent>(TEXT("TapGestureResponderComponent"));

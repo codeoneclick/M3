@@ -5,8 +5,10 @@
 #include "M3BoardModel.h"
 #include "M3CellModel.h"
 #include "M3ElementModel.h"
+#include "M3RegularElementModel.h"
 #include "M3KVMultiSlot.h"
 #include "M3Element.h"
+#include "M3Regularelement.h"
 #include "M3Cell.h"
 #include "Engine/World.h"
 #include "M3SharedModel.h"
@@ -14,9 +16,10 @@
 
 FORWARD_DECL_CONTAINER(M3CellModel, M3Model<M3CellEntity>)
 FORWARD_DECL_CONTAINER(M3ElementModel, M3Model<M3ElementEntity>)
+FORWARD_DECL_CONTAINER(M3RegularelementModel, M3Model<M3RegularelementEntity>)
 
 const std::string k_ON_CELLS_CONTAINER_CHANGED = "ON_CELLS_CONTAINER_CHANGED";
-const std::string k_ON_ELEMENTS_CONTAINER_CHANGED = "ON_ELEMENTS_CONTAINER_CHANGED";
+const std::string k_ON_REGULAR_ELEMENTS_CONTAINER_CHANGED = "ON_REGULAR_ELEMENTS_CONTAINER_CHANGED";
 const std::string k_ON_SIZE_CHANGED = "ON_SIZE_CHANGED";
 
 M3BoardView::M3BoardView(AActor* _Superview) : M3View(_Superview) {
@@ -41,25 +44,29 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	Slots[k_ON_CELLS_CONTAINER_CHANGED] = CellsContainerSlot;
 	CellsContainerSlot->Attach(M3CellModel::Container, [=](const M3CellModel_Container& Value) {
 		for (const auto& It : *Value.get()) {
-			AM3Cell* Cell = GetBundle<UM3BoardAssetsBundle>()->ConstructCell(GetSuperview()->GetWorld());
-			Cell->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
-			Cell->OnLoad(Bundle);
-			Cell->OnBindViewModel(It);
-			Cell->OnBindViewDelegate();
-			AddSubview(Cell->GetView());
+			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+				AM3Cell* Cell = GetBundle<UM3BoardAssetsBundle>()->ConstructCell(GetSuperview()->GetWorld());
+				Cell->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
+				Cell->OnLoad(Bundle);
+				Cell->OnBindViewModel(It);
+				Cell->OnBindViewDelegate();
+				AddSubview(Cell->GetView());
+			}
 		}
 	});
 
-	std::shared_ptr<M3KVMultiSlot<M3ElementModel_Container>> ElementsContainerSlot = std::make_shared<M3KVMultiSlot<M3ElementModel_Container>>();
-	Slots[k_ON_ELEMENTS_CONTAINER_CHANGED] = ElementsContainerSlot;
-	ElementsContainerSlot->Attach(M3ElementModel::Container, [=](const M3ElementModel_Container& Value) {
+	std::shared_ptr<M3KVMultiSlot<M3RegularelementModel_Container>> RegularElementsContainerSlot = std::make_shared<M3KVMultiSlot<M3RegularelementModel_Container>>();
+	Slots[k_ON_REGULAR_ELEMENTS_CONTAINER_CHANGED] = RegularElementsContainerSlot;
+	RegularElementsContainerSlot->Attach(M3RegularelementModel::Container, [=](const M3RegularelementModel_Container& Value) {
 		for (const auto& It : *Value.get()) {
-			AM3Element* Element = GetBundle<UM3BoardAssetsBundle>()->ConstructElement(GetSuperview()->GetWorld());
-			Element->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
-			Element->OnLoad(Bundle);
-			Element->OnBindViewModel(It);
-			Element->OnBindViewDelegate();
-			AddSubview(Element->GetView());
+			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+				AM3Regularelement* Regularelement = GetBundle<UM3BoardAssetsBundle>()->ConstructRegularelement(GetSuperview()->GetWorld());
+				Regularelement->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
+				Regularelement->OnLoad(Bundle);
+				Regularelement->OnBindViewModel(It->GetParent<M3ElementModel>());
+				Regularelement->OnBindViewDelegate();
+				AddSubview(Regularelement->GetView());
+			}
 		}
 	});
 

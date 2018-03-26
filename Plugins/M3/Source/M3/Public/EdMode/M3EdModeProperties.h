@@ -27,6 +27,9 @@ public:
 	UPROPERTY(Category = "Size", EditAnywhere, meta = (ShowForTools = "Tool_M3", ClampMin = 3, ClampMax = 12), BlueprintReadWrite)
 	int Rows = 10;
 
+	UPROPERTY(Category = "Settings", meta = (ShowForTools = "Tool_M3", ClampMin = 10, ClampMax = 1000), EditAnywhere, BlueprintReadOnly)
+	FVector2D ElementSize = FVector2D(100, 100);
+
 	UPROPERTY(Category = "Bundle", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
 	TSubclassOf<UM3BoardAssetsBundle> AssetsBundle_BP;
 
@@ -35,6 +38,15 @@ public:
 
 	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
 	TSubclassOf<AM3CellScheme> CellScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> FunctionalCellClosedScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> FunctionalCellHoleScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> FunctionalCellRandomScheme_BP;
 
 	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
 	TSubclassOf<AM3CellAppointmentScheme> FunctionalSpawnScheme_BP;
@@ -65,7 +77,28 @@ class M3_API UM3EdModeProps_BoardScheme : public UObject {
 public:
 
 	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
-	int Turns;
+	bool IsTurnBased;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	int Duration;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	int OneMatchScores;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	bool IsUseComboMatchScores;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	float ComboMatchScoresMultiplier;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	int Star1Scores;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	int Star2Scores;
+
+	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
+	int Star3Scores;
 
 	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
 	bool RedElementExist;
@@ -84,9 +117,6 @@ public:
 
 	UPROPERTY(Category = "Settings", EditAnywhere, BlueprintReadWrite)
 	bool PurpleElementExist;
-
-	UPROPERTY(Category = "Settings", meta = (ShowForTools = "Tool_M3", ClampMin = 10, ClampMax = 1000), EditAnywhere, BlueprintReadOnly)
-	FVector2D ElementSize = FVector2D(100, 100);
 
 	UPROPERTY(Category = "Goals", EditAnywhere, BlueprintReadWrite)
 	bool CollectRedElements;
@@ -145,6 +175,15 @@ public:
 
 	UPROPERTY(Category = "Bundle", VisibleAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadOnly)
 	UM3BoardAssetsBundle* AssetsBundle;
+
+	UPROPERTY(Category = "Settings", meta = (ShowForTools = "Tool_M3", ClampMin = 10, ClampMax = 1000), EditAnywhere, BlueprintReadOnly)
+	FVector2D ElementSize = FVector2D(100, 100);
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* CellMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* CellMesh;
 
 	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
 	class UMaterialInterface* RedElementMaterial;

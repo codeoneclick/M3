@@ -1,17 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "M3ElementModel.h"
+#include "M3RegularelementModel.h"
 
-M3ElementModel::M3ElementModel()
-{
+M3ElementModelColorComponent::M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner) {
+	Owner = _Owner;
 }
 
-M3ElementModel::~M3ElementModel()
-{
+EM3ElementColor M3ElementModelColorComponent::GetColor() {
+	return Owner->GetColor();
+}
+
+M3ElementModel::M3ElementModel() {
+}
+
+M3ElementModel::~M3ElementModel() {
 }
 
 void M3ElementModel::Init() {
-	SUBSCRIBE_PROP(M3ElementEntity, ElementId)
 	SUBSCRIBE_PROP(M3ElementEntity, State)
 }
 
@@ -24,12 +30,21 @@ void M3ElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 }
 
 void M3ElementModel::Reset() {
-	Entity->Get()->ElementId->Set(-1);
+	M3Model::Reset();
+
 	Entity->Get()->State->Set(EM3ElementState::IDLE);
 }
 
-int M3ElementModel::GetElementId() const {
-	return Entity->Get()->ElementId->Get();
+EM3ElementColor M3ElementModel::GetColor() {
+	EM3ElementColor Result = EM3ElementColor::NONE;
+
+	for (const auto Submodel : Submodels) {
+		if (Submodel && Submodel->GetComponent<M3ElementModelColorComponent>()) {
+			Result = Submodel->GetComponent<M3ElementModelColorComponent>()->GetColor();
+			break;
+		}
+	}
+	return Result;
 }
 
 void M3ElementModel::SetState(EM3ElementState State) {

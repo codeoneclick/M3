@@ -21,6 +21,10 @@
 			"Name": "M3",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/eb647863a1664469aa5c212294afd890"
+		},
+		{
+			"Name": "ApexDestruction",
+			"Enabled": true
 		}
 	]
 }

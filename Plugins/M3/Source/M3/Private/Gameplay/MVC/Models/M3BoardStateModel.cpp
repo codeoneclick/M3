@@ -2,6 +2,8 @@
 
 #include "M3BoardStateModel.h"
 #include "M3ElementModel.h"
+#include "M3BoardSettingsModel.h"
+#include "M3SharedModel.h"
 
 M3BoardStateModel::M3BoardStateModel() {
 }
@@ -21,25 +23,10 @@ void M3BoardStateModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 
-void M3BoardStateModel::PushUnusedElement(const M3ElementModel_SharedPtr& Element) {
-	const auto& UnusedElements = Entity->Get()->UnusedElements->Get();
-	const auto It = std::find_if(UnusedElements->begin(), UnusedElements->end(), [=](const M3ElementModel_SharedPtr& Value) {
-		return Value == Element;
-	});
-	if (It == UnusedElements->end()) {
-		Element->Reset();
-		UnusedElements->push_back(Element);
-	} else {
-		assert(false);
+void M3BoardStateModel::IncGameTurn() {
+	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
+	if (BoardSettingsModel->GetIsTurnBased()) {
+		Entity->Get()->Duration->Set(FMath::Min(Entity->Get()->Duration->Get() + 1, BoardSettingsModel->GetDuration()));
 	}
-}
-
-M3ElementModel_SharedPtr M3BoardStateModel::PopUnusedElement() {
-	M3ElementModel_SharedPtr Element = nullptr;
-	const auto& UnusedElements = Entity->Get()->UnusedElements->Get();
-	if (UnusedElements->size() != 0) {
-		Element = UnusedElements->back();
-		UnusedElements->pop_back();
-	}
-	return Element;
+	Entity->Get()->Turn->Set(Entity->Get()->Turn->Get() + 1);
 }

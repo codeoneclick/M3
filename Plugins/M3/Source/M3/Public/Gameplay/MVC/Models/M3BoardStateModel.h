@@ -13,8 +13,10 @@ public:
 
 	CTTI_CLASS_GUID(M3BoardStateEntity, M3Entity::GuidsContainer)
 
-	PROP_STRONG(public, M3BoardStateEntity, UnusedElements, std::shared_ptr<std::vector<M3ElementModel_SharedPtr>>, std::make_shared<std::vector<M3ElementModel_SharedPtr>>())
 	PROP_STRONG(public, M3BoardStateEntity, IsHolesExist, bool, true)
+	PROP_STRONG(public, M3BoardStateEntity, Turn, int, 0)
+	PROP_STRONG(public, M3BoardStateEntity, Duration, int, 0)
+	PROP_STRONG(public, M3BoardStateEntity, Scores, int, 0)
 };
 
 class M3_API M3BoardStateModel : public M3Model<M3BoardStateEntity>
@@ -34,7 +36,9 @@ public:
 
 	PROP_DECL_R(IsHolesExist, bool)
 	PROP_DECL_W(IsHolesExist, bool)
+	PROP_DECL_R(Turn, int)
+	PROP_DECL_R(Duration, int)
+	PROP_DECL_R(Scores, int)
 
-	void PushUnusedElement(const M3ElementModel_SharedPtr& Element);
-	M3ElementModel_SharedPtr PopUnusedElement();
+	void IncGameTurn();
 };

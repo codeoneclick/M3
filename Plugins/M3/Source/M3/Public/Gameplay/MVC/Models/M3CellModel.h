@@ -13,6 +13,8 @@ public:
 
 	PROP_STRONG(public, M3CellEntity, Col, int, 0)
 	PROP_STRONG(public, M3CellEntity, Row, int, 0)
+	PROP_STRONG(public, M3CellEntity, IsClosed, bool, false)
+
 };
 
 class M3_API M3CellModel : public M3Model<M3CellEntity>
@@ -25,11 +27,12 @@ public:
 
 	PROP_DECL_R(Col, int);
 	PROP_DECL_R(Row, int);
+	PROP_DECL_R(IsClosed, bool);
 
-	void Init();
+	void Init() override;
 
-	void Serialize();
-	void Deserialize(AM3Scheme_INTERFACE* Scheme);
+	void Serialize() override;
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
 	bool IsContainElement();
 	bool CanContainElement();

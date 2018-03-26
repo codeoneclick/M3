@@ -4,25 +4,26 @@
 #include "M3CellModel.h"
 #include "M3CellView.h"
 #include "Components/StaticMeshComponent.h"
+#include "M3ViewActionsComponent.h"
 
-AM3Cell::AM3Cell()
-{
+AM3Cell::AM3Cell() {
 	PrimaryActorTick.bCanEverTick = true;
+	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CellRootComponent"));
 
 	UStaticMeshComponent* MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellMeshComponent"));
 	MeshComponent->SetupAttachment(GetRootComponent());
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	UM3ViewActionsComponent* ActionsComponent = CreateDefaultSubobject<UM3ViewActionsComponent>(TEXT("CellActionsComponent"));
 }
 
-void AM3Cell::BeginPlay()
-{
+void AM3Cell::BeginPlay() {
 	Super::BeginPlay();
 }
 
-void AM3Cell::Tick(float DeltaTime)
-{
+void AM3Cell::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 

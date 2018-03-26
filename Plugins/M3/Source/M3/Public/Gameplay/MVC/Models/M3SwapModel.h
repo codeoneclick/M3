@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "M3Entity.h"
 #include "M3Model.h"
+#include "M3ElementModel.h"
 
 FORWARD_DECL_STRONG(M3ElementModel)
 
@@ -54,7 +55,7 @@ public:
 class M3_API M3SwapModel : public M3Model<M3SwapEntity> {
 private:
 
-	static bool CanSwapElementWithElementId(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, int ElementId);
+	static bool CanSwapElementWithElementColor(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, EM3ElementColor Color);
 	static bool CanSwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB);
 
 	bool HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row);

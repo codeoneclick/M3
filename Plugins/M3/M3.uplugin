@@ -22,8 +22,7 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win32",
-				"Win64",
-				"HTML5"
+				"Win64"
 			]
 		}
 	]

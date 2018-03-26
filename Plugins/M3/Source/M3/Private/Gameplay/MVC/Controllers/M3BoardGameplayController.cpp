@@ -8,6 +8,7 @@
 #include "M3SwapModel.h"
 #include "M3ChainModel.h"
 #include "M3BoardActionsAccumulationModel.h"
+#include "M3BoardStateModel.h"
 #include "M3SharedModel.h"
 
 M3BoardGameplayController::M3BoardGameplayController() {
@@ -15,8 +16,8 @@ M3BoardGameplayController::M3BoardGameplayController() {
 	std::shared_ptr<M3AppEvent<int>> OnGameStartedEvent = std::make_shared<M3AppEvent<int>>(M3Events::ON_GAME_STARTED, OnGameStartedCallback);
 	Subscribe(OnGameStartedEvent);
 
-	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementSwapEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementSwapEnded, this, std::placeholders::_1));
-	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr>> OnElementSwapEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr>>(M3Events::ON_ELEMENT_SWAP_ENDED, OnElementSwapEndedCallback);
+	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr, bool>> OnElementSwapEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr, bool>>(std::bind(&M3BoardGameplayController::OnElementSwapEnded, this, std::placeholders::_1, std::placeholders::_2));
+	std::shared_ptr<M3AppEvent<M3ElementModel_SharedPtr, bool>> OnElementSwapEndedEvent = std::make_shared<M3AppEvent<M3ElementModel_SharedPtr, bool>>(M3Events::ON_ELEMENT_SWAP_ENDED, OnElementSwapEndedCallback);
 	Subscribe(OnElementSwapEndedEvent);
 
 	std::shared_ptr<M3AppEvent_Callback<M3ElementModel_SharedPtr>> OnElementMatchEndedCallback = std::make_shared<M3AppEvent_Callback<M3ElementModel_SharedPtr>>(std::bind(&M3BoardGameplayController::OnElementMatchEnded, this, std::placeholders::_1));
@@ -70,6 +71,10 @@ void M3BoardGameplayController::Execute(float Deltatime) {
 			case EM3AccumulationAction::ON_ELEMENT_SPAWN_ENDED:
 				M3BoardGameplayController::GeneratePotentialSwaps();
 				M3BoardGameplayController::DetectMatches();
+				if (Action.Action == EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED) {
+					const auto BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
+					BoardStateModel->IncGameTurn();
+				}
 				break;
 			case EM3AccumulationAction::ON_ELEMENT_MATCH_ENDED:
 				M3BoardGameplayController::CreateHoles();
@@ -84,12 +89,15 @@ void M3BoardGameplayController::Execute(float Deltatime) {
 
 void M3BoardGameplayController::OnGameStarted() {
 	M3BoardGameplayController::GeneratePotentialSwaps();
+	M3BoardGameplayController::DetectMatches();
 }
 
-void M3BoardGameplayController::OnElementSwapEnded(const M3ElementModel_SharedPtr& ElementModel) {
+void M3BoardGameplayController::OnElementSwapEnded(const M3ElementModel_SharedPtr& ElementModel, bool IsPossibleToSwap) {
 	ElementModel->SetState(EM3ElementState::IDLE);
-	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
-	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED);
+	if (IsPossibleToSwap) {
+		const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
+		BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_SWAP_ENDED);
+	}
 }
 
 void M3BoardGameplayController::OnElementMatchEnded(const M3ElementModel_SharedPtr& ElementModel) {

@@ -9,6 +9,7 @@
 #include "M3ViewActionsComponent.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE(FM3ActionCallback);
+DECLARE_DELEGATE(FM3ActionNativeCallback);
 
 FORWARD_DECL_STRONG(UM3Action)
 
@@ -41,6 +42,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "M3Actions")
 	UM3Action* CallbackAction(float Duration, FM3ActionCallback Callback);
+	UM3Action* CallbackAction(float Duration, FM3ActionNativeCallback Callback);
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Actions))
@@ -136,6 +138,8 @@ class M3_API UM3CallbackAction : public UM3Action {
 
 protected:
 
+	FM3ActionNativeCallback NativeCallback;
+
 public:
 
 	UM3CallbackAction();
@@ -145,6 +149,7 @@ public:
 	FM3ActionCallback Callback;
 
 	void Setup(AActor* _Actor, float _Duration, FM3ActionCallback _Callback);
+	void Setup(AActor* _Actor, float _Duration, FM3ActionNativeCallback _Callback);
 
 	virtual void OnUpdate(float DeltaTime);
 };

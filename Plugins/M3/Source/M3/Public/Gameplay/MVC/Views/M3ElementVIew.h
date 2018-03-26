@@ -32,25 +32,25 @@ public:
 
 	UM3ElementViewAccessor();
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	AActor* View = nullptr;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int CurrentCol = -1;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int CurrentRow = -1;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int OppositeCol = -1;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int OppositeRow = -1;
 
-	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	FVector2D ElementSize = FVector2D(-1, -1);
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
 	bool IsPosibleToSwap = false;
 
 	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
@@ -68,6 +68,12 @@ public:
 	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnSpawnEndedDelegate;
 	FElementViewAnimationCallback OnSpawnEndedCallback;
+
+	UFUNCTION(BlueprintCallable, Category = "M3Accessors")
+	FVector GetCurrentLocation();
+
+	UFUNCTION(BlueprintCallable, Category = "M3Accessors")
+	FVector GetOppositeLocation();
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Delegates))
@@ -82,36 +88,32 @@ public:
 	UM3ElementViewDelegate();
 	~UM3ElementViewDelegate();
 
-	int ViewSTTI() const override;
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
 	void OnSwap(UM3ElementViewAccessor* Accessor);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
 	void OnMatch(UM3ElementViewAccessor* Accessor);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
 	void OnDrop(UM3ElementViewAccessor* Accessor);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
 	void OnSpawn(UM3ElementViewAccessor* Accessor);
 };
 
 class M3_API M3ElementView : public M3View
 {
-private:
+protected:
 
 	UM3ElementViewAccessor* Accessor = nullptr;
 
-	void SetElementVisual(int ElementId);
-
 public:
+
+	CTTI_CLASS_GUID(M3ElementView, M3View_INTERFACE::GuidsContainer)
 
 	M3ElementView(AActor* _Superview);
 	~M3ElementView();
 
-	CTTI_CLASS_GUID(M3ElementView, M3View_INTERFACE::GuidsContainer)
-
-	void Load(UM3AssetsBundle* Bundle);
-	void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);
+	virtual void Load(UM3AssetsBundle* Bundle);
+	virtual void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);
 };

@@ -38,6 +38,12 @@ UM3Action* UM3ViewActionsComponent::CallbackAction(float Duration, FM3ActionCall
 	return Action;
 }
 
+UM3Action* UM3ViewActionsComponent::CallbackAction(float Duration, FM3ActionNativeCallback Callback) {
+	const auto Action = NewObject<UM3CallbackAction>(this);
+	Action->Setup(GetOwner(), Duration, Callback);
+	return Action;
+}
+
 void UM3ViewActionsComponent::RunAction(UM3Action* Action) {
 	Actions.Add(Action);
 }
@@ -122,9 +128,15 @@ void UM3CallbackAction::Setup(AActor* _Actor, float _Duration, FM3ActionCallback
 	Callback = _Callback;
 }
 
+void UM3CallbackAction::Setup(AActor* _Actor, float _Duration, FM3ActionNativeCallback _Callback) {
+	UM3Action::Setup(_Actor, _Duration);
+	NativeCallback = _Callback;
+}
+
 void UM3CallbackAction::OnUpdate(float DeltaTime) {
 	UM3Action::OnUpdate(DeltaTime);
 	if (bIsDone) {
 		Callback.ExecuteIfBound();
+		NativeCallback.ExecuteIfBound();
 	}
 }

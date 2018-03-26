@@ -67,82 +67,7 @@ void FM3EdModeToolkit::Init(const TSharedPtr<class IToolkitHost>& ToolkitHost)
 			]
 		];
 	FModeToolkit::Init(ToolkitHost);
-
-	UWorld* World = GEditor->GetEditorWorldContext().World();
-	AM3App* M3App = nullptr;
-	for (TActorIterator<AActor> It(World, AM3App::StaticClass()); It; ++It) {
-		M3App = static_cast<AM3App*>(*It);
-		break;
-	}
-
-	if (M3App) {
-		FM3EdMode* EdMode = (FM3EdMode*)(GLevelEditorModeTools().GetActiveMode(FM3EdMode::EM_M3));
-		if (EdMode->EdModeProps_BoardScheme && M3App->BoardScheme) {
-			EdMode->EdModeProps_BoardScheme->RedElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_RED);
-			EdMode->EdModeProps_BoardScheme->GreenElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_GREEN);
-			EdMode->EdModeProps_BoardScheme->BlueElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_BLUE);
-			EdMode->EdModeProps_BoardScheme->YellowElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_YELLOW);
-			EdMode->EdModeProps_BoardScheme->OrangeElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_ORANGE);
-			EdMode->EdModeProps_BoardScheme->PurpleElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_PURPLE);
-		
-			EdMode->EdModeProps_BoardScheme->Turns = M3App->BoardScheme->Turns;
-
-			for (const auto Goal : M3App->BoardScheme->Goals) {
-				switch (Goal->Id) {
-					case EM3ElementId::ELEMENT_RED:
-						EdMode->EdModeProps_BoardScheme->CollectRedElements = Goal->Enabled;
-						EdMode->EdModeProps_BoardScheme->RedElementsQuantity = Goal->Quantity;
-					break;
-					case EM3ElementId::ELEMENT_GREEN:
-						EdMode->EdModeProps_BoardScheme->CollectGreenElements = Goal->Enabled;
-						EdMode->EdModeProps_BoardScheme->GreenElementsQuantity = Goal->Quantity;
-					break;
-					case EM3ElementId::ELEMENT_BLUE:
-						EdMode->EdModeProps_BoardScheme->CollectBlueElements = Goal->Enabled;
-						EdMode->EdModeProps_BoardScheme->BlueElementsQuantity = Goal->Quantity;
-					break;
-					case EM3ElementId::ELEMENT_YELLOW:
-						EdMode->EdModeProps_BoardScheme->CollectYellowElements = Goal->Enabled;
-						EdMode->EdModeProps_BoardScheme->YellowElementsQuantity = Goal->Quantity;
-					break;
-					case EM3ElementId::ELEMENT_ORANGE:
-						EdMode->EdModeProps_BoardScheme->CollectOrangeElements = Goal->Enabled;
-						EdMode->EdModeProps_BoardScheme->OrangeElementsQuantity = Goal->Quantity;
-					break;
-					case EM3ElementId::ELEMENT_PURPLE:
-						EdMode->EdModeProps_BoardScheme->CollectPurpleElements = Goal->Enabled;
-						EdMode->EdModeProps_BoardScheme->PurpleElementsQuantity = Goal->Quantity;
-					break;
-					default:
-					break;
-				}
-			}
-		}
-
-		if (EdMode->EdModeProps_BoardReskin && M3App->AssetsBundle) {
-			
-			EdMode->EdModeProps_BoardReskin->AssetsBundle_BP = M3App->AssetsBundle_BP;
-			EdMode->EdModeProps_BoardReskin->AssetsBundle = M3App->AssetsBundle;
-
-			EdMode->EdModeProps_BoardReskin->RedElementMaterial = M3App->AssetsBundle->Element_RED.Material;
-			EdMode->EdModeProps_BoardReskin->RedElementMesh = M3App->AssetsBundle->Element_RED.Mesh;
-
-			EdMode->EdModeProps_BoardReskin->GreenElementMaterial = M3App->AssetsBundle->Element_GREEN.Material;
-			EdMode->EdModeProps_BoardReskin->GreenElementMesh = M3App->AssetsBundle->Element_GREEN.Mesh;
-
-			EdMode->EdModeProps_BoardReskin->BlueElementMaterial = M3App->AssetsBundle->Element_BLUE.Material;
-			EdMode->EdModeProps_BoardReskin->BlueElementMesh = M3App->AssetsBundle->Element_BLUE.Mesh;
-
-			EdMode->EdModeProps_BoardReskin->YellowElementMaterial = M3App->AssetsBundle->Element_YELLOW.Material;
-			EdMode->EdModeProps_BoardReskin->YellowElementMesh = M3App->AssetsBundle->Element_YELLOW.Mesh;
-
-			EdMode->EdModeProps_BoardReskin->OrangeElementMaterial = M3App->AssetsBundle->Element_ORANGE.Material;
-			EdMode->EdModeProps_BoardReskin->OrangeElementMesh = M3App->AssetsBundle->Element_ORANGE.Mesh;
-
-			EdMode->EdModeProps_BoardReskin->PurpleElementMaterial = M3App->AssetsBundle->Element_PURPLE.Material;
-			EdMode->EdModeProps_BoardReskin->PurpleElementMesh = M3App->AssetsBundle->Element_PURPLE.Mesh;
-		}
-	}
+	FM3EdModeToolkit::FillBoardSchemeSettings();
 }
 
 FName FM3EdModeToolkit::GetToolkitFName() const
@@ -178,8 +103,7 @@ TSharedRef<SWidget> FM3EdModeToolkit::MAKE_BoardCreate_SLOT(FM3EdModeToolkit* SE
 	FDetailsViewArgs Args(false, false, false, FDetailsViewArgs::HideNameArea);
 	SELF->EdModePanel_BoardCreate = PropEdModule.CreateDetailView(Args);
 	FM3EdMode* EdMode = (FM3EdMode*)SELF->GetEditorMode();
-	if (EdMode)
-	{
+	if (EdMode) {
 		SELF->EdModePanel_BoardCreate->SetObject(EdMode->EdModeProps_BoardCreate, true);
 	}
 
@@ -325,13 +249,94 @@ TSharedRef<SWidget> FM3EdModeToolkit::MAKE_BoardElements_SLOT(FM3EdModeToolkit* 
 							SNew(SBox)
 							.HAlign(HAlign_Fill)
 							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
+							.WidthOverride(300)
 							.HeightOverride(64)
 							.Padding(15)
 							[
 								SNew(STextBlock)
 								.ColorAndOpacity(FLinearColor::White)
 								.Text(NSLOCTEXT("M3ElementNone", "M3ElementNone", "NONE"))
+							]
+						]
+					]
+					+ SWrapBox::Slot()
+					.Padding(5)
+					.VAlign(VAlign_Top)
+					[
+						SNew(SCheckBox)
+						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::CELL_CLOSED))
+						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
+							if (State == ECheckBoxState::Checked) {
+								SelectedElementId = EM3ElementId::CELL_CLOSED;
+								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->FunctionalCellClosedScheme;
+							}
+						})
+						.Content()
+						[
+							SNew(SBox)
+							.HAlign(HAlign_Fill)
+							.VAlign(VAlign_Fill)
+							.WidthOverride(300)
+							.HeightOverride(64)
+							.Padding(15)
+							[
+								SNew(STextBlock)
+								.ColorAndOpacity(FLinearColor::White)
+								.Text(NSLOCTEXT("M3CellClosed", "M3CellClosed", "CLOSED"))
+							]
+						]
+					]
+					+ SWrapBox::Slot()
+					.Padding(5)
+					.VAlign(VAlign_Top)
+					[
+						SNew(SCheckBox)
+						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::CELL_HOLE))
+						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
+							if (State == ECheckBoxState::Checked) {
+								SelectedElementId = EM3ElementId::CELL_HOLE;
+								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->FunctionalCellHoleScheme;
+							}
+						})
+						.Content()
+						[
+							SNew(SBox)
+							.HAlign(HAlign_Fill)
+							.VAlign(VAlign_Fill)
+							.WidthOverride(300)
+							.HeightOverride(64)
+							.Padding(15)
+							[
+								SNew(STextBlock)
+								.ColorAndOpacity(FLinearColor::White)
+								.Text(NSLOCTEXT("M3CellHole", "M3CellHole", "HOLE"))
+							]
+						]
+					]
+					+ SWrapBox::Slot()
+					.Padding(5)
+					.VAlign(VAlign_Top)
+					[
+						SNew(SCheckBox)
+						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::CELL_RANDOM))
+						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
+							if (State == ECheckBoxState::Checked) {
+								SelectedElementId = EM3ElementId::CELL_RANDOM;
+								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->FunctionalCellRandomScheme;
+							}
+						})
+						.Content()
+						[
+							SNew(SBox)
+							.HAlign(HAlign_Fill)
+							.VAlign(VAlign_Fill)
+							.WidthOverride(300)
+							.HeightOverride(64)
+							.Padding(15)
+							[
+								SNew(STextBlock)
+								.ColorAndOpacity(FLinearColor::White)
+								.Text(NSLOCTEXT("M3CellRandom", "M3CellRandom", "RANDOM"))
 							]
 						]
 					]
@@ -560,6 +565,18 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Cell Scheme should be assigned!");
 		return FReply::Handled();
 	}
+	if (!EdMode->EdModeProps_BoardCreate->FunctionalCellClosedScheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Functional Closed Cell should be assigned!");
+		return FReply::Handled();
+	}
+	if (!EdMode->EdModeProps_BoardCreate->FunctionalCellHoleScheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Functional Cell Hole should be assigned!");
+		return FReply::Handled();
+	}
+	if (!EdMode->EdModeProps_BoardCreate->FunctionalCellRandomScheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Functional Cell Random should be assigned!");
+		return FReply::Handled();
+	}
 	if (!EdMode->EdModeProps_BoardCreate->FunctionalSpawnScheme_BP) {
 		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Functional Spawn Scheme should be assigned!");
 		return FReply::Handled();
@@ -600,14 +617,6 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 
 		M3App->AssetsBundle_BP = EdMode->EdModeProps_BoardCreate->AssetsBundle_BP;
 		M3App->BoardScheme_BP = EdMode->EdModeProps_BoardCreate->BoardScheme_BP;
-		M3App->CellScheme_BP = EdMode->EdModeProps_BoardCreate->CellScheme_BP;
-		M3App->FunctionalSpawnScheme_BP = EdMode->EdModeProps_BoardCreate->FunctionalSpawnScheme_BP;
-		M3App->ElementRedScheme_BP = EdMode->EdModeProps_BoardCreate->ElementRedScheme_BP;
-		M3App->ElementGreenScheme_BP = EdMode->EdModeProps_BoardCreate->ElementGreenScheme_BP;
-		M3App->ElementBlueScheme_BP = EdMode->EdModeProps_BoardCreate->ElementBlueScheme_BP;
-		M3App->ElementYellowScheme_BP = EdMode->EdModeProps_BoardCreate->ElementYellowScheme_BP;
-		M3App->ElementOrangeScheme_BP = EdMode->EdModeProps_BoardCreate->ElementOrangeScheme_BP;
-		M3App->ElementPurpleScheme_BP = EdMode->EdModeProps_BoardCreate->ElementPurpleScheme_BP;
 
 		M3App->AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(M3App, M3App->AssetsBundle_BP));
 
@@ -615,36 +624,53 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 			M3App->BoardScheme = World->SpawnActor<AM3BoardScheme>(M3App->BoardScheme_BP);
 			M3App->BoardScheme->AttachToActor(M3App, FAttachmentTransformRules::KeepWorldTransform);
 		}
+
 		M3App->BoardScheme->Cols = EdMode->EdModeProps_BoardCreate->Cols;
 		M3App->BoardScheme->Rows = EdMode->EdModeProps_BoardCreate->Rows;
+		M3App->BoardScheme->ElementSize = EdMode->EdModeProps_BoardCreate->ElementSize;
+
+		if (!M3App->BoardScheme->FunctionalCellClosedScheme) {
+			M3App->BoardScheme->FunctionalCellClosedScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->FunctionalCellClosedScheme_BP);
+			M3App->BoardScheme->FunctionalCellClosedScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->FunctionalCellHoleScheme) {
+			M3App->BoardScheme->FunctionalCellHoleScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->FunctionalCellHoleScheme_BP);
+			M3App->BoardScheme->FunctionalCellHoleScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->FunctionalCellRandomScheme) {
+			M3App->BoardScheme->FunctionalCellRandomScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->FunctionalCellRandomScheme_BP);
+			M3App->BoardScheme->FunctionalCellRandomScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
 
 		if (!M3App->BoardScheme->ElementRedScheme) {
-			M3App->BoardScheme->ElementRedScheme = World->SpawnActor<AM3CellAppointmentScheme>(M3App->ElementRedScheme_BP);
+			M3App->BoardScheme->ElementRedScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->ElementRedScheme_BP);
 			M3App->BoardScheme->ElementRedScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
 		if (!M3App->BoardScheme->ElementGreenScheme) {
-			M3App->BoardScheme->ElementGreenScheme = World->SpawnActor<AM3CellAppointmentScheme>(M3App->ElementGreenScheme_BP);
+			M3App->BoardScheme->ElementGreenScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->ElementGreenScheme_BP);
 			M3App->BoardScheme->ElementGreenScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
 		if (!M3App->BoardScheme->ElementBlueScheme) {
-			M3App->BoardScheme->ElementBlueScheme = World->SpawnActor<AM3CellAppointmentScheme>(M3App->ElementBlueScheme_BP);
+			M3App->BoardScheme->ElementBlueScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->ElementBlueScheme_BP);
 			M3App->BoardScheme->ElementBlueScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
 		if (!M3App->BoardScheme->ElementYellowScheme) {
-			M3App->BoardScheme->ElementYellowScheme = World->SpawnActor<AM3CellAppointmentScheme>(M3App->ElementYellowScheme_BP);
+			M3App->BoardScheme->ElementYellowScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->ElementYellowScheme_BP);
 			M3App->BoardScheme->ElementYellowScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
 		if (!M3App->BoardScheme->ElementOrangeScheme) {
-			M3App->BoardScheme->ElementOrangeScheme = World->SpawnActor<AM3CellAppointmentScheme>(M3App->ElementOrangeScheme_BP);
+			M3App->BoardScheme->ElementOrangeScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->ElementOrangeScheme_BP);
 			M3App->BoardScheme->ElementOrangeScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
 		if (!M3App->BoardScheme->ElementPurpleScheme) {
-			M3App->BoardScheme->ElementPurpleScheme = World->SpawnActor<AM3CellAppointmentScheme>(M3App->ElementPurpleScheme_BP);
+			M3App->BoardScheme->ElementPurpleScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->ElementPurpleScheme_BP);
 			M3App->BoardScheme->ElementPurpleScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
@@ -652,6 +678,8 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 		GenerateElementsVisual(M3App);
 	}
 	GEditor->EndTransaction();
+
+	FM3EdModeToolkit::FillBoardSchemeSettings();
 
 	return FReply::Handled();
 }
@@ -669,6 +697,11 @@ FReply FM3EdModeToolkit::ON_BoardReskin_BTN() {
 				M3App->AssetsBundle = EdMode->EdModeProps_BoardReskin->AssetsBundle;
 			}
 
+			M3App->BoardScheme->ElementSize = EdMode->EdModeProps_BoardReskin->ElementSize;
+
+			if (EdMode->EdModeProps_BoardReskin->CellMaterial) {
+				M3App->AssetsBundle->Cell.Material = EdMode->EdModeProps_BoardReskin->CellMaterial;
+			}
 			if (EdMode->EdModeProps_BoardReskin->RedElementMaterial) {
 				M3App->AssetsBundle->Element_RED.Material = EdMode->EdModeProps_BoardReskin->RedElementMaterial;
 			}
@@ -688,6 +721,9 @@ FReply FM3EdModeToolkit::ON_BoardReskin_BTN() {
 				M3App->AssetsBundle->Element_PURPLE.Material = EdMode->EdModeProps_BoardReskin->PurpleElementMaterial;
 			}
 
+			if (EdMode->EdModeProps_BoardReskin->CellMesh) {
+				M3App->AssetsBundle->Cell.Mesh = EdMode->EdModeProps_BoardReskin->CellMesh;
+			}
 			if (EdMode->EdModeProps_BoardReskin->RedElementMesh) {
 				M3App->AssetsBundle->Element_RED.Mesh = EdMode->EdModeProps_BoardReskin->RedElementMesh;
 			}
@@ -724,7 +760,14 @@ FReply FM3EdModeToolkit::ON_BoardSchemeSave_BTN() {
 		if (M3App) {
 			const auto BoardScheme = M3App->BoardScheme;
 
-			BoardScheme->Turns = EdMode->EdModeProps_BoardScheme->Turns;
+			BoardScheme->IsTurnBased = EdMode->EdModeProps_BoardScheme->IsTurnBased;
+			BoardScheme->Duration = EdMode->EdModeProps_BoardScheme->Duration;
+			BoardScheme->OneMatchScores = EdMode->EdModeProps_BoardScheme->OneMatchScores;
+			BoardScheme->IsUseComboMatchScores = EdMode->EdModeProps_BoardScheme->IsUseComboMatchScores;
+			BoardScheme->ComboMatchScoresMultiplier = EdMode->EdModeProps_BoardScheme->ComboMatchScoresMultiplier;
+			BoardScheme->Star1Scores = EdMode->EdModeProps_BoardScheme->Star1Scores;
+			BoardScheme->Star2Scores = EdMode->EdModeProps_BoardScheme->Star2Scores;
+			BoardScheme->Star3Scores = EdMode->EdModeProps_BoardScheme->Star3Scores;
 
 			BoardScheme->ElementIds.Empty();
 			if (EdMode->EdModeProps_BoardScheme->RedElementExist) {
@@ -746,27 +789,27 @@ FReply FM3EdModeToolkit::ON_BoardSchemeSave_BTN() {
 				BoardScheme->ElementIds.Add(EM3ElementId::ELEMENT_PURPLE);
 			}
 
-			AM3GoalScheme* GoalScheme = BoardScheme->GetGoalScheme(World, EM3ElementId::ELEMENT_RED);
+			AM3GoalScheme* GoalScheme = BoardScheme->GetGoalScheme(World, EM3GoalId::COLLECT_RED_ELEMENTS);
 			GoalScheme->Enabled = EdMode->EdModeProps_BoardScheme->CollectRedElements;
 			GoalScheme->Quantity = EdMode->EdModeProps_BoardScheme->RedElementsQuantity;
 
-			GoalScheme = BoardScheme->GetGoalScheme(World, EM3ElementId::ELEMENT_GREEN);
+			GoalScheme = BoardScheme->GetGoalScheme(World, EM3GoalId::COLLECT_GREEN_ELEMENTS);
 			GoalScheme->Enabled = EdMode->EdModeProps_BoardScheme->CollectGreenElements;
 			GoalScheme->Quantity = EdMode->EdModeProps_BoardScheme->GreenElementsQuantity;
 
-			GoalScheme = BoardScheme->GetGoalScheme(World, EM3ElementId::ELEMENT_BLUE);
+			GoalScheme = BoardScheme->GetGoalScheme(World, EM3GoalId::COLLECT_BLUE_ELEMENTS);
 			GoalScheme->Enabled = EdMode->EdModeProps_BoardScheme->CollectBlueElements;
 			GoalScheme->Quantity = EdMode->EdModeProps_BoardScheme->BlueElementsQuantity;
 
-			GoalScheme = BoardScheme->GetGoalScheme(World, EM3ElementId::ELEMENT_YELLOW);
+			GoalScheme = BoardScheme->GetGoalScheme(World, EM3GoalId::COLLECT_YELLOW_ELEMENTS);
 			GoalScheme->Enabled = EdMode->EdModeProps_BoardScheme->CollectYellowElements;
 			GoalScheme->Quantity = EdMode->EdModeProps_BoardScheme->YellowElementsQuantity;
 
-			GoalScheme = BoardScheme->GetGoalScheme(World, EM3ElementId::ELEMENT_ORANGE);
+			GoalScheme = BoardScheme->GetGoalScheme(World, EM3GoalId::COLLECT_ORANGE_ELEMENTS);
 			GoalScheme->Enabled = EdMode->EdModeProps_BoardScheme->CollectOrangeElements;
 			GoalScheme->Quantity = EdMode->EdModeProps_BoardScheme->OrangeElementsQuantity;
 
-			GoalScheme = BoardScheme->GetGoalScheme(World, EM3ElementId::ELEMENT_PURPLE);
+			GoalScheme = BoardScheme->GetGoalScheme(World, EM3GoalId::COLLECT_PURPLE_ELEMENTS);
 			GoalScheme->Enabled = EdMode->EdModeProps_BoardScheme->CollectPurpleElements;
 			GoalScheme->Quantity = EdMode->EdModeProps_BoardScheme->PurpleElementsQuantity;
 		}
@@ -821,6 +864,7 @@ AM3App* FM3EdModeToolkit::GetM3App() {
 
 void FM3EdModeToolkit::GenerateElementsScheme(class AM3App* M3App) {
 
+	FM3EdMode* EdMode = (FM3EdMode*)(GLevelEditorModeTools().GetActiveMode(FM3EdMode::EM_M3));
 	const auto World = GEditor->GetEditorWorldContext().World();
 	const auto BoardScheme = M3App->BoardScheme;
 	const auto BoardAssetsBundle = static_cast<UM3BoardAssetsBundle*>(M3App->AssetsBundle);
@@ -840,7 +884,7 @@ void FM3EdModeToolkit::GenerateElementsScheme(class AM3App* M3App) {
 		for (int Row = 0; Row < Rows; ++Row) {
 			AM3CellScheme* CellScheme = BoardScheme->Cells[Col + Row * Cols];
 			if (!CellScheme) {
-				CellScheme = World->SpawnActor<AM3CellScheme>(M3App->CellScheme_BP);
+				CellScheme = World->SpawnActor<AM3CellScheme>(EdMode->EdModeProps_BoardCreate->CellScheme_BP);
 				CellScheme->AttachToActor(BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 				CellScheme->Col = Col;
 				CellScheme->Row = Row;
@@ -864,12 +908,12 @@ void FM3EdModeToolkit::GenerateElementsScheme(class AM3App* M3App) {
 					int ElementIdIndex = FMath::RandRange(0, ElementIds.Num() - 1);
 					ElementId = ElementIds[ElementIdIndex];
 				} while ((i >= 2 &&
-					BoardScheme->Cells[(i - 1) + j * Cols]->GetAppointment(EM3CellAppointment::ELEMENT) && BoardScheme->Cells[(i - 1) + j * Cols]->GetAppointment(EM3CellAppointment::ELEMENT)->Id == ElementId &&
-					BoardScheme->Cells[(i - 2) + j * Cols]->GetAppointment(EM3CellAppointment::ELEMENT) && BoardScheme->Cells[(i - 2) + j * Cols]->GetAppointment(EM3CellAppointment::ELEMENT)->Id == ElementId)
+					BoardScheme->Cells[(i - 1) + j * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT) && BoardScheme->Cells[(i - 1) + j * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT)->Id == ElementId &&
+					BoardScheme->Cells[(i - 2) + j * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT) && BoardScheme->Cells[(i - 2) + j * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT)->Id == ElementId)
 					||
 					(j >= 2 &&
-						BoardScheme->Cells[i + (j - 1) * Cols]->GetAppointment(EM3CellAppointment::ELEMENT) && BoardScheme->Cells[i + (j - 1) * Cols]->GetAppointment(EM3CellAppointment::ELEMENT)->Id == ElementId &&
-						BoardScheme->Cells[i + (j - 2) * Cols]->GetAppointment(EM3CellAppointment::ELEMENT) && BoardScheme->Cells[i + (j - 2) * Cols]->GetAppointment(EM3CellAppointment::ELEMENT)->Id == ElementId));
+						BoardScheme->Cells[i + (j - 1) * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT) && BoardScheme->Cells[i + (j - 1) * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT)->Id == ElementId &&
+						BoardScheme->Cells[i + (j - 2) * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT) && BoardScheme->Cells[i + (j - 2) * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT)->Id == ElementId));
 				
 				switch (ElementId) {
 					case EM3ElementId::ELEMENT_RED:
@@ -917,7 +961,8 @@ void FM3EdModeToolkit::GenerateElementsVisual(class AM3App* M3App) {
 				break;
 			}
 
-			switch (CellScheme->GetAppointment(EM3CellAppointment::ELEMENT)->Id) {
+			if (CellScheme->IsAppointmentExist(EM3CellAppointment::REGULARELEMENT)) {
+				switch (CellScheme->GetAppointment(EM3CellAppointment::REGULARELEMENT)->Id) {
 				case EM3ElementId::ELEMENT_RED:
 					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
 					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
@@ -944,7 +989,99 @@ void FM3EdModeToolkit::GenerateElementsVisual(class AM3App* M3App) {
 					break;
 				default:
 					break;
+				}
 			}
+		}
+	}
+}
+
+void FM3EdModeToolkit::FillBoardSchemeSettings() {
+	UWorld* World = GEditor->GetEditorWorldContext().World();
+	AM3App* M3App = nullptr;
+
+	for (TActorIterator<AActor> It(World, AM3App::StaticClass()); It; ++It) {
+		M3App = static_cast<AM3App*>(*It);
+		break;
+	}
+
+	if (M3App) {
+		FM3EdMode* EdMode = (FM3EdMode*)(GLevelEditorModeTools().GetActiveMode(FM3EdMode::EM_M3));
+		if (EdMode->EdModeProps_BoardScheme && M3App->BoardScheme) {
+			EdMode->EdModeProps_BoardScheme->RedElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_RED);
+			EdMode->EdModeProps_BoardScheme->GreenElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_GREEN);
+			EdMode->EdModeProps_BoardScheme->BlueElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_BLUE);
+			EdMode->EdModeProps_BoardScheme->YellowElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_YELLOW);
+			EdMode->EdModeProps_BoardScheme->OrangeElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_ORANGE);
+			EdMode->EdModeProps_BoardScheme->PurpleElementExist = M3App->BoardScheme->ElementIds.Contains(EM3ElementId::ELEMENT_PURPLE);
+
+			EdMode->EdModeProps_BoardScheme->IsTurnBased = M3App->BoardScheme->IsTurnBased;
+			EdMode->EdModeProps_BoardScheme->Duration = M3App->BoardScheme->Duration;
+			EdMode->EdModeProps_BoardScheme->OneMatchScores = M3App->BoardScheme->OneMatchScores;
+			EdMode->EdModeProps_BoardScheme->IsUseComboMatchScores = M3App->BoardScheme->IsUseComboMatchScores;
+			EdMode->EdModeProps_BoardScheme->ComboMatchScoresMultiplier = M3App->BoardScheme->ComboMatchScoresMultiplier;
+			EdMode->EdModeProps_BoardScheme->Star1Scores = M3App->BoardScheme->Star1Scores;
+			EdMode->EdModeProps_BoardScheme->Star2Scores = M3App->BoardScheme->Star2Scores;
+			EdMode->EdModeProps_BoardScheme->Star3Scores = M3App->BoardScheme->Star3Scores;
+
+			for (const auto Goal : M3App->BoardScheme->Goals) {
+				switch (Goal->Id) {
+				case EM3GoalId::COLLECT_RED_ELEMENTS:
+					EdMode->EdModeProps_BoardScheme->CollectRedElements = Goal->Enabled;
+					EdMode->EdModeProps_BoardScheme->RedElementsQuantity = Goal->Quantity;
+					break;
+				case EM3GoalId::COLLECT_GREEN_ELEMENTS:
+					EdMode->EdModeProps_BoardScheme->CollectGreenElements = Goal->Enabled;
+					EdMode->EdModeProps_BoardScheme->GreenElementsQuantity = Goal->Quantity;
+					break;
+				case EM3GoalId::COLLECT_BLUE_ELEMENTS:
+					EdMode->EdModeProps_BoardScheme->CollectBlueElements = Goal->Enabled;
+					EdMode->EdModeProps_BoardScheme->BlueElementsQuantity = Goal->Quantity;
+					break;
+				case EM3GoalId::COLLECT_YELLOW_ELEMENTS:
+					EdMode->EdModeProps_BoardScheme->CollectYellowElements = Goal->Enabled;
+					EdMode->EdModeProps_BoardScheme->YellowElementsQuantity = Goal->Quantity;
+					break;
+				case EM3GoalId::COLLECT_ORANGE_ELEMENTS:
+					EdMode->EdModeProps_BoardScheme->CollectOrangeElements = Goal->Enabled;
+					EdMode->EdModeProps_BoardScheme->OrangeElementsQuantity = Goal->Quantity;
+					break;
+				case EM3GoalId::COLLECT_PURPLE_ELEMENTS:
+					EdMode->EdModeProps_BoardScheme->CollectPurpleElements = Goal->Enabled;
+					EdMode->EdModeProps_BoardScheme->PurpleElementsQuantity = Goal->Quantity;
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+		if (EdMode->EdModeProps_BoardReskin && M3App->AssetsBundle) {
+
+			EdMode->EdModeProps_BoardReskin->AssetsBundle_BP = M3App->AssetsBundle_BP;
+			EdMode->EdModeProps_BoardReskin->AssetsBundle = M3App->AssetsBundle;
+
+			EdMode->EdModeProps_BoardReskin->ElementSize = M3App->BoardScheme->ElementSize;
+
+			EdMode->EdModeProps_BoardReskin->CellMaterial = M3App->AssetsBundle->Cell.Material;
+			EdMode->EdModeProps_BoardReskin->CellMesh = M3App->AssetsBundle->Cell.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->RedElementMaterial = M3App->AssetsBundle->Element_RED.Material;
+			EdMode->EdModeProps_BoardReskin->RedElementMesh = M3App->AssetsBundle->Element_RED.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->GreenElementMaterial = M3App->AssetsBundle->Element_GREEN.Material;
+			EdMode->EdModeProps_BoardReskin->GreenElementMesh = M3App->AssetsBundle->Element_GREEN.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlueElementMaterial = M3App->AssetsBundle->Element_BLUE.Material;
+			EdMode->EdModeProps_BoardReskin->BlueElementMesh = M3App->AssetsBundle->Element_BLUE.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->YellowElementMaterial = M3App->AssetsBundle->Element_YELLOW.Material;
+			EdMode->EdModeProps_BoardReskin->YellowElementMesh = M3App->AssetsBundle->Element_YELLOW.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->OrangeElementMaterial = M3App->AssetsBundle->Element_ORANGE.Material;
+			EdMode->EdModeProps_BoardReskin->OrangeElementMesh = M3App->AssetsBundle->Element_ORANGE.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->PurpleElementMaterial = M3App->AssetsBundle->Element_PURPLE.Material;
+			EdMode->EdModeProps_BoardReskin->PurpleElementMesh = M3App->AssetsBundle->Element_PURPLE.Mesh;
 		}
 	}
 }

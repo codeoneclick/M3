@@ -21,6 +21,15 @@ UM3EdModeProps_BoardCreate::UM3EdModeProps_BoardCreate() {
 	static ConstructorHelpers::FClassFinder<AM3CellScheme> CellScheme_BP_RESOURCE(TEXT("Class'/M3/M3CellScheme_BP.M3CellScheme_BP_C'"));
 	CellScheme_BP = CellScheme_BP_RESOURCE.Class;
 
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentFunctionalCellClosedScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentFunctionalCellClosed_BP.M3AppointmentFunctionalCellClosed_BP_C'"));
+	FunctionalCellClosedScheme_BP = AppointmentFunctionalCellClosedScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentFunctionalCellHoleScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentFunctionalCellHole_BP.M3AppointmentFunctionalCellHole_BP_C'"));
+	FunctionalCellHoleScheme_BP = AppointmentFunctionalCellHoleScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentFunctionalCellRandomScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentFunctionalCellRandom_BP.M3AppointmentFunctionalCellRandom_BP_C'"));
+	FunctionalCellRandomScheme_BP = AppointmentFunctionalCellRandomScheme_BP_RESOURCE.Class;
+
 	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentFunctionalSpawnScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentFunctionalSpawn_BP.M3AppointmentFunctionalSpawn_BP_C'"));
 	FunctionalSpawnScheme_BP = AppointmentFunctionalSpawnScheme_BP_RESOURCE.Class;
 
@@ -50,6 +59,9 @@ void UM3EdModeProps_BoardReskin::PostEditChangeProperty(struct FPropertyChangedE
 		if (AssetsBundle_BP) {
 			UWorld* World = GEditor->GetEditorWorldContext().World();
 			AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(this, AssetsBundle_BP));
+
+			CellMaterial = AssetsBundle->Cell.Material;
+			CellMesh = AssetsBundle->Cell.Mesh;
 
 			RedElementMaterial = AssetsBundle->Element_RED.Material;
 			RedElementMesh = AssetsBundle->Element_RED.Mesh;

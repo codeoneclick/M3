@@ -11,7 +11,7 @@
 struct M3Goal {
 public:
 
-	EM3ElementId Id;
+	EM3GoalId Id;
 	int Quantity;
 	int MaxQuantity;
 };
@@ -38,7 +38,7 @@ public:
 	void Serialize() override;
 	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
-	void Init();
+	void Init() override;
 
 	PROP_DECL_R(Goals, std::shared_ptr<std::vector<M3Goal>>)
 };

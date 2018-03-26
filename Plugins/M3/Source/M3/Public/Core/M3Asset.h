@@ -47,8 +47,4 @@ public:
 
 	UPROPERTY(Category = "M3Asset", EditAnywhere, BlueprintReadWrite)
 	class UStaticMesh* Mesh;
-
-	UPROPERTY(Category = "M3Asset", EditAnywhere, BlueprintReadWrite)
-	class USkeletalMesh* AnimatedMesh;
-
 };

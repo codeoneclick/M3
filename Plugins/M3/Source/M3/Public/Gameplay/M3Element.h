@@ -32,17 +32,17 @@ protected:
 
 public:	
 
-	UPROPERTY(Category = "Delegates", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Delegates", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3ViewDelegate_INTERFACE> Delegate_BP;
 
-	UPROPERTY(Category = "Delegates", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "M3Delegates", EditAnywhere, BlueprintReadWrite)
 	UM3ViewDelegate_INTERFACE* Delegate;
 
 	virtual void Tick(float DeltaTime) override;
 
-	void OnLoad(UM3AssetsBundle* Bundle);
-	void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
-	void OnBindViewDelegate();
+	virtual void OnLoad(UM3AssetsBundle* Bundle);
+	virtual void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
+	virtual void OnBindViewDelegate();
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;

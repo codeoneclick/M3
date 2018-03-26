@@ -39,6 +39,8 @@ protected:
 
 	TSharedPtr<SWidget> ToolkitWidget;
 
+	static void FillBoardSchemeSettings();
+
 	static class AM3App* GetM3App();
 	static void GenerateElementsScheme(class AM3App* M3App);
 	static void GenerateElementsVisual(class AM3App* M3App);

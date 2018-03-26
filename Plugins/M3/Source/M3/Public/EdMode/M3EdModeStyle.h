@@ -20,7 +20,7 @@ public:
 	FM3EdModeStyle() = default;
 	~FM3EdModeStyle() = default;
 
-	static void Initialize();
+	static void Startup();
 	static void Shutdown();
 	static TSharedPtr<class ISlateStyle> Get();
 };

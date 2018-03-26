@@ -47,7 +47,7 @@ bool M3ElementsDropController::DropDiagonal(const M3BoardModel_SharedPtr& Board,
 	int Lookup = Row + 1;
 	auto LookupCell = Board->GetCell(Col, Lookup);
 	bool bIsBlocked = !LookupCell;
-	if (!LookupCell) {
+	if (!bIsBlocked) {
 		for (Lookup = Row + 1; Lookup < Board->GetRows(); ++Lookup) {
 			LookupCell = Board->GetCell(Col, Lookup);
 			if (!LookupCell) {

@@ -35,4 +35,5 @@ void M3CellView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	int Col = CellModel->Entity->Get()->Col->Get();
 	int Row = CellModel->Entity->Get()->Row->Get();
 	GetSuperview()->SetActorRelativeLocation(FVector(Row * BoardSettingsModel->GetElementSize().Y, Col * BoardSettingsModel->GetElementSize().X, 0));
+	GetSuperview()->SetActorHiddenInGame(CellModel->GetIsClosed());
 }

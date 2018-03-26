@@ -66,7 +66,7 @@ void AM3GamePawn::TriggerClick()
 
 void AM3GamePawn::TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers)
 {
-	FHitResult HitResult;
+	/* FHitResult HitResult;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 	if (bDrawDebugHelpers)
 	{
@@ -93,5 +93,5 @@ void AM3GamePawn::TraceForBlock(const FVector& Start, const FVector& End, bool b
 	{
 		CurrentBlockFocus->Highlight(false);
 		CurrentBlockFocus = nullptr;
-	}
+	}*/
 }

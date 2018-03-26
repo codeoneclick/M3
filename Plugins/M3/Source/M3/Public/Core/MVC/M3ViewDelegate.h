@@ -18,6 +18,4 @@ public:
 
 	UM3ViewDelegate_INTERFACE();
 	virtual ~UM3ViewDelegate_INTERFACE() = default;
-
-	virtual int ViewSTTI() const;
 };

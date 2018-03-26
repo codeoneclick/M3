@@ -36,13 +36,13 @@ void M3SwapModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 void M3SwapModel::Init() {
 }
 
-bool M3SwapModel::CanSwapElementWithElementId(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, int ElementId) {
+bool M3SwapModel::CanSwapElementWithElementColor(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, EM3ElementColor Color) {
 	bool Result = false;
 	const auto& Cell = Cells->data()[Col + Row * Cols];
 	if (Cell) {
 		const auto& Element = Cell->GetSubmodel<M3ElementModel>();
 		if (Element) {
-			Result = Element->GetElementId() == ElementId;
+			Result = Element->GetColor() == Color;
 		}
 	}
 	return Result;
@@ -82,15 +82,15 @@ void M3SwapModel::SwapElements(const M3CellModel_SharedPtr& CellA, const M3CellM
 bool M3SwapModel::HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row) {
 	const auto& Element = Cells->data()[Col + Row * Cols]->GetSubmodel<M3ElementModel>();
 	int Count = 0;
-	const int ElementId = Element->GetElementId();
+	EM3ElementColor Color = Element->GetColor();
 
 	int HorizontalStart = -1;
 	int HorizontalEnd = -1;
 	int HorizontalLength = 1;
 	int i = -1;
 	int j = -1;
-	for (i = Col - 1; i >= 0 && M3SwapModel::CanSwapElementWithElementId(Cells, Cols, Rows, i, Row, ElementId); --i, ++HorizontalLength);
-	for (j = Col + 1; j < Cols && M3SwapModel::CanSwapElementWithElementId(Cells, Cols, Rows, j, Row, ElementId); ++j, ++HorizontalLength);
+	for (i = Col - 1; i >= 0 && M3SwapModel::CanSwapElementWithElementColor(Cells, Cols, Rows, i, Row, Color); --i, ++HorizontalLength);
+	for (j = Col + 1; j < Cols && M3SwapModel::CanSwapElementWithElementColor(Cells, Cols, Rows, j, Row, Color); ++j, ++HorizontalLength);
 	if (HorizontalLength >= 3) {
 		Count += HorizontalLength;
 		assert(j - (i + 1) == HorizontalLength);
@@ -103,8 +103,8 @@ bool M3SwapModel::HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedP
 	int VerticalLength = 1;
 	i = -1;
 	j = -1;
-	for (i = Row - 1; i >= 0 && M3SwapModel::CanSwapElementWithElementId(Cells, Cols, Rows, Col, i, ElementId); --i, ++VerticalLength);
-	for (j = Row + 1; j < Rows && M3SwapModel::CanSwapElementWithElementId(Cells, Cols, Rows, Col, j, ElementId); ++j, ++VerticalLength);
+	for (i = Row - 1; i >= 0 && M3SwapModel::CanSwapElementWithElementColor(Cells, Cols, Rows, Col, i, Color); --i, ++VerticalLength);
+	for (j = Row + 1; j < Rows && M3SwapModel::CanSwapElementWithElementColor(Cells, Cols, Rows, Col, j, Color); ++j, ++VerticalLength);
 	if (VerticalLength >= 3) {
 		Count += VerticalLength;
 		assert(j - (i + 1) == = VerticalLength);

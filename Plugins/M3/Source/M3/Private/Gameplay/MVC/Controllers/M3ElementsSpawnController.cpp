@@ -4,6 +4,7 @@
 #include "M3BoardStateModel.h"
 #include "M3BoardModel.h"
 #include "M3ElementModel.h"
+#include "M3RegularelementModel.h"
 #include "M3CellModel.h"
 #include "M3SharedModel.h"
 #include "M3BoardSettingsModel.h"
@@ -22,7 +23,6 @@ bool M3ElementsSpawnController::CanBeExecuted() const {
 
 void M3ElementsSpawnController::Execute(float Deltatime) {
 	const auto& Board = M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>();
-	const auto& BoardState = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
 	const auto& BoardSettings = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
 
 	int PreviousElementId = -1;
@@ -33,7 +33,9 @@ void M3ElementsSpawnController::Execute(float Deltatime) {
 	for (int Col = 0; Col < Cols; ++Col) {
 		const auto& Cell = Board->GetCell(Col, Rows - 1);
 		if (Cell && Cell->CanContainElement()) {
-			const auto& Element = BoardState->PopUnusedElement();
+			const auto Element = M3ElementModel::Construct<M3ElementModel>();
+			const auto Regularelement = M3RegularelementModel::Construct<M3RegularelementModel>();
+			Element->AddSubmodel(Regularelement);
 			Cell->AddSubmodel(Element);
 			int ElementRandomId = -1;
 			do {
@@ -43,11 +45,14 @@ void M3ElementsSpawnController::Execute(float Deltatime) {
 
 			PreviousElementId = ElementRandomId;
 
-			Element->Entity->Get()->ElementId->Set(ElementRandomId);
+			Regularelement->Entity->Get()->Id->Set(static_cast<EM3ElementId>(ElementRandomId));
 
 			if (!Element->Entity->Get()->IsAssignedToView->Get()) {
-				Element->AddToContainer();
 				M3ElementModel::ApplyContainer();
+			}
+
+			if (Regularelement->Entity->Get()->IsAssignedToView->Get()) {
+				M3RegularelementModel::ApplyContainer();
 			}
 
 			Element->SetState(EM3ElementState::SPAWNING);
