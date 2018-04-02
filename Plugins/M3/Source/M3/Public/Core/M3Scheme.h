@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -136,6 +136,8 @@ class M3_API AM3GoalScheme : public AM3Scheme_INTERFACE {
 
 public:
 
+	AM3GoalScheme();
+
 	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
 	EM3GoalId Id;
 
@@ -152,6 +154,8 @@ class M3_API AM3BoardScheme : public AM3Scheme_INTERFACE {
 	GENERATED_BODY()
 
 public:
+
+	AM3BoardScheme();
 
 	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Cols;

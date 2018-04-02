@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -9,9 +9,9 @@ template<unsigned int NUM>
 struct M3AppEvent_Params
 {
 	template<typename... F_ARGS, typename... T_ARGS, typename... ARGS>
-	static void Forward(std::function<void(F_ARGS... Args)> Function, std::tuple<T_ARGS...> const& TArgs, ARGS... Args)
+	static void Forward(std::function<void(F_ARGS... FArgs)> _Function, std::tuple<T_ARGS...> const& _TArgs, ARGS... _Args)
 	{
-		M3AppEvent_Params<NUM - 1>::Forward(Function, TArgs, std::get<NUM - 1>(TArgs), Args...);
+		M3AppEvent_Params<NUM - 1>::Forward(_Function, _TArgs, std::get<NUM - 1>(_TArgs), _Args...);
 	}
 };
 
@@ -19,19 +19,19 @@ template<>
 struct M3AppEvent_Params<0>
 {
 	template<typename... F_ARGS, typename... T_ARGS, typename... ARGS>
-	static void Forward(std::function<void(F_ARGS... args)> Function, std::tuple<T_ARGS...> const&, ARGS... Args)
+	static void Forward(std::function<void(F_ARGS... FArgs)> _Function, std::tuple<T_ARGS...> const&, ARGS... _Args)
 	{
-		Function(Args...);
+		_Function(_Args...);
 	}
 };
 
 template<typename... F_ARGS, typename... T_ARGS>
-void Forward(std::function<void(F_ARGS... FArgs)> Function, std::tuple<T_ARGS...> const& TArgs)
+void Forward(std::function<void(F_ARGS... FArgs)> _Function, std::tuple<T_ARGS...> const& _TArgs)
 {
-	M3AppEvent_Params<sizeof...(T_ARGS)>::Forward(Function, TArgs);
+	M3AppEvent_Params<sizeof...(T_ARGS)>::Forward(_Function, _TArgs);
 };
 
-class M3AppEvent_Callback_INTERFACE : std::enable_shared_from_this<M3AppEvent_Callback_INTERFACE>
+class M3AppEvent_Callback_INTERFACE : public std::enable_shared_from_this<M3AppEvent_Callback_INTERFACE>
 {
 public:
 
@@ -48,10 +48,10 @@ protected:
 
 public:
 
-	M3AppTask_Callback(FUCTION Function, ARGS... Args)
+	M3AppTask_Callback(FUCTION _Function, ARGS... _Args)
 	{
-		this->Function = Function;
-		this->Args = std::make_tuple(Args...);
+		Function = _Function;
+		Args = std::make_tuple(_Args...);
 	};
 
 	virtual ~M3AppTask_Callback() = default;
@@ -71,9 +71,9 @@ protected:
 
 public:
 
-	M3AppEvent_INTERFACE(const std::string& Id, const M3AppEvent_Callback_INTERFACE_SharedPtr& Callback) {
-		this->Id = Id;
-		this->Callback = Callback;
+	M3AppEvent_INTERFACE(const std::string& _Id, const M3AppEvent_Callback_INTERFACE_SharedPtr& _Callback) {
+		Id = _Id;
+		Callback = _Callback;
 	}
 	
 	virtual ~M3AppEvent_INTERFACE() = default;
@@ -97,14 +97,14 @@ protected:
 
 public:
 
-	M3AppEventModelProp_Callback(const Callback_t& Callback) {
-		this->Callback = Callback;
+	M3AppEventModelProp_Callback(const Callback_t& _Callback) {
+		Callback = _Callback;
 	};
 
 	virtual ~M3AppEventModelProp_Callback() = default;
 
-	void Call(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop) {
-		Callback(Model, Prop);
+	void Call(const M3Model_INTERFACE_SharedPtr& _Model, const M3KVProperty_INTERFACE_SharedPtr& _Prop) {
+		Callback(_Model, _Prop);
 	}
 };
 
@@ -112,19 +112,19 @@ class M3AppEventModelProp : public M3AppEvent_INTERFACE {
 
 public:
 
-	M3AppEventModelProp(int ModelId, const std::string& PropId, const M3AppEvent_Callback_INTERFACE_SharedPtr& Callback) :
-		M3AppEvent_INTERFACE(GenerateGuid(ModelId, PropId), Callback) {
+	M3AppEventModelProp(int _ModelId, const std::string& _PropId, const M3AppEvent_Callback_INTERFACE_SharedPtr& _Callback) :
+		M3AppEvent_INTERFACE(GenerateGuid(_ModelId, _PropId), _Callback) {
 	}
 
 	virtual ~M3AppEventModelProp() = default;
 
-	void Call(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop) {
-		std::static_pointer_cast<M3AppEventModelProp_Callback>(Callback)->Call(Model, Prop);
+	void Call(const M3Model_INTERFACE_SharedPtr& _Model, const M3KVProperty_INTERFACE_SharedPtr& _Prop) {
+		std::static_pointer_cast<M3AppEventModelProp_Callback>(Callback)->Call(_Model, _Prop);
 	}
 
-	static std::string GenerateGuid(int ModelId, const std::string& PropId) {
+	static std::string GenerateGuid(int _ModelId, const std::string& _PropId) {
 		std::stringstream StringStream;
-		StringStream << static_cast<int>(ModelId) << PropId;
+		StringStream << static_cast<int>(_ModelId) << _PropId;
 		return StringStream.str();
 	}
 };
@@ -141,8 +141,8 @@ protected:
 
 public:
 
-	M3AppEvent_Callback(const Callback_t& Callback) {
-		this->Callback = Callback;
+	M3AppEvent_Callback(const Callback_t& _Callback) {
+		Callback = _Callback;
 	};
 
 	virtual ~M3AppEvent_Callback() = default;
@@ -157,8 +157,8 @@ class M3AppEvent : public M3AppEvent_INTERFACE {
 
 public:
 
-	M3AppEvent(const std::string& Id, const M3AppEvent_Callback_INTERFACE_SharedPtr& Callback) :
-		M3AppEvent_INTERFACE(Id, Callback){
+	M3AppEvent(const std::string& _Id, const M3AppEvent_Callback_INTERFACE_SharedPtr& _Callback) :
+		M3AppEvent_INTERFACE(_Id, _Callback){
 	}
 
 	void Call(ARGS... Args) {

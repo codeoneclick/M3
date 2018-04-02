@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3CoordinatingComponent.h"
 #include "Engine/World.h"
@@ -41,6 +41,7 @@ UM3CoordinatingComponent::~UM3CoordinatingComponent() {
 	M3ChainModel::Unregister();
 	M3BoardStateModel::Unregister();
 	M3BoardSettingsModel::Unregister();
+	M3GoalModel::Unregister();
 	M3GoalsModel::Unregister();
 	M3RegularelementModel::Unregister();
 
@@ -67,6 +68,7 @@ void UM3CoordinatingComponent::CreateModels() {
 	M3BoardActionsAccumulationModel::Register();
 	M3ChainModel::Register();
 	M3BoardStateModel::Register();
+	M3GoalModel::Register();
 	M3GoalsModel::Register();
 	M3RegularelementModel::Register();
 

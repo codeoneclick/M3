@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -72,7 +72,7 @@ class M3_API M3Model : public M3Model_INTERFACE
 static_assert(std::is_base_of<M3Entity, T>::value, "T must derive from M3Entity");
 private:
 
-	PROP_STATIC(public, M3Model<T>, TempContainer, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>)
+	PROP_STATIC(public, M3Model<T>, TempContainer, std::shared_ptr<std::list<std::shared_ptr<M3Model<T>>>>)
 	PROP_STATIC(public, M3Model<T>, Pool, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>)
 
 protected:
@@ -85,7 +85,7 @@ public:
 
 	PROP_STRONG(public, M3Model<T>, Entity, std::shared_ptr<T>, nullptr)
 
-	PROP_STATIC(public, M3Model<T>, Container, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>)
+	PROP_STATIC(public, M3Model<T>, Container, std::shared_ptr<std::list<std::shared_ptr<M3Model<T>>>>)
 
 	PROP_WEAK(public, M3Model<T>, Parent, std::weak_ptr<M3Model_INTERFACE>)
 
@@ -128,12 +128,12 @@ public:
 	}
 
 	static void Register() {
-		auto Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
-		Container = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
-		Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
-		TempContainer = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
-		Storage = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
-		Pool = std::make_shared<M3KVProperty<decltype(Storage)>>(Storage);
+		auto StorageList = std::make_shared<std::list<std::shared_ptr<M3Model<T>>>>();
+		Container = std::make_shared<M3KVProperty<decltype(StorageList)>>(StorageList);
+		StorageList = std::make_shared<std::list<std::shared_ptr<M3Model<T>>>>();
+		TempContainer = std::make_shared<M3KVProperty<decltype(StorageList)>>(StorageList);
+		auto StorageVector = std::make_shared<std::vector<std::shared_ptr<M3Model<T>>>>();
+		Pool = std::make_shared<M3KVProperty<decltype(StorageVector)>>(StorageVector);
 	};
 
 	static void Unregister() {
@@ -159,9 +159,7 @@ public:
 
 	void RemoveFromContainer() {
 		const auto Instance = M3Model_INTERFACE::shared_from_this();
-		std::remove_if(TempContainer->Get()->begin(), TempContainer->Get()->end(), [=](const std::shared_ptr<M3Model<T>> Model) {
-			return Instance == Model;
-		});
+		TempContainer->Get()->remove(std::static_pointer_cast<M3Model<T>>(Instance));
 	}
 
 	template<typename TSubmodel>
@@ -221,10 +219,10 @@ public:
 };
 
 template<typename T>
-PROP_STATIC_INIT(M3Model<T>, Container, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>, nullptr)
+PROP_STATIC_INIT(M3Model<T>, Container, std::shared_ptr<std::list<std::shared_ptr<M3Model<T>>>>, nullptr)
 
 template<typename T>
-PROP_STATIC_INIT(M3Model<T>, TempContainer, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>, nullptr)
+PROP_STATIC_INIT(M3Model<T>, TempContainer, std::shared_ptr<std::list<std::shared_ptr<M3Model<T>>>>, nullptr)
 
 template<typename T>
 PROP_STATIC_INIT(M3Model<T>, Pool, std::shared_ptr<std::vector<std::shared_ptr<M3Model<T>>>>, nullptr)

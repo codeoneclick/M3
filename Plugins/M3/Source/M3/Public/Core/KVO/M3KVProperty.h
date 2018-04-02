@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -41,12 +41,12 @@ private:
 protected:
 
 	void Init() {
-		Getter = [this]() {
-			return this->Value;
+		M3KVCoding<T>::Getter = [=]() {
+			return Value;
 		};
 
-		Setter = [this](const T& Value) {
-			this->Value = Value;
+		M3KVCoding<T>::Setter = [=](const T& _Value) {
+			Value = _Value;
 			if (Listeners.size() != 0) {
 				for (const auto& Listener : Listeners) {
 					Listener->OnChanged(shared_from_this());
@@ -61,8 +61,8 @@ public:
 		Init();
 	};
 
-	M3KVProperty(const T& Value) {
-		this->Value = Value;
+	M3KVProperty(const T& _Value) {
+		Value = _Value;
 		Init();
 	}
 
@@ -72,18 +72,18 @@ public:
 	M3KVProperty& operator= (const M3KVProperty&) = delete;
 
 	void Set(const T& _Value) {
-		if (!Setter)
+		if (!M3KVCoding<T>::Setter)
 		{
 			assert(false);
 		}
-		Setter(_Value);
+		M3KVCoding<T>::Setter(_Value);
 	}
 
 	T Get() const {
-		if (!Getter)
+		if (!M3KVCoding<T>::Getter)
 		{
 			assert(false);
 		}
-		return Getter();
+		return M3KVCoding<T>::Getter();
 	}
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -9,8 +9,8 @@ class M3KVCoding
 {
 protected:
 
-	std::function<T()> Getter;
-	std::function<void(const T&)> Setter;
+	std::function<T()> Getter = nullptr;
+	std::function<void(const T&)> Setter = nullptr;
 
 public:
 
@@ -21,6 +21,6 @@ public:
 
 	virtual ~M3KVCoding() = default;
 
-	virtual void Set(const T& Value) = 0;
+	virtual void Set(const T& _Value) = 0;
 	virtual T Get() const = 0;
 };

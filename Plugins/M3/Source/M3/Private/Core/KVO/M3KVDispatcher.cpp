@@ -1,3 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3KVDispatcher.h"

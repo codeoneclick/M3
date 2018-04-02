@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3Scheme.h"
 #include "M3App.h"
@@ -16,6 +16,8 @@
 
 #endif
 
+
+
 AM3CellAppointmentScheme* AM3CellScheme::EdModeSelectedAppointmentScheme = nullptr;
 
 AM3CellScheme::AM3CellScheme() {
@@ -23,16 +25,16 @@ AM3CellScheme::AM3CellScheme() {
 
 	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellClosedMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellClosed.M3_SM_CellClosed'"));
 	CellClosedMesh = CellClosedMesh_RESOURCE.Get();
-	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellHoleMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellHole.M3_SM_CellHole'"));
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellHoleMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_Element.M3_SM_Element'"));
 	CellHoleMesh = CellHoleMesh_RESOURCE.Get();
-	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellRandomMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellRandom.M3_SM_CellRandom'"));
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellRandomMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_Element.M3_SM_Element'"));
 	CellRandomMesh = CellRandomMesh_RESOURCE.Get();
 
-	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellClosedMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_BLACK.M3_MI_BLACK'"));
+	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellClosedMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_RED.M3_MI_RED'"));
 	CellClosedMaterial = CellClosedMaterial_RESOURCE.Get();
-	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellHoleMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_GRAY.M3_MI_GRAY'"));
+	static ConstructorHelpers::FObjectFinderOptional<UMaterial> CellHoleMaterial_RESOURCE(TEXT("Material'/M3/M3_M_HOLE_ALPHA.M3_M_HOLE_ALPHA'"));
 	CellHoleMaterial = CellHoleMaterial_RESOURCE.Get();
-	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellRandomMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_PURPLE.M3_MI_PURPLE'"));
+	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellRandomMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_GRAY.M3_MI_GRAY'"));
 	CellRandomMaterial = CellRandomMaterial_RESOURCE.Get();
 }
 
@@ -184,6 +186,22 @@ void AM3CellScheme::OnEditorMouseReleased() {
 }
 
 #endif
+
+AM3GoalScheme::AM3GoalScheme() {
+	PrimaryActorTick.bCanEverTick = true;
+	auto MeshComponent = GetComponentByClass(UStaticMeshComponent::StaticClass());
+	if (MeshComponent) {
+		Cast<UStaticMeshComponent>(MeshComponent)->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+AM3BoardScheme::AM3BoardScheme() {
+	PrimaryActorTick.bCanEverTick = true;
+	auto MeshComponent = GetComponentByClass(UStaticMeshComponent::StaticClass());
+	if (MeshComponent) {
+		Cast<UStaticMeshComponent>(MeshComponent)->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
 
 AM3GoalScheme* AM3BoardScheme::GetGoalScheme(UWorld* World, EM3GoalId Id) {
 	AM3GoalScheme* GoalScheme = nullptr;

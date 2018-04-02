@@ -14,7 +14,7 @@
 	"CanContainContent": true,
 	"IsBetaVersion": false,
 	"Installed": true,
-	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/eb647863a1664469aa5c212294afd890",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/24741018eedb4e11bd824aa74fd899b6",
 	"Modules": [
 		{
 			"Name": "M3",
@@ -22,7 +22,10 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win32",
-				"Win64"
+				"Win64",
+				"Mac",
+				"Html5",
+				"Android"
 			]
 		}
 	]

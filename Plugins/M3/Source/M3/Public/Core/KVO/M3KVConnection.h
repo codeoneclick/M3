@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -19,11 +19,11 @@ private:
 
 public:
 
-	M3KVConnection(const std::function<void(const T&)>& Callback) {
-		this->Callback = Callback;
+	M3KVConnection(const std::function<void(const T&)>& _Callback) {
+		Callback = _Callback;
 	};
 
 	void OnChanged(const M3KVProperty_INTERFACE_SharedPtr& Prop, const T& Value) {
-		this->Call(Value);
+		Call(Value);
 	};
 };

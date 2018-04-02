@@ -1,4 +1,4 @@
-// Copyright serhii serhiiv 2017. All rights reserved.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3EdModeToolkit.h"
 
@@ -24,7 +24,7 @@ EM3ElementId FM3EdModeToolkit::SelectedElementId = EM3ElementId::UNKNOWN;
 
 #define LOCTEXT_NAMESPACE "HMEdModeToolkit"
 
-void FM3EdModeToolkit::Init(const TSharedPtr<class IToolkitHost>& ToolkitHost)
+void FM3EdModeToolkit::Init(const TSharedPtr<class IToolkitHost>& _ToolkitHost)
 {
 	struct Locals
 	{
@@ -66,7 +66,7 @@ void FM3EdModeToolkit::Init(const TSharedPtr<class IToolkitHost>& ToolkitHost)
 				MAKE_Copyright_SLOT(this)
 			]
 		];
-	FModeToolkit::Init(ToolkitHost);
+	FModeToolkit::Init(_ToolkitHost);
 	FM3EdModeToolkit::FillBoardSchemeSettings();
 }
 
@@ -629,6 +629,11 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 		M3App->BoardScheme->Rows = EdMode->EdModeProps_BoardCreate->Rows;
 		M3App->BoardScheme->ElementSize = EdMode->EdModeProps_BoardCreate->ElementSize;
 
+		float LocationX = -M3App->BoardScheme->Rows * M3App->BoardScheme->ElementSize.X * 0.5 + M3App->BoardScheme->ElementSize.X * 0.5;
+		float LocationY = -M3App->BoardScheme->Cols * M3App->BoardScheme->ElementSize.Y * 0.5 + M3App->BoardScheme->ElementSize.Y * 0.5;
+		FVector CurrentLocation = M3App->BoardScheme->GetActorLocation();
+		M3App->BoardScheme->SetActorLocation(FVector(LocationX, LocationY, CurrentLocation.Z));
+
 		if (!M3App->BoardScheme->FunctionalCellClosedScheme) {
 			M3App->BoardScheme->FunctionalCellClosedScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->FunctionalCellClosedScheme_BP);
 			M3App->BoardScheme->FunctionalCellClosedScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
@@ -698,6 +703,20 @@ FReply FM3EdModeToolkit::ON_BoardReskin_BTN() {
 			}
 
 			M3App->BoardScheme->ElementSize = EdMode->EdModeProps_BoardReskin->ElementSize;
+
+			float LocationX = -M3App->BoardScheme->Rows * M3App->BoardScheme->ElementSize.X * 0.5 + M3App->BoardScheme->ElementSize.X * 0.5;
+			float LocationY = -M3App->BoardScheme->Cols * M3App->BoardScheme->ElementSize.Y * 0.5 + M3App->BoardScheme->ElementSize.Y * 0.5;
+			FVector CurrentLocation = M3App->BoardScheme->GetActorLocation();
+			M3App->BoardScheme->SetActorLocation(FVector(LocationX, LocationY, CurrentLocation.Z));
+
+			for (int Col = 0; Col < M3App->BoardScheme->Cols; ++Col) {
+				for (int Row = 0; Row < M3App->BoardScheme->Rows; ++Row) {
+					AM3CellScheme* CellScheme = M3App->BoardScheme->Cells[Col + Row * M3App->BoardScheme->Cols];
+					if (CellScheme) {
+						CellScheme->SetActorRelativeLocation(FVector(Row * M3App->BoardScheme->ElementSize.X, Col * M3App->BoardScheme->ElementSize.Y, 0));
+					}
+				}
+			}
 
 			if (EdMode->EdModeProps_BoardReskin->CellMaterial) {
 				M3App->AssetsBundle->Cell.Material = EdMode->EdModeProps_BoardReskin->CellMaterial;
@@ -890,7 +909,7 @@ void FM3EdModeToolkit::GenerateElementsScheme(class AM3App* M3App) {
 				CellScheme->Row = Row;
 				BoardScheme->Cells[Col + Row * Cols] = CellScheme;
 			}
-			CellScheme->SetActorRelativeLocation(FVector(Row * 110, Col * 110, 0));
+			CellScheme->SetActorRelativeLocation(FVector(Row * BoardScheme->ElementSize.X, Col * BoardScheme->ElementSize.Y, 0));
 			CellScheme->Appointments.Empty();
 		}
 	}

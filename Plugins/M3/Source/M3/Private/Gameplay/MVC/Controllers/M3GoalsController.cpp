@@ -1,4 +1,4 @@
-// Copyright serhii serhiiv 2017. All rights reserved.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3GoalsController.h"
 #include "M3AppEvent.h"
@@ -25,15 +25,80 @@ void M3GoalsController::Execute(float Deltatime) {
 }
 
 void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop) {
-	const auto GoalsModel = M3SharedModel::GetInstance()->GetSubmodel<M3GoalsModel>();
 	const auto ElementModel = std::static_pointer_cast<M3ElementModel>(Model);
-	for (size_t i = 0; i < GoalsModel->GetGoals()->size(); ++i) {
-		/*if (static_cast<int>(GoalsModel->GetGoals()->data()[i].Id) == ElementModel->GetId()) {
-			if (GoalsModel->GetGoals()->data()[i].Quantity < GoalsModel->GetGoals()->data()[i].MaxQuantity) {
-				GoalsModel->GetGoals()->data()[i].Quantity++;
-			} else {
-				UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+	if (ElementModel->IsInState(EM3ElementState::MATCHING)) {
+		const auto GoalsModel = M3SharedModel::GetInstance()->GetSubmodel<M3GoalsModel>();
+		for (size_t i = 0; i < GoalsModel->GetGoals()->size(); ++i) {
+			switch (GoalsModel->GetGoals()->data()[i]->GetId()) {
+			case EM3GoalId::COLLECT_RED_ELEMENTS:
+				if (ElementModel->GetColor() == EM3ElementColor::RED) {
+					if (!GoalsModel->GetGoals()->data()[i]->IsDone()) {
+						GoalsModel->GetGoals()->data()[i]->IncQuantity();
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+					}
+				}
+				break;
+
+			case EM3GoalId::COLLECT_GREEN_ELEMENTS:
+				if (ElementModel->GetColor() == EM3ElementColor::GREEN) {
+					if (!GoalsModel->GetGoals()->data()[i]->IsDone()) {
+						GoalsModel->GetGoals()->data()[i]->IncQuantity();
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+					}
+				}
+				break;
+
+			case EM3GoalId::COLLECT_BLUE_ELEMENTS:
+				if (ElementModel->GetColor() == EM3ElementColor::BLUE) {
+					if (!GoalsModel->GetGoals()->data()[i]->IsDone()) {
+						GoalsModel->GetGoals()->data()[i]->IncQuantity();
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+					}
+				}
+				break;
+
+			case EM3GoalId::COLLECT_YELLOW_ELEMENTS:
+				if (ElementModel->GetColor() == EM3ElementColor::YELLOW) {
+					if (!GoalsModel->GetGoals()->data()[i]->IsDone()) {
+						GoalsModel->GetGoals()->data()[i]->IncQuantity();
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+					}
+				}
+				break;
+
+			case EM3GoalId::COLLECT_ORANGE_ELEMENTS:
+				if (ElementModel->GetColor() == EM3ElementColor::ORANGE) {
+					if (!GoalsModel->GetGoals()->data()[i]->IsDone()) {
+						GoalsModel->GetGoals()->data()[i]->IncQuantity();
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+					}
+				}
+				break;
+
+			case EM3GoalId::COLLECT_PURPLE_ELEMENTS:
+				if (ElementModel->GetColor() == EM3ElementColor::PURPLE) {
+					if (!GoalsModel->GetGoals()->data()[i]->IsDone()) {
+						GoalsModel->GetGoals()->data()[i]->IncQuantity();
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+					}
+				}
+				break;
+
+			default:
+				break;
 			}
-		}*/
+		}
 	}
 }

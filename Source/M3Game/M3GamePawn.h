@@ -18,13 +18,4 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	virtual void CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult) override;
-
-protected:
-
-	void OnResetVR();
-	void TriggerClick();
-	void TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers);
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
-	class AM3GameBlock* CurrentBlockFocus;
 };

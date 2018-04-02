@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3BoardModel.h"
 #include "M3CellModel.h"
@@ -83,8 +83,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 						CellModel->Entity->Get()->IsClosed->Set(true);
 					}
 					if (Appointment->Id == EM3ElementId::CELL_HOLE) {
-						M3ElementModel_SharedPtr ElementModel = M3ElementModel::Construct<M3ElementModel>();
-						CellModel->AddSubmodel(ElementModel);
+						CellModel->Entity->Get()->IsClosed->Set(false);
 					}
 					if (Appointment->Id == EM3ElementId::CELL_RANDOM) {
 						M3ElementModel_SharedPtr ElementModel = M3ElementModel::Construct<M3ElementModel>();

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3RegularelementView.h"
 #include "M3KVSlot.h"
@@ -29,6 +29,7 @@ void M3RegularelementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _Vie
 	M3ElementView::BindViewModel(_ViewModel);
 
 	const auto RegularelementModel = GetViewModel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>();
+	RegularelementModel->Entity->Get()->IsAssignedToView->Set(true);
 	std::shared_ptr<M3KVSlot<EM3ElementId>> OnElementIdChangedSlot = std::make_shared<M3KVSlot<EM3ElementId>>(RegularelementModel->Entity->Get()->Id);
 	Slots[k_ON_ELEMENT_ID_CHANGED] = OnElementIdChangedSlot;
 	OnElementIdChangedSlot->Attach([=](EM3ElementId Id) {

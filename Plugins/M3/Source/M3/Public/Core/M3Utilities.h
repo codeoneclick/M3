@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
 
@@ -19,7 +19,6 @@
 #include <mutex>
 #include <thread>
 #include <fstream>
-#include <strstream>
 #include <sstream>
 #include <iostream>
 #include <assert.h>
@@ -52,21 +51,21 @@ return static_cast<uint8_t>(__class__::ClassGuid());\
 #define PROP_STRONG(__directive__, __class__, __prop__, __type__, ...) \
 __directive__: \
 std::shared_ptr<M3KVProperty<__type__>> __prop__ = std::make_shared<M3KVProperty<__type__>>(__VA_ARGS__); \
-static std::string __class__::PROPERTY_ID_##__prop__() { \
+static std::string PROPERTY_ID_##__prop__() { \
 return #__prop__; \
 } \
 
 #define PROP_WEAK(__directive__, __class__, __prop__, __type__, ...) \
 __directive__: \
 std::shared_ptr<M3KVProperty<__type__>> __prop__ = std::make_shared<M3KVProperty<__type__>>(__VA_ARGS__); \
-static std::string __class__::PROPERTY_ID_##__prop__() { \
+static std::string PROPERTY_ID_##__prop__() { \
 return #__prop__; \
 } \
 
 #define PROP_STATIC(__directive__, __class__, __prop__, __type__, ...) \
 __directive__: \
 static std::shared_ptr<M3KVProperty<__type__>> __prop__; \
-static std::string __class__::PROPERTY_ID_##__prop__() { \
+static std::string PROPERTY_ID_##__prop__() { \
 return #__prop__; \
 } \
 
@@ -75,12 +74,12 @@ std::shared_ptr<M3KVProperty<__type__>> __class__::__prop__ = std::make_shared<M
 
 #define PROP_DECL_R(__prop__, __type__, ...) \
 __type__ Get##__prop__() const { \
-return Entity->Get()->##__prop__->Get(); \
+return Entity->Get()->__prop__->Get(); \
 } \
 
 #define PROP_DECL_W(__prop__, __type__, ...) \
-void Set##__prop__(const __type__##& Value) { \
-Entity->Get()->##__prop__->Set(Value); \
+void Set##__prop__(const __type__& Value) { \
+Entity->Get()->__prop__->Set(Value); \
 } \
 
 #define FORWARD_DECL_STRONG(__class__) \
@@ -91,7 +90,11 @@ typedef std::shared_ptr<__class__> __class__##_SharedPtr; \
 class __class__; \
 typedef std::weak_ptr<__class__> __class__##_WeakPtr; \
 
-#define FORWARD_DECL_CONTAINER(__class__, __type__) \
+#define FORWARD_DECL_VECTOR_CONTAINER(__class__, __type__) \
 class __class__; \
 typedef std::shared_ptr<std::vector<std::shared_ptr<__type__>>> __class__##_Container; \
+
+#define FORWARD_DECL_LIST_CONTAINER(__class__, __type__) \
+class __class__; \
+typedef std::shared_ptr<std::list<std::shared_ptr<__type__>>> __class__##_Container; \
 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3ElementView.h"
 #include "M3KVSlot.h"
@@ -37,7 +37,6 @@ void UM3ElementViewAccessor::OnDropEnded() {
 void UM3ElementViewAccessor::OnSpawnEnded() {
 	OnSpawnEndedCallback.ExecuteIfBound();
 }
-
 
 FVector UM3ElementViewAccessor::GetCurrentLocation() {
 	FVector ParentLocation = View->GetAttachParentActor()->GetActorLocation();

@@ -1,3 +1,5 @@
+// Copyright serhii serhiiv 2018 All rights reserved.
+
 #include "M3TapGestureRecognizerComponent.h"
 #include "M3TapGestureResponderComponent.h"
 #include "GameFramework/Actor.h"

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3ElementsSpawnController.h"
 #include "M3BoardStateModel.h"
@@ -51,7 +51,7 @@ void M3ElementsSpawnController::Execute(float Deltatime) {
 				M3ElementModel::ApplyContainer();
 			}
 
-			if (Regularelement->Entity->Get()->IsAssignedToView->Get()) {
+			if (!Regularelement->Entity->Get()->IsAssignedToView->Get()) {
 				M3RegularelementModel::ApplyContainer();
 			}
 

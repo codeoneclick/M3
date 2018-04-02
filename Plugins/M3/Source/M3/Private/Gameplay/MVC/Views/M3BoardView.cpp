@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3BoardView.h"
 #include "M3AssetsBundle.h"
@@ -14,9 +14,9 @@
 #include "M3SharedModel.h"
 #include "M3BoardSettingsModel.h"
 
-FORWARD_DECL_CONTAINER(M3CellModel, M3Model<M3CellEntity>)
-FORWARD_DECL_CONTAINER(M3ElementModel, M3Model<M3ElementEntity>)
-FORWARD_DECL_CONTAINER(M3RegularelementModel, M3Model<M3RegularelementEntity>)
+FORWARD_DECL_LIST_CONTAINER(M3CellModel, M3Model<M3CellEntity>)
+FORWARD_DECL_LIST_CONTAINER(M3ElementModel, M3Model<M3ElementEntity>)
+FORWARD_DECL_LIST_CONTAINER(M3RegularelementModel, M3Model<M3RegularelementEntity>)
 
 const std::string k_ON_CELLS_CONTAINER_CHANGED = "ON_CELLS_CONTAINER_CHANGED";
 const std::string k_ON_REGULAR_ELEMENTS_CONTAINER_CHANGED = "ON_REGULAR_ELEMENTS_CONTAINER_CHANGED";
@@ -76,13 +76,13 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	Slots[k_ON_SIZE_CHANGED] = SizeSlot;
 	SizeSlot->Attach(BoardEntity->Cols, [=](const int& Value) {
 		FVector CurrentLocation = GetSuperview()->GetActorLocation();
-		float LocationY = -Value * BoardSettingsModel->GetElementSize().Y * 0.5;
+		float LocationY = -Value * BoardSettingsModel->GetElementSize().Y * 0.5 + BoardSettingsModel->GetElementSize().Y * 0.5;
 		GetSuperview()->SetActorLocation(FVector(CurrentLocation.X, LocationY, CurrentLocation.Z));
 	});
 
 	SizeSlot->Attach(BoardEntity->Rows, [=](const int& Value) {
 		FVector CurrentLocation = GetSuperview()->GetActorLocation();
-		float LocationX = -Value * BoardSettingsModel->GetElementSize().X * 0.5;
+		float LocationX = -Value * BoardSettingsModel->GetElementSize().X * 0.5 + BoardSettingsModel->GetElementSize().X * 0.5;
 		GetSuperview()->SetActorLocation(FVector(LocationX, CurrentLocation.Y, CurrentLocation.Z));
 	});
 }
