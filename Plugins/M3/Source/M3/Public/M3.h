@@ -1,4 +1,4 @@
-// Copyright serhii serhiiv 2017. All rights reserved.
+// Copyright serhii serhiiv 2018 All rights reserved.
 
 #pragma once
  

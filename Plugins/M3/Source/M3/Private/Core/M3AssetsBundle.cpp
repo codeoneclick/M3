@@ -3,6 +3,7 @@
 #include "M3AssetsBundle.h"
 #include "M3Board.h"
 #include "M3Cell.h"
+#include "M3Element.h"
 #include "M3Regularelement.h"
 #include "M3Superelement.h"
 #include "Engine/World.h"
@@ -24,6 +25,12 @@ AM3Cell* UM3BoardAssetsBundle::ConstructCell(UWorld* World) {
 	} else {
 		Result = World->SpawnActor<AM3Cell>(FVector(0.f), FRotator(0.f));
 	}
+	return Result;
+}
+
+AM3Element* UM3BoardAssetsBundle::ConstructElement(UWorld* World) {
+	AM3Element* Result = nullptr;
+	Result = World->SpawnActor<AM3Element>(FVector(0.f), FRotator(0.f));
 	return Result;
 }
 

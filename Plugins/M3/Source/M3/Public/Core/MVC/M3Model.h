@@ -67,8 +67,7 @@ public:
 };
 
 template<typename T>
-class M3_API M3Model : public M3Model_INTERFACE
-{
+class M3_API M3Model : public M3Model_INTERFACE {
 static_assert(std::is_base_of<M3Entity, T>::value, "T must derive from M3Entity");
 private:
 
@@ -77,6 +76,7 @@ private:
 
 protected:
 
+	std::weak_ptr<M3Model_INTERFACE> Parent;
 	std::array<std::shared_ptr<M3Model_INTERFACE>, std::numeric_limits<uint8_t>::max()> Submodels;
 
 public:
@@ -84,17 +84,15 @@ public:
 	CTTI_CLASS_GUID(M3Model<T>, M3Model<T>::GuidsContainer)
 
 	PROP_STRONG(public, M3Model<T>, Entity, std::shared_ptr<T>, nullptr)
-
 	PROP_STATIC(public, M3Model<T>, Container, std::shared_ptr<std::list<std::shared_ptr<M3Model<T>>>>)
-
-	PROP_WEAK(public, M3Model<T>, Parent, std::weak_ptr<M3Model_INTERFACE>)
 
 	M3Model() {
 		Entity->Set(std::make_shared<T>());
+		Parent.reset();
 		Submodels.fill(nullptr);
 	};
 	virtual ~M3Model() {
-		Parent->Get().reset();
+		Parent.reset();
 		Submodels.fill(nullptr);
 	};
 
@@ -106,8 +104,8 @@ public:
 			Pool->Get()->pop_back();
 		} else {
 			Result = std::make_shared<RESULT>();
+			Result->Init();
 		}
-		Result->Init();
 		Result->AddToContainer();
 		return Result;
 	}
@@ -119,12 +117,16 @@ public:
 	virtual void Reset() override {
 		std::for_each(Submodels.begin(), Submodels.end(), [=](const M3Model_INTERFACE_SharedPtr& Submodel) {
 			if (Submodel) {
-				Submodel->Reset();
+				const auto SubmodelTemp = Submodel;
 				RemoveSubmodel(std::static_pointer_cast<M3Model>(Submodel));
+				SubmodelTemp->Reset();
 			}
 		});
-		Pool->Get()->push_back(std::static_pointer_cast<M3Model>(shared_from_this()));
+		const auto& Instance = std::static_pointer_cast<M3Model<T>>(M3Model_INTERFACE::shared_from_this());
+		ensure(Instance->Parent.expired() && "Model should be deattached from parent");
+		Pool->Get()->push_back(Instance);
 		RemoveFromContainer();
+		Entity->Get()->IsAssignedToView->Set(false);
 	}
 
 	static void Register() {
@@ -153,13 +155,13 @@ public:
 	};
 
 	void AddToContainer() {
-		const auto Instance = M3Model_INTERFACE::shared_from_this();
-		TempContainer->Get()->push_back(std::static_pointer_cast<M3Model<T>>(Instance));
+		const auto& Instance = std::static_pointer_cast<M3Model<T>>(M3Model_INTERFACE::shared_from_this());
+		TempContainer->Get()->push_back(Instance);
 	};
 
 	void RemoveFromContainer() {
-		const auto Instance = M3Model_INTERFACE::shared_from_this();
-		TempContainer->Get()->remove(std::static_pointer_cast<M3Model<T>>(Instance));
+		const auto& Instance = std::static_pointer_cast<M3Model<T>>(M3Model_INTERFACE::shared_from_this());
+		TempContainer->Get()->remove(Instance);
 	}
 
 	template<typename TSubmodel>
@@ -168,7 +170,7 @@ public:
 		if (!Submodels[Submodel->InstanceGuid()]) {
 			Submodels[Submodel->InstanceGuid()] = Submodel;
 			const auto Instance = M3Model_INTERFACE::shared_from_this();
-			Submodel->Parent->Set(std::static_pointer_cast<M3Model<T>>(Instance));
+			Submodel->SetParent(std::static_pointer_cast<M3Model<T>>(Instance));
 		} else {
 			UE_LOG(LogTemp, Error, TEXT("Can't add same model to Shared Model"));
 			assert(false);
@@ -179,7 +181,7 @@ public:
 	void RemoveSubmodel(const std::shared_ptr<TSubmodel>& Submodel) {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TSubmodel>::value, "TSubmodel must derive from M3Model_INTERFACE");
 		Submodels[Submodel->InstanceGuid()] = nullptr;
-		Submodel->Parent->Get().reset();
+		Submodel->ResetParent();
 	};
 
 	void RemoveAllSubmodels() {
@@ -200,11 +202,21 @@ public:
 	std::shared_ptr<TModel> GetParent() {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TModel>::value, "TModel must derive from M3Model_INTERFACE");
 		std::shared_ptr<TModel> Result = nullptr;
-		if (!Parent->Get().expired()) {
-			Result = std::static_pointer_cast<TModel>(Parent->Get().lock());
+		if (!Parent.expired()) {
+			Result = std::static_pointer_cast<TModel>(Parent.lock());
 		}
 		return Result;
 	};
+
+	template<typename TModel>
+	void SetParent(const std::shared_ptr<TModel>& _Parent) {
+		static_assert(std::is_base_of<M3Model_INTERFACE, TModel>::value, "TModel must derive from M3Model_INTERFACE");
+		Parent = _Parent;
+	}
+
+	void ResetParent() {
+		Parent.reset();
+	}
 
 	void Subscribe(const M3KVProperty_INTERFACE_SharedPtr& Prop, const std::string& PropId) {
 		const auto Instance = M3KVListener_INTERFACE::shared_from_this();

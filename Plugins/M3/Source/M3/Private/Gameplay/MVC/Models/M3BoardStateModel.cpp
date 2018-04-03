@@ -30,3 +30,8 @@ void M3BoardStateModel::IncGameTurn() {
 	}
 	Entity->Get()->Turn->Set(Entity->Get()->Turn->Get() + 1);
 }
+
+void M3BoardStateModel::IncTimestamp() {
+	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
+	Entity->Get()->Timestamp->Set(Entity->Get()->Timestamp->Get() + 1);
+}

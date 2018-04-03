@@ -10,6 +10,7 @@
 
 FORWARD_DECL_STRONG(AM3Board)
 FORWARD_DECL_STRONG(AM3Cell)
+FORWARD_DECL_STRONG(AM3Element)
 FORWARD_DECL_STRONG(AM3Regularelement)
 FORWARD_DECL_STRONG(AM3Superelement)
 
@@ -73,6 +74,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
 	AM3Cell* ConstructCell(UWorld* World);
+
+	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
+	AM3Element* ConstructElement(UWorld* World);
 
 	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
 	AM3Regularelement* ConstructRegularelement(UWorld* World);

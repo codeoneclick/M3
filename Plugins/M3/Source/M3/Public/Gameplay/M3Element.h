@@ -22,11 +22,12 @@ class M3_API AM3Element : public ACharacter
 public:	
 
 	AM3Element();
+	~AM3Element();
 
 protected:
 
-	M3ElementModel_SharedPtr ElementModel = nullptr;
-	M3ElementView_SharedPtr ElementView = nullptr;
+	M3ElementModel_SharedPtr Model = nullptr;
+	M3ElementView_SharedPtr View = nullptr;
 
 	virtual void BeginPlay() override;
 
@@ -40,10 +41,12 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void OnLoad(UM3AssetsBundle* Bundle);
-	virtual void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
+	virtual void OnLoad(UM3AssetsBundle* _Bundle);
+	virtual void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel);
 	virtual void OnBindViewDelegate();
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;
+
+	void Dispose();
 };

@@ -13,6 +13,7 @@ public:
 
 	CTTI_CLASS_GUID(M3BoardStateEntity, M3Entity::GuidsContainer)
 
+	PROP_STRONG(public, M3ElementEntity, Timestamp, int64, 0)
 	PROP_STRONG(public, M3BoardStateEntity, IsHolesExist, bool, true)
 	PROP_STRONG(public, M3BoardStateEntity, Turn, int, 0)
 	PROP_STRONG(public, M3BoardStateEntity, Duration, int, 0)
@@ -34,6 +35,7 @@ public:
 	void Serialize() override;
 	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
+	PROP_DECL_R(Timestamp, int64)
 	PROP_DECL_R(IsHolesExist, bool)
 	PROP_DECL_W(IsHolesExist, bool)
 	PROP_DECL_R(Turn, int)
@@ -41,4 +43,5 @@ public:
 	PROP_DECL_R(Scores, int)
 
 	void IncGameTurn();
+	void IncTimestamp();
 };

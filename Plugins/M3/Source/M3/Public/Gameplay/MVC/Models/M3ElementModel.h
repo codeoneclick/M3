@@ -47,6 +47,7 @@ public:
 	CTTI_CLASS_GUID(M3ElementEntity, M3Entity::GuidsContainer)
 
 	PROP_STRONG(public, M3ElementEntity, State, EM3ElementState, EM3ElementState::IDLE)
+	PROP_STRONG(public, M3ElementEntity, Timestamp, int64, 0)
 };
 
 class M3_API M3ElementModel : public M3Model<M3ElementEntity>
@@ -60,6 +61,8 @@ public:
 
 	M3ElementModel();
 	~M3ElementModel();
+
+	PROP_DECL_R(Timestamp, int64)
 
 	void Init() override;
 

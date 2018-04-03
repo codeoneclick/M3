@@ -16,14 +16,13 @@ public:
 	PROP_STRONG(public, M3RegularelementEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
 };
 
-class M3_API M3RegularelementModel : public M3Model<M3RegularelementEntity>, public M3ElementModelColorComponent_INTERFACE
-{
+class M3_API M3RegularelementModel : public M3Model<M3RegularelementEntity>, public M3ElementModelColorComponent_INTERFACE {
 public:
+
+	CTTI_CLASS_GUID(M3RegularelementModel, M3Model_INTERFACE::GuidsContainer)
 
 	M3RegularelementModel();
 	~M3RegularelementModel();
-
-	CTTI_CLASS_GUID(M3RegularelementModel, M3Model_INTERFACE::GuidsContainer)
 
 	void Init() override;
 

@@ -4,11 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "M3Utilities.h"
 #include "M3View.h"
 
-class M3_API M3BoardView : public M3View
-{
-	
+FORWARD_DECL_STRONG(AM3Cell)
+FORWARD_DECL_STRONG(AM3Element)
+FORWARD_DECL_STRONG(AM3Regularelement)
+FORWARD_DECL_STRONG(AM3Superelement)
+
+class M3_API M3BoardView : public M3View {
+
+protected:
+
+	std::vector<AM3Cell *> Cells;
+	std::vector<AM3Element *> Elements;
+
 public:	
 
 	M3BoardView(AActor* _Superview);

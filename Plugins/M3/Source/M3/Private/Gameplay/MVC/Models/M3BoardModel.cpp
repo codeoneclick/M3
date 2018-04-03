@@ -160,6 +160,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
  	M3CellModel::ApplyContainer();
 	M3ElementModel::ApplyContainer();
 	M3RegularelementModel::ApplyContainer();
+	M3SuperelementModel::ApplyContainer();
 }
 
 M3CellModel_SharedPtr M3BoardModel::GetCell(int Col, int Row) const {
@@ -188,6 +189,7 @@ void M3BoardModel::CreateHole(int Col, int Row) {
 
 		const auto BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
 		Element->Reset();
+		ensure(Element->GetParent<M3CellModel>() == nullptr);
 		BoardStateModel->SetIsHolesExist(true);
 	}
 }

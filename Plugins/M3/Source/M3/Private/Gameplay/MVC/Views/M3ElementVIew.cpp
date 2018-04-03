@@ -10,8 +10,10 @@
 #include "M3SharedModel.h"
 #include "M3ViewActionsComponent.h"
 #include "M3BoardSettingsModel.h"
+#include "M3Element.h"
 
 const std::string k_ON_ELEMENT_STATE_CHANGED = "ON_ELEMENT_STATE_CHANGED";
+const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
 
 FORWARD_DECL_STRONG(M3ElementModel)
 
@@ -103,6 +105,7 @@ void UM3ElementViewDelegate::OnDrop_Implementation(UM3ElementViewAccessor* Acces
 
 void UM3ElementViewDelegate::OnSpawn_Implementation(UM3ElementViewAccessor* Accessor) {
 	const auto ActionsComponent = static_cast<UM3ViewActionsComponent *>(Accessor->View->GetComponentByClass(UM3ViewActionsComponent::StaticClass()));
+	Accessor->View->SetActorScale3D(FVector(0.f));
 	Accessor->View->SetActorLocation(Accessor->GetCurrentLocation());
 	ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.3, FVector(1.f)));
 	FM3ActionNativeCallback CallbackA;
@@ -117,7 +120,10 @@ M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {
 }
 
 M3ElementView::~M3ElementView() {
-	Accessor->RemoveFromRoot();
+	if (Accessor) {
+		Accessor->RemoveFromRoot();
+	}
+	Accessor = nullptr;
 }
 
 void M3ElementView::Load(UM3AssetsBundle* _Bundle) {
@@ -198,16 +204,30 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 					Delegate->OnDrop(Accessor);
 				}
 				break;
-			case EM3ElementState::SPAWNING:
-				if (Delegate) {
-					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+			case EM3ElementState::SPAWNING: {
+					if (Delegate) {
+						Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+						Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
 
-					Delegate->OnSpawn(Accessor);
+						Delegate->OnSpawn(Accessor);
+					}
+				}
+				break;
+			case EM3ElementState::REMOVING: {
+
 				}
 				break;
 			default:
 				break;
+		}
+	});
+
+	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(ElementModel->Entity->Get()->IsAssignedToView);
+	Slots[k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
+	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
+		if (!IsAssignedToView) {
+			Dispose<AM3Element>();
+			UE_LOG(LogTemp, Warning, TEXT("Element should be destroyed!"));
 		}
 	});
 

@@ -55,11 +55,12 @@ void M3BoardGameplayController::CreateHoles() {
 }
 
 bool M3BoardGameplayController::CanBeExecuted() const {
-	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
-	return BoardActionsAccumulationModel->HasActions();
+	return true;
 }
 
 void M3BoardGameplayController::Execute(float Deltatime) {
+	const auto& BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
+	BoardStateModel->IncTimestamp();
 	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
 	const auto& Actions = BoardActionsAccumulationModel->Entity->Get()->Actions->Get();
 	while (!Actions->empty()) {

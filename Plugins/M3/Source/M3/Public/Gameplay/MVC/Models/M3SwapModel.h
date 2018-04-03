@@ -81,6 +81,5 @@ public:
 
 	void GeneratePotentialSwaps();
 	void AddSwapElement(const M3ElementModel_SharedPtr& Element);
-	void ResetSwapElements();
 	bool IsPossibleToSwap() const;
 };

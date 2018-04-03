@@ -1,7 +1,8 @@
 // Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3ElementModel.h"
-#include "M3RegularelementModel.h"
+#include "M3BoardStateModel.h"
+#include "M3SharedModel.h"
 
 M3ElementModelColorComponent::M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner) {
 	Owner = _Owner;
@@ -33,6 +34,7 @@ void M3ElementModel::Reset() {
 	M3Model::Reset();
 
 	Entity->Get()->State->Set(EM3ElementState::IDLE);
+	Entity->Get()->Timestamp->Set(0);
 }
 
 EM3ElementColor M3ElementModel::GetColor() {
@@ -58,7 +60,8 @@ void M3ElementModel::SetState(EM3ElementState State) {
 	case EM3ElementState::SPAWNING:
 	case EM3ElementState::SWAPPING:
 	case EM3ElementState::DROPPING: {
-		//
+		const auto& BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
+		Entity->Get()->Timestamp->Set(BoardStateModel->GetTimestamp());
 	}
 		break;
 

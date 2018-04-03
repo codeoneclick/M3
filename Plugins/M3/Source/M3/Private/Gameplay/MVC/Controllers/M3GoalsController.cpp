@@ -36,7 +36,7 @@ void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, con
 						GoalsModel->GetGoals()->data()[i]->IncQuantity();
 					}
 					else {
-						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+						
 					}
 				}
 				break;
@@ -47,7 +47,7 @@ void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, con
 						GoalsModel->GetGoals()->data()[i]->IncQuantity();
 					}
 					else {
-						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+						
 					}
 				}
 				break;
@@ -58,7 +58,7 @@ void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, con
 						GoalsModel->GetGoals()->data()[i]->IncQuantity();
 					}
 					else {
-						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+						
 					}
 				}
 				break;
@@ -69,7 +69,7 @@ void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, con
 						GoalsModel->GetGoals()->data()[i]->IncQuantity();
 					}
 					else {
-						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+						
 					}
 				}
 				break;
@@ -80,7 +80,7 @@ void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, con
 						GoalsModel->GetGoals()->data()[i]->IncQuantity();
 					}
 					else {
-						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+						
 					}
 				}
 				break;
@@ -91,7 +91,7 @@ void M3GoalsController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, con
 						GoalsModel->GetGoals()->data()[i]->IncQuantity();
 					}
 					else {
-						UE_LOG(LogTemp, Warning, TEXT("Goal is done!"));
+						
 					}
 				}
 				break;

@@ -20,7 +20,7 @@ class M3Chain {
 public:
 
 	EM3Chain Chain = EM3Chain::UNKNOWN_CHAIN;
-	std::vector<M3ElementModel_SharedPtr> Elements;
+	std::set<M3ElementModel_SharedPtr> Elements;
 };
 
 
@@ -31,6 +31,7 @@ public:
 
 	PROP_STRONG(public, M3ChainEntity, HorizontalChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
 	PROP_STRONG(public, M3ChainEntity, VerticalChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
+	PROP_STRONG(public, M3ChainEntity, SuperelementChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
 };
 
 
@@ -55,6 +56,11 @@ public:
 	void DetectHorizontalMatches(const M3BoardModel_SharedPtr& BoardModel);
 	void DetectVerticalMatches(const M3BoardModel_SharedPtr& BoardModel);
 
+	void ValidateElementChains(const M3ElementModel_SharedPtr& Element);
 	bool IsChainsExist() const;
 	M3Chain_SharedPtr PopChain();
+
+	void ValidateSuperelementChains();
+	bool IsSuperelementChainsExist() const;
+	M3Chain_SharedPtr PopSuperelementChain();
 };

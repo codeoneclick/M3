@@ -20,12 +20,7 @@ public:
 	PROP_STRONG(public, M3BoardEntity, Cells, std::shared_ptr<std::vector<M3CellModel_SharedPtr>>, std::make_shared<std::vector<M3CellModel_SharedPtr>>())
 };
 
-class M3_API M3BoardModel : public M3Model<M3BoardEntity>
-{
-private:
-
-	void CreateHole(int Col, int Row);
-
+class M3_API M3BoardModel : public M3Model<M3BoardEntity> {
 public:
 
 	M3BoardModel();
@@ -45,6 +40,7 @@ public:
 	M3CellModel_SharedPtr GetCell(int Col, int Row) const;
 	M3ElementModel_SharedPtr GetElement(int Col, int Row) const;
 
+	void CreateHole(int Col, int Row);
 	void RemoveMatched();
 
 	static void MoveElement(const M3CellModel_SharedPtr& From, const M3CellModel_SharedPtr& To);

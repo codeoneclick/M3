@@ -7,13 +7,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "M3ViewActionsComponent.h"
 
-#if defined(__DESTRUCTIBLE_MESH__)
-
-#include "DestructibleComponent.h"
-#include "DestructibleMesh.h"
-
-#endif
-
 AM3Element::AM3Element() {
 	PrimaryActorTick.bCanEverTick = true;
 	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -25,16 +18,11 @@ AM3Element::AM3Element() {
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	UM3ViewActionsComponent* ActionsComponent = CreateDefaultSubobject<UM3ViewActionsComponent>(TEXT("ElementActionsComponent"));
+}
 
-#if defined(__DESTRUCTIBLE_MESH__)
-
-	UDestructibleComponent *DestructibleComponent = CreateDefaultSubobject<UDestructibleComponent>(TEXT("ElementDestructibleComponent"));;
-	DestructibleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	DestructibleComponent->SetSimulatePhysics(false);
-	DestructibleComponent->SetEnableGravity(false);
-	DestructibleComponent->WakeRigidBody(NAME_None);
-
-#endif
+AM3Element::~AM3Element() {
+	View = nullptr;
+	Model = nullptr;
 }
 
 void AM3Element::BeginPlay() {
@@ -45,34 +33,14 @@ void AM3Element::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-void AM3Element::OnLoad(UM3AssetsBundle* Bundle) {
-	assert(false);
+void AM3Element::OnLoad(UM3AssetsBundle* _Bundle) {
+	View = std::make_shared<M3ElementView>(this);
+	View->Load(_Bundle);
 }
 
-void AM3Element::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
-	assert(false);
-
-#if defined(__DESTRUCTIBLE_MESH__)
-
-	UStaticMeshComponent* MeshComponent = nullptr;
-	TArray<UActorComponent*> MeshesComponents = GetComponentsByClass(UStaticMeshComponent::StaticClass());
-	for (UActorComponent* ActorComponent : MeshesComponents) {
-		MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
-		break;
-	}
-
-	UDestructibleMesh* DestructibleMesh = NewObject<UDestructibleMesh>();
-	DestructibleMesh->BuildFromStaticMesh((*MeshComponent->GetStaticMesh()));
-
-	UDestructibleComponent* DestructionComponent = nullptr;
-	TArray<UActorComponent*> DestructionComponents = GetComponentsByClass(UDestructibleComponent::StaticClass());
-	for (UActorComponent* ActorComponent : DestructionComponents) {
-		DestructionComponent = Cast<UDestructibleComponent>(ActorComponent);
-		break;
-	}
-	DestructionComponent->SetDestructibleMesh(DestructibleMesh);
-
-#endif
+void AM3Element::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
+	Model = std::static_pointer_cast<M3ElementModel>(_ViewModel);
+	View->BindViewModel(Model);
 }
 
 void AM3Element::OnBindViewDelegate() {
@@ -81,14 +49,19 @@ void AM3Element::OnBindViewDelegate() {
 	} else {
 		Delegate = NewObject<UM3ElementViewDelegate>();
 	}
-	ElementView->BindViewDelegate(Delegate);
+	View->BindViewDelegate(Delegate);
 }
 
 M3View_INTERFACE_SharedPtr AM3Element::GetView() const {
-	return ElementView;
+	return View;
 }
 
 M3Model_INTERFACE_SharedPtr AM3Element::GetModel() const {
-	return ElementModel;
+	return Model;
+}
+
+void AM3Element::Dispose() {
+	View = nullptr;
+	Model = nullptr;
 }
 

@@ -32,6 +32,15 @@ enum class EM3ElementId : uint8 {
 };
 
 UENUM(BlueprintType)
+enum class EM3SuperelementId : uint8 {
+	UNKNOWN UMETA(DisplayName = "Unknown"),
+	MATCH4_BOMB UMETA(DisplayName = "Match 4 Bomb"),
+	MATCH5_BOMB UMETA(DisplayName = "Match 5 Bomb"),
+	MATCH6_BOMB UMETA(DisplayName = "Match 6 Bomb"),
+	MATCH7_BOMB UMETA(DisplayName = "Match 7 Bomb"),
+};
+
+UENUM(BlueprintType)
 enum class EM3GoalId : uint8 {
 	UNKNOWN UMETA(DisplayName = "Unknown"),
 	COLLECT_RED_ELEMENTS UMETA(DisplayName = "Collect Red element"),

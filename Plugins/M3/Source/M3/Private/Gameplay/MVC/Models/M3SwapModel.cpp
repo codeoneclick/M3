@@ -201,11 +201,6 @@ void M3SwapModel::AddSwapElement(const M3ElementModel_SharedPtr& Element) {
 	}
 }
 
-void M3SwapModel::ResetSwapElements() {
-	Entity->Get()->SwapElementA->Set(nullptr);
-	Entity->Get()->SwapElementB->Set(nullptr);
-}
-
 bool M3SwapModel::IsPossibleToSwap() const {
 	bool Result = false;
 	const auto SwapElementA = GetSwapElementA();

@@ -72,16 +72,14 @@ public:
 	M3KVProperty& operator= (const M3KVProperty&) = delete;
 
 	void Set(const T& _Value) {
-		if (!M3KVCoding<T>::Setter)
-		{
+		if (!M3KVCoding<T>::Setter) {
 			assert(false);
 		}
 		M3KVCoding<T>::Setter(_Value);
 	}
 
 	T Get() const {
-		if (!M3KVCoding<T>::Getter)
-		{
+		if (!M3KVCoding<T>::Getter) {
 			assert(false);
 		}
 		return M3KVCoding<T>::Getter();

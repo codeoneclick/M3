@@ -53,6 +53,10 @@ public:
 		T* Result = static_cast<T*>(Delegate);
 		return Result;
 	};
+
+	void AddSubview(const M3View_INTERFACE_SharedPtr& Subview);
+	void RemoveSubview(const M3View_INTERFACE_SharedPtr& Subview);
+	void RemoveFromParent();
 };
 
 class M3_API M3View : public M3View_INTERFACE {
@@ -83,9 +87,13 @@ public:
 		return static_cast<T*>(Bundle);
 	};
 
-	AActor* GetSuperview() const;
+	template<typename T>
+	void Dispose() {
+		const auto Superview = static_cast<T*>(GetSuperview());
+		Superview->Dispose();
+		Superview->Destroy();
+		RemoveFromParent();
+	};
 
-	void AddSubview(const M3View_INTERFACE_SharedPtr& Subview);
-	void RemoveSubview(const M3View_INTERFACE_SharedPtr& Subview);
-	void RemoveFromParent();
+	AActor* GetSuperview() const;
 };
