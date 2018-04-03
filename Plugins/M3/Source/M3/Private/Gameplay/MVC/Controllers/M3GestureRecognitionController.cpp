@@ -3,6 +3,7 @@
 #include "M3GestureRecognitionController.h"
 #include "M3TapGestureResponderComponent.h"
 #include "M3PanGestureResponderComponent.h"
+#include "M32TapGestureResponderComponent.h"
 #include "M3Board.h"
 #include "GameFramework/Actor.h"
 #include "M3GestureModel.h"
@@ -28,12 +29,20 @@ void M3GestureRecognitionController::SetInteractionView(class AActor* _Interacti
 	AM3Board* Board = static_cast<AM3Board*>(_InteractionView);
 	Board->TapGestureResponderComponent->OnTapDelegate.BindRaw(this, &M3GestureRecognitionController::OnTapGesture);
 	Board->PanGestureResponderComponent->OnPanDelegate.BindRaw(this, &M3GestureRecognitionController::OnPanGesture);
+	Board->DoubleTapGestureResponderComponent->On2TapDelegate.BindRaw(this, &M3GestureRecognitionController::On2TapGesture);
 }
 
 void M3GestureRecognitionController::OnTapGesture(const ETouchIndex::Type FingerIndex, const FVector Location) {
 	const auto& GestureModel = M3SharedModel::GetInstance()->GetSubmodel<M3GestureModel>();
 	if (!GestureModel->GetIsPanned() && !GestureModel->GetIsInterrupted()) {
 		GestureModel->PushGesture(EM3Gesture::TAP, Location);
+	}
+}
+
+void M3GestureRecognitionController::On2TapGesture(const ETouchIndex::Type FingerIndex, const FVector Location) {
+	const auto& GestureModel = M3SharedModel::GetInstance()->GetSubmodel<M3GestureModel>();
+	if (!GestureModel->GetIsPanned() && !GestureModel->GetIsInterrupted()) {
+		GestureModel->PushGesture(EM3Gesture::DOUBLE_TAP, Location);
 	}
 }
 

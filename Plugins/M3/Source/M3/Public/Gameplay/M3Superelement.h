@@ -38,4 +38,6 @@ public:
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;
+
+	void Dispose();
 };

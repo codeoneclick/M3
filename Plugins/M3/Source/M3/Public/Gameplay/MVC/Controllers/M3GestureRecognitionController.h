@@ -14,6 +14,7 @@ protected:
 	class AActor* InteractionView = nullptr;
 
 	void OnTapGesture(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void On2TapGesture(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnPanGesture(EM3PanState State, const FVector Location, const FVector Delta);
 
 public:

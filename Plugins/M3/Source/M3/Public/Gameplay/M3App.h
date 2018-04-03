@@ -36,11 +36,14 @@ public:
 	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
 	UM3CoordinatingComponent* CoordinatingComponent;
 
-	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	class UM3TapGestureRecognizerComponent* TapGestureRecognizerComponent;
 
-	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	class UM3PanGestureRecognizerComponent* PanGestureRecognizerComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UM32TapGestureRecognizerComponent* DoubleTapGestureRecognizerComponent;
 
 	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3BoardAssetsBundle> AssetsBundle_BP;

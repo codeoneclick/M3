@@ -89,9 +89,9 @@ public:
 
 	template<typename T>
 	void Dispose() {
-		const auto Superview = static_cast<T*>(GetSuperview());
-		Superview->Dispose();
-		Superview->Destroy();
+		const auto CurrentSuperview = static_cast<T*>(GetSuperview());
+		CurrentSuperview->Dispose();
+		CurrentSuperview->Destroy();
 		RemoveFromParent();
 	};
 

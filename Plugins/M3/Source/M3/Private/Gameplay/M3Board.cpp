@@ -7,6 +7,7 @@
 #include "M3Element.h"
 #include "M3TapGestureResponderComponent.h"
 #include "M3PanGestureResponderComponent.h"
+#include "M32TapGestureResponderComponent.h"
 
 AM3Board::AM3Board() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -15,6 +16,7 @@ AM3Board::AM3Board() {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("BoardRootComponent"));
 	TapGestureResponderComponent = CreateDefaultSubobject<UM3TapGestureResponderComponent>(TEXT("TapGestureResponderComponent"));
 	PanGestureResponderComponent = CreateDefaultSubobject<UM3PanGestureResponderComponent>(TEXT("PanGestureResponderComponent"));
+	DoubleTapGestureResponderComponent = CreateDefaultSubobject<UM32TapGestureResponderComponent>(TEXT("DoubleTapGestureResponderComponent"));
 }
 
 void AM3Board::BeginPlay() {
@@ -28,6 +30,11 @@ void AM3Board::BeginPlay() {
 	PanGestureResponderComponent = FindComponentByClass<UM3PanGestureResponderComponent>();
 	if (!PanGestureResponderComponent) {
 		UE_LOG(LogTemp, Error, TEXT("Can't find PanGestureResponderComponent"));
+	}
+
+	DoubleTapGestureResponderComponent = FindComponentByClass<UM32TapGestureResponderComponent>();
+	if (!PanGestureResponderComponent) {
+		UE_LOG(LogTemp, Error, TEXT("Can't find DoubleTapGestureResponderComponent"));
 	}
 }
 

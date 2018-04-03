@@ -9,6 +9,7 @@
 enum EM3Gesture {
 	UNKNOWN = 0,
 	TAP,
+	DOUBLE_TAP,
 	PAN_START,
 	PAN,
 	PAN_END,

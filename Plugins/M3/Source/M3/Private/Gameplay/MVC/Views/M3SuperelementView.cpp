@@ -11,9 +11,12 @@
 #include "Components/StaticMeshComponent.h"
 #include "M3ViewActionsComponent.h"
 #include "M3BoardSettingsModel.h"
+#include "M3SuperElement.h"
 
-const std::string k_ON_SUPERELEMENT_ID_CHANGED = "ON_SUPERELEMENT_ID_CHANGED";
-const std::string k_ON_USED_STATE_CHANGED = "ON_USED_STATE_CHANGED";
+namespace SUPER_ELEMENT_VIEW_CONNECTION {
+	const std::string k_ON_SUPERELEMENT_ID_CHANGED = "ON_SUPERELEMENT_ID_CHANGED";
+	const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
+}
 
 M3SuperelementView::M3SuperelementView(AActor* _Superview) : M3View(_Superview) {
 }
@@ -28,16 +31,25 @@ void M3SuperelementView::Load(UM3AssetsBundle* _Bundle) {
 void M3SuperelementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	M3View::BindViewModel(_ViewModel);
 
-	const auto SuperelementModel = std::static_pointer_cast<M3SuperelementModel>(_ViewModel);
-	SuperelementModel->Entity->Get()->IsAssignedToView->Set(true);
-	std::shared_ptr<M3KVSlot<EM3SuperelementId>> OnSuperelementIdChangedSlot = std::make_shared<M3KVSlot<EM3SuperelementId>>(SuperelementModel->Entity->Get()->Id);
-	Slots[k_ON_SUPERELEMENT_ID_CHANGED] = OnSuperelementIdChangedSlot;
+	const auto SuperElementModel = std::static_pointer_cast<M3SuperelementModel>(_ViewModel);
+	SuperElementModel->Entity->Get()->IsAssignedToView->Set(true);
+	std::shared_ptr<M3KVSlot<EM3SuperelementId>> OnSuperelementIdChangedSlot = std::make_shared<M3KVSlot<EM3SuperelementId>>(SuperElementModel->Entity->Get()->Id);
+	Slots[SUPER_ELEMENT_VIEW_CONNECTION::k_ON_SUPERELEMENT_ID_CHANGED] = OnSuperelementIdChangedSlot;
 	OnSuperelementIdChangedSlot->Attach([=](EM3SuperelementId Id) {
 		if (Id != EM3SuperelementId::UNKNOWN) {
 			SetSuperelementVisual(Id);
 		}
 	});
-	SetSuperelementVisual(SuperelementModel->Entity->Get()->Id->Get());
+	SetSuperelementVisual(SuperElementModel->Entity->Get()->Id->Get());
+
+	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(SuperElementModel->Entity->Get()->IsAssignedToView);
+	Slots[SUPER_ELEMENT_VIEW_CONNECTION::k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
+	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
+		if (!IsAssignedToView) {
+			Dispose<AM3Superelement>();
+			UE_LOG(LogTemp, Warning, TEXT("SuperElement should be destroyed!"));
+		}
+	});
 }
 
 void M3SuperelementView::SetSuperelementVisual(EM3SuperelementId Id) {

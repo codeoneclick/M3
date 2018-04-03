@@ -1,10 +1,12 @@
 // Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3Regularelement.h"
+#include "M3ElementModel.h"
 #include "M3RegularelementModel.h"
 #include "M3RegularelementView.h"
 #include "Components/StaticMeshComponent.h"
 #include "M3ViewActionsComponent.h"
+#include "M3InteractionComponent.h"
 
 AM3Regularelement::AM3Regularelement() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,6 +20,7 @@ AM3Regularelement::AM3Regularelement() {
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	UM3ViewActionsComponent* ActionsComponent = CreateDefaultSubobject<UM3ViewActionsComponent>(TEXT("RegularElementActionsComponent"));
+	UM3InteractionComponent* InteractionComponent = CreateDefaultSubobject<UM3InteractionComponent>(TEXT("RegularElementInteractionComponent"));
 }
 
 AM3Regularelement::~AM3Regularelement() {
@@ -41,6 +44,8 @@ void AM3Regularelement::OnLoad(UM3AssetsBundle* _Bundle) {
 void AM3Regularelement::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	Model = std::static_pointer_cast<M3RegularelementModel>(_ViewModel);
 	View->BindViewModel(Model);
+	ensure(Model->GetParent<M3ElementModel>() != nullptr);
+	Cast<UM3InteractionComponent>(GetComponentByClass(UM3InteractionComponent::StaticClass()))->SetElementModel(Model->GetParent<M3ElementModel>());
 }
 
 void AM3Regularelement::OnBindViewDelegate() {
@@ -58,4 +63,5 @@ M3Model_INTERFACE_SharedPtr AM3Regularelement::GetModel() const {
 void AM3Regularelement::Dispose() {
 	View = nullptr;
 	Model = nullptr;
+	Cast<UM3InteractionComponent>(GetComponentByClass(UM3InteractionComponent::StaticClass()))->SetElementModel(nullptr);
 }

@@ -8,6 +8,7 @@
 #include "Engine/World.h"
 #include "M3TapGestureRecognizerComponent.h"
 #include "M3PanGestureRecognizerComponent.h"
+#include "M32TapGestureRecognizerComponent.h"
 
 AM3App::AM3App() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,6 +20,7 @@ AM3App::AM3App() {
 
 	TapGestureRecognizerComponent = CreateDefaultSubobject<UM3TapGestureRecognizerComponent>(TEXT("TapGestureRecognizerComponent"));
 	PanGestureRecognizerComponent = CreateDefaultSubobject<UM3PanGestureRecognizerComponent>(TEXT("PanGestureRecognizerComponent"));
+	DoubleTapGestureRecognizerComponent = CreateDefaultSubobject<UM32TapGestureRecognizerComponent>(TEXT("DoubleTapGestureRecognizerComponent"));
 }
 
 void AM3App::BeginPlay() {
@@ -35,6 +37,11 @@ void AM3App::BeginPlay() {
 	PanGestureRecognizerComponent = FindComponentByClass<UM3PanGestureRecognizerComponent>();
 	if (!PanGestureRecognizerComponent) {
 		UE_LOG(LogTemp, Error, TEXT("Can't find PanGestureRecognizerComponent"));
+	}
+
+	DoubleTapGestureRecognizerComponent = FindComponentByClass<UM32TapGestureRecognizerComponent>();
+	if (!PanGestureRecognizerComponent) {
+		UE_LOG(LogTemp, Error, TEXT("Can't find DoubleTapGestureRecognizerComponent"));
 	}
 
 	const auto PC = GetWorld()->GetFirstPlayerController();
@@ -58,11 +65,13 @@ void AM3App::Tick(float DeltaTime) {
 void AM3App::OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location) {
 	TapGestureRecognizerComponent->OnTouchPressed(FingerIndex, Location);
 	PanGestureRecognizerComponent->OnTouchPressed(FingerIndex, Location);
+	DoubleTapGestureRecognizerComponent->OnTouchPressed(FingerIndex, Location);
 }
 
 void AM3App::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location) {
 	TapGestureRecognizerComponent->OnTouchReleased(FingerIndex, Location);
 	PanGestureRecognizerComponent->OnTouchReleased(FingerIndex, Location);
+	DoubleTapGestureRecognizerComponent->OnTouchReleased(FingerIndex, Location);
 }
 
 

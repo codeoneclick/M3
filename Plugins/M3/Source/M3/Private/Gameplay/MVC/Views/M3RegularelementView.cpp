@@ -13,8 +13,10 @@
 #include "M3BoardSettingsModel.h"
 #include "M3RegularElement.h"
 
-const std::string k_ON_ELEMENT_ID_CHANGED = "ON_ELEMENT_ID_CHANGED";
-const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
+namespace REGULAR_ELEMENT_VIEW_CONNECTION {
+	const std::string k_ON_ELEMENT_ID_CHANGED = "ON_ELEMENT_ID_CHANGED";
+	const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
+}
 
 M3RegularelementView::M3RegularelementView(AActor* _Superview) : M3View(_Superview) {
 }
@@ -32,7 +34,7 @@ void M3RegularelementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _Vie
 	const auto RegularelementModel = std::static_pointer_cast<M3RegularelementModel>(_ViewModel);
 	RegularelementModel->Entity->Get()->IsAssignedToView->Set(true);
 	std::shared_ptr<M3KVSlot<EM3ElementId>> OnElementIdChangedSlot = std::make_shared<M3KVSlot<EM3ElementId>>(RegularelementModel->Entity->Get()->Id);
-	Slots[k_ON_ELEMENT_ID_CHANGED] = OnElementIdChangedSlot;
+	Slots[REGULAR_ELEMENT_VIEW_CONNECTION::k_ON_ELEMENT_ID_CHANGED] = OnElementIdChangedSlot;
 	OnElementIdChangedSlot->Attach([=](EM3ElementId Id) {
 		if (Id != EM3ElementId::UNKNOWN) {
 			SetElementVisual(Id);
@@ -41,7 +43,7 @@ void M3RegularelementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _Vie
 	SetElementVisual(RegularelementModel->Entity->Get()->Id->Get());
 
 	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(RegularelementModel->Entity->Get()->IsAssignedToView);
-	Slots[k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
+	Slots[REGULAR_ELEMENT_VIEW_CONNECTION::k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
 	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
 		if (!IsAssignedToView) {
 			Dispose<AM3Regularelement>();

@@ -40,9 +40,12 @@ public:
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;
 
-	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	class UM3TapGestureResponderComponent* TapGestureResponderComponent;
 
-	UPROPERTY(EditAnywhere, Category = "M3CustomInput")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	class UM3PanGestureResponderComponent* PanGestureResponderComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UM32TapGestureResponderComponent* DoubleTapGestureResponderComponent;
 };

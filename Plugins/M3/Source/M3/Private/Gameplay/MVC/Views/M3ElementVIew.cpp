@@ -12,8 +12,10 @@
 #include "M3BoardSettingsModel.h"
 #include "M3Element.h"
 
-const std::string k_ON_ELEMENT_STATE_CHANGED = "ON_ELEMENT_STATE_CHANGED";
-const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
+namespace ELEMENT_VIEW_CONNECTION {
+	const std::string k_ON_ELEMENT_STATE_CHANGED = "ON_ELEMENT_STATE_CHANGED";
+	const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
+}
 
 FORWARD_DECL_STRONG(M3ElementModel)
 
@@ -166,7 +168,7 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 	const auto& ElementEntity = ElementModel->Entity->Get();
 
 	std::shared_ptr<M3KVSlot<EM3ElementState>> OnElementStateChangedSlot = std::make_shared<M3KVSlot<EM3ElementState>>(ElementEntity->State);
-	Slots[k_ON_ELEMENT_STATE_CHANGED] = OnElementStateChangedSlot;
+	Slots[ELEMENT_VIEW_CONNECTION::k_ON_ELEMENT_STATE_CHANGED] = OnElementStateChangedSlot;
 	OnElementStateChangedSlot->Attach([=] (EM3ElementState State) {
 		const auto Delegate = GetDelegate<UM3ElementViewDelegate>();
 		assert(Delegate != nullptr);
@@ -223,7 +225,7 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 	});
 
 	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(ElementModel->Entity->Get()->IsAssignedToView);
-	Slots[k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
+	Slots[ELEMENT_VIEW_CONNECTION::k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
 	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
 		if (!IsAssignedToView) {
 			Dispose<AM3Element>();
