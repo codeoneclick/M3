@@ -33,10 +33,10 @@ protected:
 
 public:	
 
-	UPROPERTY(Category = "M3Delegates", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Delegates", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3ViewDelegate_INTERFACE> Delegate_BP;
 
-	UPROPERTY(Category = "M3Delegates", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Delegates", EditAnywhere, BlueprintReadWrite)
 	UM3ViewDelegate_INTERFACE* Delegate;
 
 	virtual void Tick(float DeltaTime) override;

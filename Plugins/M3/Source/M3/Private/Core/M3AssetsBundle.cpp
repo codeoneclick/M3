@@ -4,8 +4,9 @@
 #include "M3Board.h"
 #include "M3Cell.h"
 #include "M3Element.h"
-#include "M3Regularelement.h"
-#include "M3Superelement.h"
+#include "M3Blocker.h"
+#include "M3RegularElement.h"
+#include "M3SuperElement.h"
 #include "Engine/World.h"
 
 AM3Board* UM3BoardAssetsBundle::ConstructBoard(UWorld* World) {
@@ -34,23 +35,34 @@ AM3Element* UM3BoardAssetsBundle::ConstructElement(UWorld* World) {
 	return Result;
 }
 
-AM3Regularelement* UM3BoardAssetsBundle::ConstructRegularelement(UWorld* World) {
-	AM3Regularelement* Result = nullptr;
-	if (Regularelement_BP) {
-		Result = World->SpawnActor<AM3Regularelement>(Regularelement_BP);
+AM3RegularElement* UM3BoardAssetsBundle::ConstructRegularElement(UWorld* World) {
+	AM3RegularElement* Result = nullptr;
+	if (RegularElement_BP) {
+		Result = World->SpawnActor<AM3RegularElement>(RegularElement_BP);
 	} else {
-		Result = World->SpawnActor<AM3Regularelement>(FVector(0.f), FRotator(0.f));
+		Result = World->SpawnActor<AM3RegularElement>(FVector(0.f), FRotator(0.f));
 	}
 	return Result;
 }
 
-AM3Superelement* UM3BoardAssetsBundle::ConstructSuperelement(UWorld* World) {
-	AM3Superelement* Result = nullptr;
-	if (Superelement_BP) {
-		Result = World->SpawnActor<AM3Superelement>(Superelement_BP);
+AM3SuperElement* UM3BoardAssetsBundle::ConstructSuperElement(UWorld* World) {
+	AM3SuperElement* Result = nullptr;
+	if (SuperElement_BP) {
+		Result = World->SpawnActor<AM3SuperElement>(SuperElement_BP);
 	}
 	else {
-		Result = World->SpawnActor<AM3Superelement>(FVector(0.f), FRotator(0.f));
+		Result = World->SpawnActor<AM3SuperElement>(FVector(0.f), FRotator(0.f));
+	}
+	return Result;
+}
+
+AM3Blocker* UM3BoardAssetsBundle::ConstructBlocker(UWorld* World) {
+	AM3Blocker* Result = nullptr;
+	if (SuperElement_BP) {
+		Result = World->SpawnActor<AM3Blocker>(Blocker_BP);
+	}
+	else {
+		Result = World->SpawnActor<AM3Blocker>(FVector(0.f), FRotator(0.f));
 	}
 	return Result;
 }

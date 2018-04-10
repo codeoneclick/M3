@@ -11,8 +11,9 @@
 FORWARD_DECL_STRONG(AM3Board)
 FORWARD_DECL_STRONG(AM3Cell)
 FORWARD_DECL_STRONG(AM3Element)
-FORWARD_DECL_STRONG(AM3Regularelement)
-FORWARD_DECL_STRONG(AM3Superelement)
+FORWARD_DECL_STRONG(AM3RegularElement)
+FORWARD_DECL_STRONG(AM3SuperElement)
+FORWARD_DECL_STRONG(AM3Blocker)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Bundle))
 class M3_API UM3AssetsBundle : public UObject
@@ -30,58 +31,97 @@ class M3_API UM3BoardAssetsBundle : public UM3AssetsBundle
 
 public:
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Cell;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset CellHole;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset CellClosed;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_RED;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_GREEN;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_BLUE;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_YELLOW;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_ORANGE;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	FM3BoardAsset Element_PURPLE;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset SuperElement_MATCH4;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset SuperElement_MATCH5;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset SuperElement_MATCH6;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset SuperElement_MATCH7;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Box1X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Box2X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Box3X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Ice1X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Ice2X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Wire1X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	FM3BoardAsset Blocker_Wire2X;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AM3Board> Board_BP;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AM3Cell> Cell_BP;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Regularelement> Regularelement_BP;
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AM3RegularElement> RegularElement_BP;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Superelement> Superelement_BP;
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AM3SuperElement> SuperElement_BP;
 
-	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AM3Blocker> Blocker_BP;
+
+	UFUNCTION(BlueprintCallable, Category = "Bundle")
 	AM3Board* ConstructBoard(UWorld* World);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
+	UFUNCTION(BlueprintCallable, Category = "Bundle")
 	AM3Cell* ConstructCell(UWorld* World);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
+	UFUNCTION(BlueprintCallable, Category = "Bundle")
 	AM3Element* ConstructElement(UWorld* World);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
-	AM3Regularelement* ConstructRegularelement(UWorld* World);
+	UFUNCTION(BlueprintCallable, Category = "Bundle")
+	AM3RegularElement* ConstructRegularElement(UWorld* World);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Bundle")
-	AM3Superelement* ConstructSuperelement(UWorld* World);
+	UFUNCTION(BlueprintCallable, Category = "Bundle")
+	AM3SuperElement* ConstructSuperElement(UWorld* World);
+
+	UFUNCTION(BlueprintCallable, Category = "Bundle")
+	AM3Blocker* ConstructBlocker(UWorld* World);
 };
 

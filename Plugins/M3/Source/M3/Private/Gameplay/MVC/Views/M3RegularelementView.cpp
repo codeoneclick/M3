@@ -1,10 +1,10 @@
 // Copyright serhii serhiiv 2018 All rights reserved.
 
-#include "M3RegularelementView.h"
+#include "M3RegularElementView.h"
 #include "M3KVSlot.h"
 #include "M3CellModel.h"
 #include "M3ElementModel.h"
-#include "M3RegularelementModel.h"
+#include "M3RegularElementModel.h"
 #include "M3AssetsBundle.h"
 #include "M3Scheme.h"
 #include "M3SharedModel.h"
@@ -18,41 +18,41 @@ namespace REGULAR_ELEMENT_VIEW_CONNECTION {
 	const std::string k_ON_ASSIGNED_STATE_CHANGED = "ON_ASSIGNED_STATE_CHANGED";
 }
 
-M3RegularelementView::M3RegularelementView(AActor* _Superview) : M3View(_Superview) {
+M3RegularElementView::M3RegularElementView(AActor* _Superview) : M3View(_Superview) {
 }
 
-M3RegularelementView::~M3RegularelementView() {
+M3RegularElementView::~M3RegularElementView() {
 }
 
-void M3RegularelementView::Load(UM3AssetsBundle* _Bundle) {
+void M3RegularElementView::Load(UM3AssetsBundle* _Bundle) {
 	M3View::Load(_Bundle);
 }
 
-void M3RegularelementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
+void M3RegularElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	M3View::BindViewModel(_ViewModel);
 
-	const auto RegularelementModel = std::static_pointer_cast<M3RegularelementModel>(_ViewModel);
-	RegularelementModel->Entity->Get()->IsAssignedToView->Set(true);
-	std::shared_ptr<M3KVSlot<EM3ElementId>> OnElementIdChangedSlot = std::make_shared<M3KVSlot<EM3ElementId>>(RegularelementModel->Entity->Get()->Id);
+	const auto RegularElementModel = std::static_pointer_cast<M3RegularElementModel>(_ViewModel);
+	RegularElementModel->Entity->Get()->IsAssignedToView->Set(true);
+	std::shared_ptr<M3KVSlot<EM3ElementId>> OnElementIdChangedSlot = std::make_shared<M3KVSlot<EM3ElementId>>(RegularElementModel->Entity->Get()->Id);
 	Slots[REGULAR_ELEMENT_VIEW_CONNECTION::k_ON_ELEMENT_ID_CHANGED] = OnElementIdChangedSlot;
 	OnElementIdChangedSlot->Attach([=](EM3ElementId Id) {
 		if (Id != EM3ElementId::UNKNOWN) {
 			SetElementVisual(Id);
 		}
 	});
-	SetElementVisual(RegularelementModel->Entity->Get()->Id->Get());
+	SetElementVisual(RegularElementModel->Entity->Get()->Id->Get());
 
-	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(RegularelementModel->Entity->Get()->IsAssignedToView);
+	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(RegularElementModel->Entity->Get()->IsAssignedToView);
 	Slots[REGULAR_ELEMENT_VIEW_CONNECTION::k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
 	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
 		if (!IsAssignedToView) {
-			Dispose<AM3Regularelement>();
-			UE_LOG(LogTemp, Warning, TEXT("Regularelement should be destroyed!"));
+			Dispose<AM3RegularElement>();
+			UE_LOG(LogTemp, Warning, TEXT("RegularElement should be destroyed!"));
 		}
 	});
 }
 
-void M3RegularelementView::SetElementVisual(EM3ElementId Id) {
+void M3RegularElementView::SetElementVisual(EM3ElementId Id) {
 	UM3BoardAssetsBundle* BoardAssetsBundle = static_cast<UM3BoardAssetsBundle*>(Bundle);
 
 	TArray<UActorComponent*> MeshesComponents = Superview->GetComponentsByClass(UStaticMeshComponent::StaticClass());

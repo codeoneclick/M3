@@ -25,10 +25,10 @@ public:
 	FM3Asset();
 	~FM3Asset();
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere)
+	UPROPERTY(Category = "Asset", VisibleAnywhere)
 	EM3Asset Asset;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere)
+	UPROPERTY(Category = "Asset", VisibleAnywhere)
 	FString Filepath;
 };
 
@@ -42,9 +42,9 @@ public:
 	FM3BoardAsset();
 	~FM3BoardAsset();
 
-	UPROPERTY(Category = "M3Asset", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Asset", EditAnywhere, BlueprintReadWrite)
 	class UMaterialInterface* Material;
 
-	UPROPERTY(Category = "M3Asset", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Asset", EditAnywhere, BlueprintReadWrite)
 	class UStaticMesh* Mesh;
 };

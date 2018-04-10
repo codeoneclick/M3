@@ -33,7 +33,7 @@ public:
 		const auto It = Listeners.find(Id);
 		if (It != Listeners.end()) {
 			for (const auto& Event : It->second) {
-				std::static_pointer_cast<T>(Event)->Call(std::forward<ARGS>(Args)...);
+				std::static_pointer_cast<T>(Event)->Call(Args...);
 			}
 		}
 	};

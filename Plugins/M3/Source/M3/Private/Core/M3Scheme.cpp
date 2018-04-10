@@ -36,17 +36,32 @@ AM3CellScheme::AM3CellScheme() {
 	CellHoleMaterial = CellHoleMaterial_RESOURCE.Get();
 	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellRandomMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_GRAY.M3_MI_GRAY'"));
 	CellRandomMaterial = CellRandomMaterial_RESOURCE.Get();
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CellSchemeRootComponent"));;
+
+	ElementMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellSchemeElementMeshComponent"));
+	ElementMeshComponent->SetupAttachment(GetRootComponent());
+	ElementMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
+	BlockerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellSchemeBlockerMeshComponent"));
+	BlockerMeshComponent->SetupAttachment(GetRootComponent());
+	BlockerMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AM3CellScheme::BeginPlay() {
 	Super::BeginPlay();
-	SetActorHiddenInGame(true);
 
+	SetActorHiddenInGame(true);
 	UStaticMeshComponent* MeshComponent = nullptr;
 	TArray<UActorComponent*> MeshesComponents = GetComponentsByClass(UStaticMeshComponent::StaticClass());
 	for (UActorComponent* ActorComponent : MeshesComponents) {
 		MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
 		MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		if (ActorComponent->GetName() == "CellSchemeElementMeshComponent") {
+			ElementMeshComponent = MeshComponent;
+		} else if (ActorComponent->GetName() == "CellSchemeBlockerMeshComponent") {
+			BlockerMeshComponent = MeshComponent;
+		}
 	}
 }
 
@@ -63,6 +78,34 @@ void AM3CellScheme::AddAppointment(AM3CellAppointmentScheme* _Appointment) {
 	if (!bIsReplaced) {
 		Appointments.Add(_Appointment);
 	}
+}
+
+void AM3CellScheme::RemoveAppointment(EM3CellAppointment AppointmentId) {
+	for (int i = 0; i < Appointments.Num(); ++i) {
+		const auto& Appointment = Appointments[i];
+		if (Appointment->Appointment == AppointmentId) {
+			Appointments.RemoveAt(i);
+			if (AppointmentId == EM3CellAppointment::FUNCTIONAL ||
+				AppointmentId == EM3CellAppointment::REGULARELEMENT ||
+				AppointmentId == EM3CellAppointment::SUPERELEMENT) {
+				ElementMeshComponent->SetStaticMesh(nullptr);
+				ElementMeshComponent->SetMaterial(0, nullptr);
+			}
+			if (AppointmentId == EM3CellAppointment::BLOCKER) {
+				BlockerMeshComponent->SetStaticMesh(nullptr);
+				BlockerMeshComponent->SetMaterial(0, nullptr);
+			}
+			break;
+		}
+	}
+}
+
+void AM3CellScheme::RemoveAllAppointments() {
+	ElementMeshComponent->SetStaticMesh(nullptr);
+	ElementMeshComponent->SetMaterial(0, nullptr);
+	BlockerMeshComponent->SetStaticMesh(nullptr);
+	BlockerMeshComponent->SetMaterial(0, nullptr);
+	Appointments.Empty();
 }
 
 AM3CellAppointmentScheme* AM3CellScheme::GetAppointment(EM3CellAppointment AppointmentId) const {
@@ -93,7 +136,7 @@ void AM3CellScheme::PostEditChangeProperty(struct FPropertyChangedEvent& Event) 
 }
 
 void AM3CellScheme::EditorApplyTranslation(const FVector & DeltaTranslation, bool bAltDown, bool bShiftDown, bool bCtrlDown) {
-	// Super::EditorApplyTranslation(DeltaTranslation, bAltDown, bShiftDown, bCtrlDown);
+
 }
 
 void AM3CellScheme::OnEditorTick(float DeltaTime) {
@@ -119,63 +162,171 @@ void AM3CellScheme::OnEditorMouseReleased() {
 				}
 				if (M3App) {
 					const auto BoardAssetsBundle = static_cast<UM3BoardAssetsBundle*>(M3App->AssetsBundle);
-					Appointments.Empty();
-					AddAppointment(AM3CellScheme::EdModeSelectedAppointmentScheme);
-
-					UStaticMeshComponent* MeshComponent = nullptr;
-					TArray<UActorComponent*> MeshesComponents = GetComponentsByClass(UStaticMeshComponent::StaticClass());
-					for (UActorComponent* ActorComponent : MeshesComponents) {
-						MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
-						break;
+					if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::REGULARELEMENT) {
+						RemoveAppointment(EM3CellAppointment::REGULARELEMENT);
+						RemoveAppointment(EM3CellAppointment::SUPERELEMENT);
+						const auto FunctionalAppointment = GetAppointment(EM3CellAppointment::SUPERELEMENT);
+						if (FunctionalAppointment &&
+							(FunctionalAppointment->Id == EM3ElementId::CELL_CLOSED ||
+							 FunctionalAppointment->Id == EM3ElementId::CELL_HOLE ||
+							 FunctionalAppointment->Id == EM3ElementId::CELL_RANDOM)) {
+							RemoveAppointment(EM3CellAppointment::FUNCTIONAL);
+						}
+					}
+					if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::SUPERELEMENT) {
+						RemoveAppointment(EM3CellAppointment::REGULARELEMENT);
+						RemoveAppointment(EM3CellAppointment::SUPERELEMENT);
+						const auto FunctionalAppointment = GetAppointment(EM3CellAppointment::SUPERELEMENT);
+						if (FunctionalAppointment &&
+							(FunctionalAppointment->Id == EM3ElementId::CELL_CLOSED ||
+							 FunctionalAppointment->Id == EM3ElementId::CELL_HOLE ||
+							 FunctionalAppointment->Id == EM3ElementId::CELL_RANDOM)) {
+							RemoveAppointment(EM3CellAppointment::FUNCTIONAL);
+						}
 					}
 
-					if (MeshComponent) {
-						if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::REGULARELEMENT) {
-							switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
-							case EM3ElementId::ELEMENT_RED:
-								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
-								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
-								break;
-							case EM3ElementId::ELEMENT_GREEN:
-								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
-								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
-								break;
-							case EM3ElementId::ELEMENT_BLUE:
-								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
-								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
-								break;
-							case EM3ElementId::ELEMENT_YELLOW:
-								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
-								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
-								break;
-							case EM3ElementId::ELEMENT_ORANGE:
-								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
-								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
-								break;
-							case EM3ElementId::ELEMENT_PURPLE:
-								MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
-								MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
-								break;
-							default:
-								break;
-							}
-						} else if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::FUNCTIONAL) {
-							switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
-							case EM3ElementId::CELL_CLOSED:
-								MeshComponent->SetStaticMesh(CellClosedMesh);
-								MeshComponent->SetMaterial(0, CellClosedMaterial);
-								break;
-							case EM3ElementId::CELL_HOLE:
-								MeshComponent->SetStaticMesh(CellHoleMesh);
-								MeshComponent->SetMaterial(0, CellHoleMaterial);
-								break;
-							case EM3ElementId::CELL_RANDOM:
-								MeshComponent->SetStaticMesh(CellRandomMesh);
-								MeshComponent->SetMaterial(0, CellRandomMaterial);
-								break;
-							default:
-								break;
-							}
+					if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::FUNCTIONAL) {
+						RemoveAppointment(EM3CellAppointment::FUNCTIONAL);
+						if (AM3CellScheme::EdModeSelectedAppointmentScheme->Id == EM3ElementId::CELL_HOLE) {
+							RemoveAppointment(EM3CellAppointment::REGULARELEMENT);
+							RemoveAppointment(EM3CellAppointment::SUPERELEMENT);
+							RemoveAppointment(EM3CellAppointment::BLOCKER);
+						}
+						if (AM3CellScheme::EdModeSelectedAppointmentScheme->Id == EM3ElementId::CELL_CLOSED) {
+							RemoveAppointment(EM3CellAppointment::REGULARELEMENT);
+							RemoveAppointment(EM3CellAppointment::SUPERELEMENT);
+							RemoveAppointment(EM3CellAppointment::BLOCKER);
+						}
+						if (AM3CellScheme::EdModeSelectedAppointmentScheme->Id == EM3ElementId::CELL_RANDOM) {
+							RemoveAppointment(EM3CellAppointment::REGULARELEMENT);
+							RemoveAppointment(EM3CellAppointment::SUPERELEMENT);
+						}
+					}
+
+					if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::BLOCKER) {
+						RemoveAppointment(EM3CellAppointment::BLOCKER);
+						const auto RegularElementAppointment = GetAppointment(EM3CellAppointment::REGULARELEMENT);
+						const auto SuperElementAppointment = GetAppointment(EM3CellAppointment::SUPERELEMENT);
+						if (!RegularElementAppointment && !SuperElementAppointment) {
+							return;
+						}
+						const auto FunctionalAppointment = GetAppointment(EM3CellAppointment::SUPERELEMENT);
+						if (FunctionalAppointment &&
+							(FunctionalAppointment->Id == EM3ElementId::CELL_CLOSED ||
+							 FunctionalAppointment->Id == EM3ElementId::CELL_HOLE)) {
+							return;
+						}
+					}
+					
+					AddAppointment(AM3CellScheme::EdModeSelectedAppointmentScheme);
+					
+					ensure(ElementMeshComponent != nullptr);
+					ensure(BlockerMeshComponent != nullptr);
+
+					if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::REGULARELEMENT) {
+						switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
+						case EM3ElementId::ELEMENT_RED:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
+							break;
+						case EM3ElementId::ELEMENT_GREEN:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
+							break;
+						case EM3ElementId::ELEMENT_BLUE:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
+							break;
+						case EM3ElementId::ELEMENT_YELLOW:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
+							break;
+						case EM3ElementId::ELEMENT_ORANGE:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
+							break;
+						case EM3ElementId::ELEMENT_PURPLE:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
+							break;
+						default:
+							break;
+						}
+					} else if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::FUNCTIONAL) {
+						switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
+						case EM3ElementId::CELL_CLOSED:
+							ElementMeshComponent->SetStaticMesh(CellClosedMesh);
+							ElementMeshComponent->SetMaterial(0, CellClosedMaterial);
+							break;
+						case EM3ElementId::CELL_HOLE:
+							ElementMeshComponent->SetStaticMesh(CellHoleMesh);
+							ElementMeshComponent->SetMaterial(0, CellHoleMaterial);
+							break;
+						case EM3ElementId::CELL_RANDOM:
+							ElementMeshComponent->SetStaticMesh(CellRandomMesh);
+							ElementMeshComponent->SetMaterial(0, CellRandomMaterial);
+							break;
+						default:
+							break;
+						}
+					} else if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::SUPERELEMENT) {
+						switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
+						case EM3ElementId::SUPERELEMENT_MATCH4:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH4.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH4.Material);
+							break;
+						case EM3ElementId::SUPERELEMENT_MATCH5:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH5.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH5.Material);
+							break;
+						case EM3ElementId::SUPERELEMENT_MATCH6:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH6.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH6.Material);
+							break;
+						case EM3ElementId::SUPERELEMENT_MATCH7:
+							ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH7.Mesh);
+							ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH7.Material);
+							break;
+						default:
+							break;
+						}
+					}
+					else if (AM3CellScheme::EdModeSelectedAppointmentScheme->Appointment == EM3CellAppointment::BLOCKER) {
+						switch (AM3CellScheme::EdModeSelectedAppointmentScheme->Id) {
+						case EM3ElementId::BLOCKER_NONE:
+							BlockerMeshComponent->SetStaticMesh(nullptr);
+							BlockerMeshComponent->SetMaterial(0, nullptr);
+							break;
+						case EM3ElementId::BLOCKER_BOX1X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Box1X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Box1X.Material);
+							break;
+						case EM3ElementId::BLOCKER_BOX2X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Box2X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Box2X.Material);
+							break;
+						case EM3ElementId::BLOCKER_BOX3X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Box3X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Box3X.Material);
+							break;
+						case EM3ElementId::BLOCKER_ICE1X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Ice1X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Ice1X.Material);
+							break;
+						case EM3ElementId::BLOCKER_ICE2X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Ice2X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Ice2X.Material);
+							break;
+						case EM3ElementId::BLOCKER_WIRE1X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Wire1X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Wire1X.Material);
+							break;
+						case EM3ElementId::BLOCKER_WIRE2X:
+							BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Wire2X.Mesh);
+							BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Wire2X.Material);
+							break;
+						default:
+							break;
 						}
 					}
 					GEditor->SelectNone(true, true);

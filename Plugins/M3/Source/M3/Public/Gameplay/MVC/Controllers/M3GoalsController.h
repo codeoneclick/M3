@@ -1,4 +1,4 @@
-// Copyright serhii serhiiv 2017. All rights reserved.
+// Copyright serhii serhiiv 2018. All rights reserved.
 
 #pragma once
 
@@ -8,8 +8,7 @@
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3KVProperty_INTERFACE)
 
-class M3_API M3GoalsController : public M3MediatingController
-{
+class M3_API M3GoalsController : public M3MediatingController {
 private:
 
 protected:

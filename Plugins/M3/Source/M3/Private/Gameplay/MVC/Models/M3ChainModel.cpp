@@ -121,22 +121,22 @@ void M3ChainModel::PushChain(const M3Chain_SharedPtr& Chain) {
 	}
 
 	bool IsSomeElementContainsInChain = false;
-	const auto SuperelementChains = Entity->Get()->SuperelementChains->Get();
-	for (int i = 0; i < SuperelementChains->size(); ++i) {
-		const auto SuperelementChain = SuperelementChains->data()[i];
+	const auto SuperElementChains = Entity->Get()->SuperElementChains->Get();
+	for (size_t i = 0; i < SuperElementChains->size(); ++i) {
+		const auto SuperElementChain = SuperElementChains->data()[i];
 
 		std::set<M3ElementModel_SharedPtr> Intersection;
-		std::set_intersection(Chain->Elements.begin(), Chain->Elements.end(), SuperelementChain->Elements.begin(), SuperelementChain->Elements.end(), std::inserter(Intersection, Intersection.begin()));
+		std::set_intersection(Chain->Elements.begin(), Chain->Elements.end(), SuperElementChain->Elements.begin(), SuperElementChain->Elements.end(), std::inserter(Intersection, Intersection.begin()));
 		if (Intersection.size() > 0) {
 			IsSomeElementContainsInChain = true;
 			for (const auto Element : Chain->Elements) {
-				SuperelementChain->Elements.insert(Element);
+				SuperElementChain->Elements.insert(Element);
 			}
 		}
 	}
 
 	if (!IsSomeElementContainsInChain) {
-		SuperelementChains->push_back(Chain);
+		SuperElementChains->push_back(Chain);
 	}
 }
 
@@ -161,80 +161,40 @@ void M3ChainModel::ValidateElementChains(const M3ElementModel_SharedPtr& Element
 	const auto HorizontalChains = Entity->Get()->HorizontalChains->Get();
 	const auto VerticalChains = Entity->Get()->VerticalChains->Get();
 
-	for (int i = 0; i < HorizontalChains->size(); ++i) {
+	for (size_t i = 0; i < HorizontalChains->size(); ++i) {
 		const auto HorizontalChain = HorizontalChains->data()[i];
 		HorizontalChain->Elements.erase(Element);
 	}
 
-	for (int i = 0; i < VerticalChains->size(); ++i) {
+	for (size_t i = 0; i < VerticalChains->size(); ++i) {
 		const auto VerticalChain = VerticalChains->data()[i];
 		VerticalChain->Elements.erase(Element);
 	}
 }
 
-void M3ChainModel::ValidateSuperelementChains() {
-	auto SuperelementChains = Entity->Get()->SuperelementChains->Get();
-	for (auto It = SuperelementChains->begin(); It != SuperelementChains->end();) {
+void M3ChainModel::ValidateSuperElementChains() {
+	auto SuperElementChains = Entity->Get()->SuperElementChains->Get();
+	for (auto It = SuperElementChains->begin(); It != SuperElementChains->end();) {
 		if ((*It)->Elements.size() <= 3) {
-			It = SuperelementChains->erase(It);
+			It = SuperElementChains->erase(It);
 		} else {
 			++It;
 		}
 	}
-	for (auto It = SuperelementChains->begin(); It != SuperelementChains->end(); ++It) {
+	for (auto It = SuperElementChains->begin(); It != SuperElementChains->end(); ++It) {
 		ensure((*It)->Elements.size() > 3);
 	}
-
-	/*
-	while (1) {
-		M3Chain_SharedPtr IntersectedSuperelementChainA = nullptr;
-		M3Chain_SharedPtr IntersectedSuperelementChainB = nullptr;
-		for (int i = 0; i < SuperelementChains->size(); ++i) {
-			const auto SuperelementChain_ItA = SuperelementChains->data()[i];
-			std::sort(SuperelementChain_ItA->Elements.begin(), SuperelementChain_ItA->Elements.end());
-			for (int j = 0; j < SuperelementChains->size(); ++j) {
-				const auto SuperelementChain_ItB = SuperelementChains->data()[j];
-				std::sort(SuperelementChain_ItB->Elements.begin(), SuperelementChain_ItB->Elements.end());
-				if (SuperelementChain_ItA != SuperelementChain_ItB) {
-
-					std::vector<M3ElementModel_SharedPtr> Intersection;
-					std::set_intersection(SuperelementChain_ItA->Elements.begin(), SuperelementChain_ItA->Elements.end(), SuperelementChain_ItB->Elements.begin(), SuperelementChain_ItB->Elements.end(), std::back_inserter(Intersection));
-					if (Intersection.size() > 0) {
-						IntersectedSuperelementChainA = SuperelementChain_ItA;
-						IntersectedSuperelementChainB = SuperelementChain_ItB;
-						break;
-					}
-				}
-			}
-			if (IntersectedSuperelementChainA && IntersectedSuperelementChainB) {
-				break;
-			}
-		}
-		if (IntersectedSuperelementChainA && IntersectedSuperelementChainB) {
-			const auto IntersectedSuperelementChainItA = std::find(SuperelementChains->begin(), SuperelementChains->end(), IntersectedSuperelementChainA);
-			const auto IntersectedSuperelementChainItB = std::find(SuperelementChains->begin(), SuperelementChains->end(), IntersectedSuperelementChainB);
-			for (const auto Element : IntersectedSuperelementChainB->Elements) {
-				if (std::find(IntersectedSuperelementChainA->Elements.begin(), IntersectedSuperelementChainA->Elements.end(), Element) != IntersectedSuperelementChainA->Elements.end()) {
-					IntersectedSuperelementChainA->Elements.push_back(Element);
-				}
-			}
-			SuperelementChains->erase(IntersectedSuperelementChainItB);
-		}
-		else {
-			break;
-		}
-	}*/
 }
 
-bool M3ChainModel::IsSuperelementChainsExist() const {
-	return Entity->Get()->SuperelementChains->Get()->size() != 0;
+bool M3ChainModel::IsSuperElementChainsExist() const {
+	return Entity->Get()->SuperElementChains->Get()->size() != 0;
 }
 
-M3Chain_SharedPtr M3ChainModel::PopSuperelementChain() {
+M3Chain_SharedPtr M3ChainModel::PopSuperElementChain() {
 	M3Chain_SharedPtr Chain = nullptr;
-	if (Entity->Get()->SuperelementChains->Get()->size() != 0) {
-		Chain = Entity->Get()->SuperelementChains->Get()->back();
-		Entity->Get()->SuperelementChains->Get()->pop_back();
+	if (Entity->Get()->SuperElementChains->Get()->size() != 0) {
+		Chain = Entity->Get()->SuperElementChains->Get()->back();
+		Entity->Get()->SuperElementChains->Get()->pop_back();
 	}
 	return Chain;
 }

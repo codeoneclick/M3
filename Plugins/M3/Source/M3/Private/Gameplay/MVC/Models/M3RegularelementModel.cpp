@@ -1,29 +1,29 @@
 // Copyright serhii serhiiv 2018 All rights reserved.
 
-#include "M3RegularelementModel.h"
+#include "M3RegularElementModel.h"
 
-M3RegularelementModel::M3RegularelementModel() {
+M3RegularElementModel::M3RegularElementModel() {
 
 }
 
-M3RegularelementModel::~M3RegularelementModel() {
+M3RegularElementModel::~M3RegularElementModel() {
 }
 
-void M3RegularelementModel::Init() {
-	SUBSCRIBE_PROP(M3RegularelementEntity, Id)
-	std::shared_ptr<M3RegularelementModel> Instance = std::static_pointer_cast<M3RegularelementModel>(shared_from_this());
+void M3RegularElementModel::Init() {
+	SUBSCRIBE_PROP(M3RegularElementEntity, Id)
+	std::shared_ptr<M3RegularElementModel> Instance = std::static_pointer_cast<M3RegularElementModel>(shared_from_this());
 	AddComponent(std::make_shared<M3ElementModelColorComponent>(std::static_pointer_cast<M3ElementModelColorComponent_INTERFACE>(Instance)));
 }
 
-void M3RegularelementModel::Serialize() {
+void M3RegularElementModel::Serialize() {
 
 }
 
-void M3RegularelementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+void M3RegularElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 }
 
-EM3ElementColor M3RegularelementModel::GetColor() {
+EM3ElementColor M3RegularElementModel::GetColor() {
 	EM3ElementColor Result = EM3ElementColor::NONE;
 	switch (GetId())
 	{
@@ -52,7 +52,7 @@ EM3ElementColor M3RegularelementModel::GetColor() {
 	return Result;
 }
 
-void M3RegularelementModel::Reset() {
+void M3RegularElementModel::Reset() {
 	M3Model::Reset();
 
 	Entity->Get()->Id->Set(EM3ElementId::UNKNOWN);

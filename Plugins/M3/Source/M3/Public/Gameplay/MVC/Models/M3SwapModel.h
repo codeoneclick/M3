@@ -16,7 +16,7 @@ public:
 
 	PROP_STRONG(public, M3PotentialSwapEntity, SwapElementA, M3ElementModel_SharedPtr, nullptr)
 	PROP_STRONG(public, M3PotentialSwapEntity, SwapElementB, M3ElementModel_SharedPtr, nullptr)
-	PROP_STRONG(public, M3PotentialSwapEntity, Weightning, int, 0)
+	PROP_STRONG(public, M3PotentialSwapEntity, Weightning, float, 0)
 };
 
 class M3_API M3PotentialSwapModel : public M3Model<M3PotentialSwapEntity> {
@@ -37,6 +37,8 @@ public:
 
 	PROP_DECL_W(SwapElementA, M3ElementModel_SharedPtr)
 	PROP_DECL_W(SwapElementB, M3ElementModel_SharedPtr)
+
+	PROP_DECL_R(Weightning, float)
 };
 
 FORWARD_DECL_STRONG(M3CellModel)
@@ -58,7 +60,7 @@ private:
 	static bool CanSwapElementWithElementColor(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, EM3ElementColor Color);
 	static bool CanSwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB);
 
-	bool HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row);
+	bool HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, int* OutCount, int* OutHorizontalStart, int* OutHorizontalEnd, int* OutVerticalStart, int* OutVerticalEnd);
 
 public:
 

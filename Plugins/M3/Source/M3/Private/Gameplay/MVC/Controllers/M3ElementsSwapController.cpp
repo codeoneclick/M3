@@ -4,6 +4,7 @@
 #include "M3GestureModel.h"
 #include "M3SwapModel.h"
 #include "M3SharedModel.h"
+#include "M3BoardStateModel.h"
 #include "M3Board.h"
 #include "M3View.h"
 #include "M3Element.h"
@@ -30,6 +31,7 @@ bool M3ElementsSwapController::CanBeExecuted() const {
 void M3ElementsSwapController::Execute(float Deltatime) {
 	const auto& GestureModel = M3SharedModel::GetInstance()->GetSubmodel<M3GestureModel>();
 	const auto& SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
+	const auto& BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
 	const auto Board = static_cast<AM3Board*>(InteractionView);
 
 	const auto PC = Board->GetWorld()->GetFirstPlayerController();
@@ -52,6 +54,7 @@ void M3ElementsSwapController::Execute(float Deltatime) {
 			ensure(ElementModel != nullptr);
 			if (CurrentGesture.Gesture == EM3Gesture::DOUBLE_TAP && InteractionComponent->isDoubleTapEnabled) {
 				ElementModel->SetState(EM3ElementState::MATCHING);
+				BoardStateModel->IncGameTurn();
 			} else {
 				SwapModel->AddSwapElement(ElementModel);
 				const auto SwapElementA = SwapModel->GetSwapElementA();

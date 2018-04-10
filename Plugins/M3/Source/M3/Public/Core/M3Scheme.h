@@ -11,8 +11,8 @@ UENUM(BlueprintType)
 enum class EM3CellAppointment : uint8 {
 	UNKNOWN UMETA(DisplayName = "Unknown"),
 	FUNCTIONAL UMETA(DisplayName = "Functional"),
-	REGULARELEMENT UMETA(DispalyName = "Regularelement"),
-	SUPERELEMENT UMETA(DispalyName = "Superelement"),
+	REGULARELEMENT UMETA(DispalyName = "Regular Element"),
+	SUPERELEMENT UMETA(DispalyName = "Super Element"),
 	BLOCKER UMETA(DispalyName = "Blocker"),
 };
 
@@ -29,15 +29,18 @@ enum class EM3ElementId : uint8 {
 	ELEMENT_YELLOW UMETA(DisplayName = "Element Yellow"),
 	ELEMENT_ORANGE UMETA(DisplayName = "Element Orange"),
 	ELEMENT_PURPLE UMETA(DisplayName = "Element Purple"),
-};
-
-UENUM(BlueprintType)
-enum class EM3SuperelementId : uint8 {
-	UNKNOWN UMETA(DisplayName = "Unknown"),
-	MATCH4_BOMB UMETA(DisplayName = "Match 4 Bomb"),
-	MATCH5_BOMB UMETA(DisplayName = "Match 5 Bomb"),
-	MATCH6_BOMB UMETA(DisplayName = "Match 6 Bomb"),
-	MATCH7_BOMB UMETA(DisplayName = "Match 7 Bomb"),
+	SUPERELEMENT_MATCH4 UMETA(DisplayName = "Super element Match 4"),
+	SUPERELEMENT_MATCH5 UMETA(DisplayName = "Super element Match 5"),
+	SUPERELEMENT_MATCH6 UMETA(DisplayName = "Super element Match 6"),
+	SUPERELEMENT_MATCH7 UMETA(DisplayName = "Super element Match 7"),
+	BLOCKER_NONE UMETA(DisplayName = "Blocker None"),
+	BLOCKER_BOX1X UMETA(DisplayName = "Box 1X"),
+	BLOCKER_BOX2X UMETA(DisplayName = "Box 2X"),
+	BLOCKER_BOX3X UMETA(DisplayName = "Box 3X"),
+	BLOCKER_ICE1X UMETA(DisplayName = "Ice 1X"),
+	BLOCKER_ICE2X UMETA(DisplayName = "Ice 2X"),
+	BLOCKER_WIRE1X UMETA(DisplayName = "Wire 1X"),
+	BLOCKER_WIRE2X UMETA(DisplayName = "Wire 2X"),
 };
 
 UENUM(BlueprintType)
@@ -66,13 +69,13 @@ class M3_API AM3CellAppointmentScheme : public AM3Scheme_INTERFACE {
 
 public:
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	EM3CellAppointment Appointment;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	EM3ElementId Id;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	int GroupId;
 };
 
@@ -96,34 +99,42 @@ public:
 
 	AM3CellScheme();
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Col;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Row;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	TArray<AM3CellAppointmentScheme*> Appointments;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Asset", VisibleAnywhere, BlueprintReadOnly)
 	class UMaterialInterface* CellClosedMaterial;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Asset", VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMesh* CellClosedMesh;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Asset", VisibleAnywhere, BlueprintReadOnly)
 	class UMaterialInterface* CellHoleMaterial;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Asset", VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMesh* CellHoleMesh;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Asset", VisibleAnywhere, BlueprintReadOnly)
 	class UMaterialInterface* CellRandomMaterial;
 
-	UPROPERTY(Category = "M3Asset", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Asset", VisibleAnywhere, BlueprintReadOnly)
 	class UStaticMesh* CellRandomMesh;
 
+	UPROPERTY(Category = "Component", VisibleAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent* ElementMeshComponent;
+
+	UPROPERTY(Category = "Component", VisibleAnywhere, BlueprintReadOnly)
+	class UStaticMeshComponent* BlockerMeshComponent;
+
 	void AddAppointment(AM3CellAppointmentScheme* Appointment);
+	void RemoveAppointment(EM3CellAppointment AppointmentId);
+	void RemoveAllAppointments();
 	AM3CellAppointmentScheme* GetAppointment(EM3CellAppointment AppointmentId) const;
 	bool IsAppointmentExist(EM3CellAppointment AppointmentId) const;
 
@@ -147,13 +158,13 @@ public:
 
 	AM3GoalScheme();
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	EM3GoalId Id;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	int Quantity;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	bool Enabled;
 };
 
@@ -166,73 +177,106 @@ public:
 
 	AM3BoardScheme();
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Cols;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Rows;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	FVector2D ElementSize;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* FunctionalCellClosedScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* FunctionalCellHoleScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* FunctionalCellRandomScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* ElementRedScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* ElementGreenScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* ElementBlueScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* ElementYellowScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* ElementOrangeScheme;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* ElementPurpleScheme;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* SuperElementMatch4Scheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* SuperElementMatch5Scheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* SuperElementMatch6Scheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* SuperElementMatch7Scheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerBox1XScheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerBox2XScheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerBox3XScheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerIce1XScheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerIce2XScheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerWire1XScheme;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerWire2XScheme;
+
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	TArray<AM3CellScheme*> Cells;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	bool IsTurnBased;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Duration;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int OneMatchScores;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	bool IsUseComboMatchScores;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	float ComboMatchScoresMultiplier;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Star1Scores;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Star2Scores;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	int Star3Scores;
 
-	UPROPERTY(Category = "M3Scheme", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	TArray<AM3GoalScheme*> Goals;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	TSet<EM3ElementId> ElementIds;
 
 	AM3GoalScheme* GetGoalScheme(UWorld* World, EM3GoalId Id);

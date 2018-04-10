@@ -83,4 +83,7 @@ public:
 	bool CanDrop() const;
 
 	bool IsDropBlocked() const;
+
+	bool IsRegular() const;
+	bool IsSuper() const;
 };

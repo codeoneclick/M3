@@ -31,7 +31,7 @@ public:
 
 	PROP_STRONG(public, M3ChainEntity, HorizontalChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
 	PROP_STRONG(public, M3ChainEntity, VerticalChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
-	PROP_STRONG(public, M3ChainEntity, SuperelementChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
+	PROP_STRONG(public, M3ChainEntity, SuperElementChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
 };
 
 
@@ -60,7 +60,7 @@ public:
 	bool IsChainsExist() const;
 	M3Chain_SharedPtr PopChain();
 
-	void ValidateSuperelementChains();
-	bool IsSuperelementChainsExist() const;
-	M3Chain_SharedPtr PopSuperelementChain();
+	void ValidateSuperElementChains();
+	bool IsSuperElementChainsExist() const;
+	M3Chain_SharedPtr PopSuperElementChain();
 };

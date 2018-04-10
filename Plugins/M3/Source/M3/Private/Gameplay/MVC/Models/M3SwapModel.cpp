@@ -5,6 +5,7 @@
 #include "M3ElementModel.h"
 #include "M3BoardModel.h"
 #include "M3SharedModel.h"
+#include "M3AutobotModel.h"
 
 M3PotentialSwapModel::M3PotentialSwapModel() {
 }
@@ -79,7 +80,7 @@ void M3SwapModel::SwapElements(const M3CellModel_SharedPtr& CellA, const M3CellM
 	}
 }
 
-bool M3SwapModel::HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row) {
+bool M3SwapModel::HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedPtr>>& Cells, int Cols, int Rows, int Col, int Row, int* OutCount, int* OutHorizontalStart, int* OutHorizontalEnd, int* OutVerticalStart, int* OutVerticalEnd) {
 	const auto& Element = Cells->data()[Col + Row * Cols]->GetSubmodel<M3ElementModel>();
 	int Count = 0;
 	EM3ElementColor Color = Element->GetColor();
@@ -112,11 +113,18 @@ bool M3SwapModel::HasChain(const std::shared_ptr<std::vector<M3CellModel_SharedP
 		VerticalEnd = j;
 	}
 
+	*OutCount = Count;
+	*OutHorizontalStart = HorizontalStart;
+	*OutHorizontalEnd = HorizontalEnd;
+	*OutVerticalStart = VerticalStart;
+	*OutVerticalEnd = VerticalEnd;
+
 	return Count >= 3;
 }
 
 void M3SwapModel::GeneratePotentialSwaps() {
 	const auto& Board = M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>();
+	const auto& AutobotModel = M3SharedModel::GetInstance()->GetSubmodel<M3AutobotModel>();
 
 	const int Cols = Board->GetCols();
 	const int Rows = Board->GetRows();
@@ -138,15 +146,23 @@ void M3SwapModel::GeneratePotentialSwaps() {
 
 								int ColTo = Col + 1;
 								int RowTo = Row;
-								bool Result = HasChain(Cells, Cols, Rows, Col + 1, Row);
+
+								int Count = 0;
+								int HorizontalStart = 0;
+								int HorizontalEnd = 0;
+								int VerticalStart = 0;
+								int VerticalEnd = 0;
+
+								bool Result = HasChain(Cells, Cols, Rows, Col + 1, Row, &Count, &HorizontalStart, &HorizontalEnd, &VerticalStart, &VerticalEnd);
 								if (!Result) {
 									ColTo = Col;
-									Result = HasChain(Cells, Cols, Rows, Col, Row);
+									Result = HasChain(Cells, Cols, Rows, Col, Row, &Count, &HorizontalStart, &HorizontalEnd, &VerticalStart, &VerticalEnd);
 								}
 								if (Result && M3SwapModel::CanSwapElements(Element, OtherElement)) {
 									const auto PotentialSwapModel = std::make_shared<M3PotentialSwapModel>();
 									PotentialSwapModel->SetSwapElementA(Element);
 									PotentialSwapModel->SetSwapElementB(OtherElement);
+									PotentialSwapModel->Entity->Get()->Weightning->Set(AutobotModel->GetMatchWeightning(Count, HorizontalStart, HorizontalEnd, VerticalStart, VerticalEnd, ColTo, RowTo));
 									PotentialSwaps->push_back(PotentialSwapModel);
 								}
 
@@ -164,15 +180,23 @@ void M3SwapModel::GeneratePotentialSwaps() {
 
 								int ColTo = Col;
 								int RowTo = Row + 1;
-								bool Result = HasChain(Cells, Cols, Rows, Col, Row + 1);
+
+								int Count = 0;
+								int HorizontalStart = 0;
+								int HorizontalEnd = 0;
+								int VerticalStart = 0;
+								int VerticalEnd = 0;
+
+								bool Result = HasChain(Cells, Cols, Rows, Col, Row + 1, &Count, &HorizontalStart, &HorizontalEnd, &VerticalStart, &VerticalEnd);
 								if (!Result) {
 									RowTo = Row;
-									Result = HasChain(Cells, Cols, Rows, Col, Row);
+									Result = HasChain(Cells, Cols, Rows, Col, Row, &Count, &HorizontalStart, &HorizontalEnd, &VerticalStart, &VerticalEnd);
 								}
 								if (Result && M3SwapModel::CanSwapElements(Element, OtherElement)) {
 									const auto PotentialSwapModel = std::make_shared<M3PotentialSwapModel>();
 									PotentialSwapModel->SetSwapElementA(Element);
 									PotentialSwapModel->SetSwapElementB(OtherElement);
+									PotentialSwapModel->Entity->Get()->Weightning->Set(AutobotModel->GetMatchWeightning(Count, HorizontalStart, HorizontalEnd, VerticalStart, VerticalEnd, ColTo, RowTo));
 									PotentialSwaps->push_back(PotentialSwapModel);
 								}
 
@@ -217,6 +241,9 @@ bool M3SwapModel::IsPossibleToSwap() const {
 				return;
 			}
 		});
+		if (SwapElementA->IsSuper() || SwapElementB->IsSuper()) {
+			Result = true;
+		}
 	}
 	return Result;
 }

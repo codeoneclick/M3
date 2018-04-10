@@ -22,6 +22,8 @@ private:
 	static TSharedRef<SWidget> MAKE_BoardElements_SLOT(FM3EdModeToolkit* SELF);
 	static TSharedRef<SWidget> MAKE_BoardReskin_SLOT(FM3EdModeToolkit* SELF);
 	static TSharedRef<SWidget> MAKE_Copyright_SLOT(FM3EdModeToolkit* SELF);
+	
+	static TSharedRef<SWidget> MAKE_Element_CheckBox_SLOT(FM3EdModeToolkit* SELF, EM3ElementId Id, AM3CellAppointmentScheme* Scheme, FLinearColor Color, FText Text);
 
 	static ECheckBoxState ON_Element_CHECKED(int ElementId);
 
@@ -30,6 +32,8 @@ private:
 	static FReply ON_BoardSchemeSave_BTN();
 
 	static EM3ElementId SelectedElementId;
+
+	
 
 protected:
 

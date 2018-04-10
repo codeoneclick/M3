@@ -45,15 +45,18 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UM32TapGestureRecognizerComponent* DoubleTapGestureRecognizerComponent;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3BoardAssetsBundle> AssetsBundle_BP;
 
-	UPROPERTY(Category = "M3Bundle", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	UM3BoardAssetsBundle* AssetsBundle;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AM3BoardScheme> BoardScheme_BP;
 
-	UPROPERTY(Category = "M3Scheme", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadWrite)
 	AM3BoardScheme* BoardScheme;
+
+	UPROPERTY(Category = "Autobot", EditAnywhere, BlueprintReadWrite)
+	bool AutobotEnabled;
 };

@@ -7,21 +7,23 @@
 #include "M3Model.h"
 #include "M3Scheme.h"
 
-class M3SuperelementEntity : public M3Entity {
+class M3SuperElementEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3SuperelementEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3SuperElementEntity, M3Entity::GuidsContainer)
 
-	PROP_STRONG(public, M3SuperelementEntity, Id, EM3SuperelementId, EM3SuperelementId::UNKNOWN)
+	PROP_STRONG(public, M3SuperElementEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
 };
 
-class M3_API M3SuperelementModel : public M3Model<M3SuperelementEntity> {
+class M3_API M3SuperElementModel : public M3Model<M3SuperElementEntity> {
 public:
 
-	CTTI_CLASS_GUID(M3SuperelementModel, M3Model_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3SuperElementModel, M3Model_INTERFACE::GuidsContainer)
 
-	M3SuperelementModel();
-	~M3SuperelementModel();
+	M3SuperElementModel();
+	~M3SuperElementModel();
+
+	static int GetExplosionRadius(EM3ElementId Id);
 
 	void Init() override;
 
@@ -30,5 +32,5 @@ public:
 
 	void Reset() override;
 
-	PROP_DECL_R(Id, EM3SuperelementId)
+	PROP_DECL_R(Id, EM3ElementId)
 };

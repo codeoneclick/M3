@@ -5,28 +5,28 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "M3Utilities.h"
-#include "M3Regularelement.generated.h"
+#include "M3RegularElement.generated.h"
 
-FORWARD_DECL_STRONG(M3RegularelementModel)
-FORWARD_DECL_STRONG(M3RegularelementView)
+FORWARD_DECL_STRONG(M3RegularElementModel)
+FORWARD_DECL_STRONG(M3RegularElementView)
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Views))
-class M3_API AM3Regularelement : public ACharacter {
+class M3_API AM3RegularElement : public ACharacter {
 
 	GENERATED_BODY()
 
 public:
 
-	AM3Regularelement();
-	~AM3Regularelement();
+	AM3RegularElement();
+	~AM3RegularElement();
 
 protected:
 
-	M3RegularelementModel_SharedPtr Model = nullptr;
-	M3RegularelementView_SharedPtr View = nullptr;
+	M3RegularElementModel_SharedPtr Model = nullptr;
+	M3RegularElementView_SharedPtr View = nullptr;
 
 	virtual void BeginPlay() override;
 

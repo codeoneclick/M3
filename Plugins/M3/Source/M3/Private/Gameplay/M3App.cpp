@@ -9,6 +9,8 @@
 #include "M3TapGestureRecognizerComponent.h"
 #include "M3PanGestureRecognizerComponent.h"
 #include "M32TapGestureRecognizerComponent.h"
+#include "M3AutobotModel.h"
+#include "M3SharedModel.h"
 
 AM3App::AM3App() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -54,6 +56,9 @@ void AM3App::BeginPlay() {
 	CoordinatingComponent->CreateControllers();
 	CoordinatingComponent->CreateViews(AssetsBundle);
 	CoordinatingComponent->OnModelChanged(BoardScheme);
+
+	const auto& AutobotModel = M3SharedModel::GetInstance()->GetSubmodel<M3AutobotModel>();
+	AutobotModel->Entity->Get()->Enabled->Set(AutobotEnabled);
 
 	CoordinatingComponent->OnStart();
 }

@@ -50,6 +50,39 @@ UM3EdModeProps_BoardCreate::UM3EdModeProps_BoardCreate() {
 
 	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentElementPurpleScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentElementPurple_BP.M3AppointmentElementPurple_BP_C'"));
 	ElementPurpleScheme_BP = AppointmentElementPurpleScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentSuperElementMatch4Scheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentSuperElementMatch4_BP.M3AppointmentSuperElementMatch4_BP_C'"));
+	SuperElementMatch4Scheme_BP = AppointmentSuperElementMatch4Scheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentSuperElementMatch5Scheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentSuperElementMatch5_BP.M3AppointmentSuperElementMatch5_BP_C'"));
+	SuperElementMatch5Scheme_BP = AppointmentSuperElementMatch5Scheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentSuperElementMatch6Scheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentSuperElementMatch6_BP.M3AppointmentSuperElementMatch6_BP_C'"));
+	SuperElementMatch6Scheme_BP = AppointmentSuperElementMatch6Scheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentSuperElementMatch7Scheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentSuperElementMatch7_BP.M3AppointmentSuperElementMatch7_BP_C'"));
+	SuperElementMatch7Scheme_BP = AppointmentSuperElementMatch7Scheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerBox1XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerBox1X_BP.M3AppointmentBlockerBox1X_BP_C'"));
+	BlockerBox1XScheme_BP = AppointmentBlockerBox1XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerBox2XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerBox2X_BP.M3AppointmentBlockerBox2X_BP_C'"));
+	BlockerBox2XScheme_BP = AppointmentBlockerBox2XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerBox3XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerBox3X_BP.M3AppointmentBlockerBox3X_BP_C'"));
+	BlockerBox3XScheme_BP = AppointmentBlockerBox3XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerIce1XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerIce1X_BP.M3AppointmentBlockerIce1X_BP_C'"));
+	BlockerIce1XScheme_BP = AppointmentBlockerIce1XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerIce2XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerIce2X_BP.M3AppointmentBlockerIce2X_BP_C'"));
+	BlockerIce2XScheme_BP = AppointmentBlockerIce2XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerWire1XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerWire1X_BP.M3AppointmentBlockerWire1X_BP_c'"));
+	BlockerWire1XScheme_BP = AppointmentBlockerWire1XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerWire2XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerWire2X_BP.M3AppointmentBlockerWire2X_BP_c'"));
+	BlockerWire2XScheme_BP = AppointmentBlockerWire2XScheme_BP_RESOURCE.Class;
 }
 
 #if WITH_EDITOR
@@ -82,6 +115,39 @@ void UM3EdModeProps_BoardReskin::PostEditChangeProperty(struct FPropertyChangedE
 
 			PurpleElementMaterial = AssetsBundle->Element_PURPLE.Material;
 			PurpleElementMesh = AssetsBundle->Element_PURPLE.Mesh;
+
+			SuperElementMatch4Material = AssetsBundle->SuperElement_MATCH4.Material;
+			SuperElementMatch4Mesh = AssetsBundle->SuperElement_MATCH4.Mesh;
+
+			SuperElementMatch5Material = AssetsBundle->SuperElement_MATCH5.Material;
+			SuperElementMatch5Mesh = AssetsBundle->SuperElement_MATCH5.Mesh;
+
+			SuperElementMatch6Material = AssetsBundle->SuperElement_MATCH6.Material;
+			SuperElementMatch6Mesh = AssetsBundle->SuperElement_MATCH6.Mesh;
+
+			SuperElementMatch7Material = AssetsBundle->SuperElement_MATCH7.Material;
+			SuperElementMatch7Mesh = AssetsBundle->SuperElement_MATCH7.Mesh;
+
+			BlockerBox1XMaterial = AssetsBundle->Blocker_Box1X.Material;
+			BlockerBox1XMesh = AssetsBundle->Blocker_Box1X.Mesh;
+
+			BlockerBox2XMaterial = AssetsBundle->Blocker_Box2X.Material;
+			BlockerBox2XMesh = AssetsBundle->Blocker_Box2X.Mesh;
+
+			BlockerBox3XMaterial = AssetsBundle->Blocker_Box3X.Material;
+			BlockerBox3XMesh = AssetsBundle->Blocker_Box3X.Mesh;
+
+			BlockerIce1XMaterial = AssetsBundle->Blocker_Ice1X.Material;
+			BlockerIce1XMesh = AssetsBundle->Blocker_Ice1X.Mesh;
+
+			BlockerIce2XMaterial = AssetsBundle->Blocker_Ice2X.Material;
+			BlockerIce2XMesh = AssetsBundle->Blocker_Ice2X.Mesh;
+
+			BlockerWire1XMaterial = AssetsBundle->Blocker_Wire1X.Material;
+			BlockerWire1XMesh = AssetsBundle->Blocker_Wire1X.Mesh;
+
+			BlockerWire2XMaterial = AssetsBundle->Blocker_Wire2X.Material;
+			BlockerWire2XMesh = AssetsBundle->Blocker_Wire2X.Mesh;
 		}
 	}
 }

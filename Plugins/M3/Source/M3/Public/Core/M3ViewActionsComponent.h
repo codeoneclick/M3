@@ -28,19 +28,19 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(Category = "M3Actions", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Actions", EditAnywhere, BlueprintReadWrite)
 	TArray<UM3Action*> Actions;
 
-	UFUNCTION(BlueprintCallable, Category = "M3Actions")
+	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void RunAction(UM3Action* Action);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Actions")
+	UFUNCTION(BlueprintCallable, Category = "Actions")
 	UM3Action* MoveToAction(float Duration, const FVector& Location);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Actions")
+	UFUNCTION(BlueprintCallable, Category = "Actions")
 	UM3Action* ScaleToAction(float Duration, const FVector& Scale);
 
-	UFUNCTION(BlueprintCallable, Category = "M3Actions")
+	UFUNCTION(BlueprintCallable, Category = "Actions")
 	UM3Action* CallbackAction(float Duration, FM3ActionCallback Callback);
 	UM3Action* CallbackAction(float Duration, FM3ActionNativeCallback Callback);
 };
@@ -84,7 +84,7 @@ public:
 
 	virtual void Setup(AActor* _Actor);
 
-	UPROPERTY(Category = "M3Actions", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Actions", EditAnywhere, BlueprintReadWrite)
 	TArray<UM3Action*> Actions;
 
 	virtual void OnUpdate(float DeltaTime);
@@ -145,7 +145,7 @@ public:
 	UM3CallbackAction();
 	virtual ~UM3CallbackAction() = default;
 
-	UPROPERTY(Category = "M3Actions", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Actions", EditAnywhere, BlueprintReadWrite)
 	FM3ActionCallback Callback;
 
 	void Setup(AActor* _Actor, float _Duration, FM3ActionCallback _Callback);

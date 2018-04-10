@@ -36,13 +36,13 @@ public:
 	AM3HUD();
 	~AM3HUD();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Delegates")
 	void OnDurationChanged(int CurrentDuration, int MaxDuration, bool IsTurnBased);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Delegates")
 	void OnScoresChanged(int CurrentScores, int Star1Scores, int Star2Scores, int Star3Scores);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Delegates")
 	void OnGoalChanged(EM3GoalId Id, int Index, int CurrentQuantity, int MaxQuantity);
 
 };

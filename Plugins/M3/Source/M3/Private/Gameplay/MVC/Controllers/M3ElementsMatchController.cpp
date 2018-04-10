@@ -5,8 +5,8 @@
 #include "M3BoardModel.h"
 #include "M3CellModel.h"
 #include "M3ElementModel.h"
-#include "M3RegularelementModel.h"
-#include "M3SuperelementModel.h"
+#include "M3RegularElementModel.h"
+#include "M3SuperElementModel.h"
 #include "M3BoardSettingsModel.h"
 #include "M3BoardStateModel.h"
 #include "M3SpawnModel.h"
@@ -31,13 +31,13 @@ void M3ElementsMatchController::Execute(float Deltatime) {
 	const auto BoardModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>();
 	const auto SpawnModel = M3SharedModel::GetInstance()->GetSubmodel<M3SpawnModel>();
 
-	ChainModel->ValidateSuperelementChains();
+	ChainModel->ValidateSuperElementChains();
 
-	while (ChainModel->IsSuperelementChainsExist()) {
-		auto SuperelementChain = ChainModel->PopSuperelementChain();
+	while (ChainModel->IsSuperElementChainsExist()) {
+		auto SuperElementChain = ChainModel->PopSuperElementChain();
 		int MaxTimestamp = -1;
 		M3ElementModel_SharedPtr ElementWithMaxTimestamp = nullptr;
-		for (const auto Element : SuperelementChain->Elements) {
+		for (const auto Element : SuperElementChain->Elements) {
 			ensure(Element->CanMatch());
 			if (Element->GetTimestamp() > MaxTimestamp) {
 				MaxTimestamp = Element->GetTimestamp();
@@ -46,20 +46,19 @@ void M3ElementsMatchController::Execute(float Deltatime) {
 		}
 		ensure(ElementWithMaxTimestamp != nullptr);
 		if (ElementWithMaxTimestamp) {
+			int SuperElementChainLength = SuperElementChain->Elements.size();
 			ChainModel->ValidateElementChains(ElementWithMaxTimestamp);
 			
 			const auto CellModel = ElementWithMaxTimestamp->GetParent<M3CellModel>();
 			BoardModel->CreateHole(CellModel->GetCol(), CellModel->GetRow());
-			SpawnModel->PushSuperElementSpawner(CellModel);
-			
-			UE_LOG(LogTemp, Warning, TEXT("Superelement model added at cell %d %d"), CellModel->GetCol(), CellModel->GetRow());
+			SpawnModel->PushSuperElementSpawner(CellModel, SuperElementChainLength);
 		}
 	}
 
 	while (ChainModel->IsChainsExist()) {
 		const auto Chain = ChainModel->PopChain();
 		for (const auto Element : Chain->Elements) {
-			ensure(Element->GetSubmodel<M3SuperelementModel>() == nullptr);
+			ensure(Element->GetSubmodel<M3SuperElementModel>() == nullptr);
 			if (!Element->IsInState(EM3ElementState::REMOVING) &&
 				!Element->IsInState(EM3ElementState::MATCHING)) {
 				Element->SetState(EM3ElementState::MATCHING);

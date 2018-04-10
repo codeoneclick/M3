@@ -8,17 +8,17 @@
 
 FORWARD_DECL_STRONG(UM3ElementViewAccessor)
 
-class M3_API M3RegularelementView : public M3View {
+class M3_API M3RegularElementView : public M3View {
 protected:
 
 	void SetElementVisual(EM3ElementId Id);
 
 public:
 
-	CTTI_CLASS_GUID(M3RegularelementView, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3RegularElementView, M3View_INTERFACE::GuidsContainer)
 
-	M3RegularelementView(AActor* _Superview);
-	~M3RegularelementView();
+	M3RegularElementView(AActor* _Superview);
+	~M3RegularElementView();
 
 	void Load(UM3AssetsBundle* _Bundle) override;
 	void BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) override;

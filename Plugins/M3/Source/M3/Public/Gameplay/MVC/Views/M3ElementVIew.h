@@ -16,63 +16,63 @@ private:
 
 	GENERATED_BODY()
 
-	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Delegates")
 	void OnSwapEnded();
 	
-	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Delegates")
 	void OnMatchEnded();
 
-	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Delegates")
 	void OnDropEnded();
 
-	UFUNCTION(BlueprintCallable, Category = "M3Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Delegates")
 	void OnSpawnEnded();
 
 public:
 
 	UM3ElementViewAccessor();
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	AActor* View = nullptr;
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int CurrentCol = -1;
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int CurrentRow = -1;
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int OppositeCol = -1;
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	int OppositeRow = -1;
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	FVector2D ElementSize = FVector2D(-1, -1);
 
-	UPROPERTY(Category = "M3Accessors", VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	bool IsPosibleToSwap = false;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnSwapEndedDelegate;
 	FElementViewAnimationCallback OnSwapEndedCallback;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnMatchEndedDelegate;
 	FElementViewAnimationCallback OnMatchEndedCallback;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnDropEndedDelegate;
 	FElementViewAnimationCallback OnDropEndedCallback;
 
-	UPROPERTY(Category = "M3Accessors", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnSpawnEndedDelegate;
 	FElementViewAnimationCallback OnSpawnEndedCallback;
 
-	UFUNCTION(BlueprintCallable, Category = "M3Accessors")
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	FVector GetCurrentLocation();
 
-	UFUNCTION(BlueprintCallable, Category = "M3Accessors")
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	FVector GetOppositeLocation();
 };
 
@@ -88,16 +88,16 @@ public:
 	UM3ElementViewDelegate();
 	~UM3ElementViewDelegate();
 
-	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "Delegates")
 	void OnSwap(UM3ElementViewAccessor* Accessor);
 
-	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "Delegates")
 	void OnMatch(UM3ElementViewAccessor* Accessor);
 
-	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "Delegates")
 	void OnDrop(UM3ElementViewAccessor* Accessor);
 
-	UFUNCTION(BlueprintNativeEvent, Category = "M3Delegates")
+	UFUNCTION(BlueprintNativeEvent, Category = "Delegates")
 	void OnSpawn(UM3ElementViewAccessor* Accessor);
 };
 

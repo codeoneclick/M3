@@ -3,8 +3,9 @@
 #include "M3BoardModel.h"
 #include "M3CellModel.h"
 #include "M3ElementModel.h"
-#include "M3RegularelementModel.h"
-#include "M3SuperelementModel.h"
+#include "M3RegularElementModel.h"
+#include "M3SuperElementModel.h"
+#include "M3BlockerModel.h"
 #include "M3Scheme.h"
 #include "M3BoardStateModel.h"
 #include "M3BoardSettingsModel.h"
@@ -12,8 +13,9 @@
 
 FORWARD_DECL_STRONG(M3CellModel)
 FORWARD_DECL_STRONG(M3ElementModel)
-FORWARD_DECL_STRONG(M3RegularelementModel)
-FORWARD_DECL_STRONG(M3SuperelementModel)
+FORWARD_DECL_STRONG(M3RegularElementModel)
+FORWARD_DECL_STRONG(M3SuperElementModel)
+FORWARD_DECL_STRONG(M3BlockerModel)
 
 M3BoardModel::M3BoardModel() {
 	
@@ -64,15 +66,25 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 				
 				AM3CellAppointmentScheme* Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT);
 				if (Appointment) {
-					M3RegularelementModel_SharedPtr RegularelementModel = M3RegularelementModel::Construct<M3RegularelementModel>();
-					RegularelementModel->Entity->Get()->Id->Set(Appointment->Id);
-					ElementModel->AddSubmodel(RegularelementModel);
+					M3RegularElementModel_SharedPtr RegularElementModel = M3RegularElementModel::Construct<M3RegularElementModel>();
+					RegularElementModel->Entity->Get()->Id->Set(Appointment->Id);
+					ElementModel->AddSubmodel(RegularElementModel);
 					CellModel->AddSubmodel(ElementModel);
 				}
 
 				Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::SUPERELEMENT);
 				if (Appointment) {
+					M3SuperElementModel_SharedPtr SuperElementModel = M3SuperElementModel::Construct<M3SuperElementModel>();
+					SuperElementModel->Entity->Get()->Id->Set(Appointment->Id);
+					ElementModel->AddSubmodel(SuperElementModel);
+					CellModel->AddSubmodel(ElementModel);
+				}
 
+				Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::BLOCKER);
+				if (Appointment) {
+					M3BlockerModel_SharedPtr BlockerModel = M3BlockerModel::Construct<M3BlockerModel>();
+					BlockerModel->Entity->Get()->Id->Set(Appointment->Id);
+					ElementModel->AddSubmodel(BlockerModel);
 				}
 			}
 			if (BoardScheme->Cells[i + j * Cols]->IsAppointmentExist(EM3CellAppointment::FUNCTIONAL)) {
@@ -87,8 +99,8 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 					}
 					if (Appointment->Id == EM3ElementId::CELL_RANDOM) {
 						M3ElementModel_SharedPtr ElementModel = M3ElementModel::Construct<M3ElementModel>();
-						M3RegularelementModel_SharedPtr RegularelementModel = M3RegularelementModel::Construct<M3RegularelementModel>();
-						ElementModel->AddSubmodel(RegularelementModel);
+						M3RegularElementModel_SharedPtr RegularElementModel = M3RegularElementModel::Construct<M3RegularElementModel>();
+						ElementModel->AddSubmodel(RegularElementModel);
 						CellModel->AddSubmodel(ElementModel);
 						RandomElements.push_back(ElementModel);
 					}
@@ -108,66 +120,69 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 			ElementId = BoardSettingsModel->GetElementIds()->data()[ElementIdIndex];
 		} while ((Col >= 2 &&
 				Cells[(Col - 1) + Row * Cols]->IsContainElement() && 
-				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() && 
-				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId &&
+				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() && 
+				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId &&
 				Cells[(Col - 2) + Row * Cols]->IsContainElement() &&
-				Cells[(Col - 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[(Col - 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId)
+				Cells[(Col - 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[(Col - 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId)
 				||
 				(Col < Cols - 2 &&
 				Cells[(Col + 1) + Row * Cols]->IsContainElement() &&
-				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId &&
+				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId &&
 				Cells[(Col + 2) + Row * Cols]->IsContainElement() &&
-				Cells[(Col + 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[(Col + 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId)
+				Cells[(Col + 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[(Col + 2) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId)
 				||
 				(Col >= 1 && Col < Cols - 1 &&
 				Cells[(Col - 1) + Row * Cols]->IsContainElement() &&
-				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId &&
+				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[(Col - 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId &&
 				Cells[(Col + 1) + Row * Cols]->IsContainElement() &&
-				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId)
+				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[(Col + 1) + Row * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId)
 				||
 				(Row >= 2 &&
 				Cells[Col + (Row - 1) * Cols]->IsContainElement() &&
-				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId &&
+				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId &&
 				Cells[Col + (Row - 2) * Cols]->IsContainElement() &&
-				Cells[Col + (Row - 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[Col + (Row - 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId)
+				Cells[Col + (Row - 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[Col + (Row - 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId)
 				||
 				(Row < Rows - 2 &&
 				Cells[Col + (Row + 1) * Cols]->IsContainElement() &&
-				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId &&
+				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId &&
 				Cells[Col + (Row + 2) * Cols]->IsContainElement() &&
-				Cells[Col + (Row + 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[Col + (Row + 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId)
+				Cells[Col + (Row + 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[Col + (Row + 2) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId)
 				||
 				(Row >= 1 && Row < Rows - 1 &&
 				Cells[Col + (Row - 1) * Cols]->IsContainElement() &&
-				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId &&
+				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[Col + (Row - 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId &&
 				Cells[Col + (Row + 1) * Cols]->IsContainElement() &&
-				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>() &&
-				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularelementModel>()->GetId() == ElementId));
+				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>() &&
+				Cells[Col + (Row + 1) * Cols]->GetSubmodel<M3ElementModel>()->GetSubmodel<M3RegularElementModel>()->GetId() == ElementId));
 
-		RandomElement->GetSubmodel<M3RegularelementModel>()->Entity->Get()->Id->Set(ElementId);
+		RandomElement->GetSubmodel<M3RegularElementModel>()->Entity->Get()->Id->Set(ElementId);
 	}
 
  	M3CellModel::ApplyContainer();
 	M3ElementModel::ApplyContainer();
-	M3RegularelementModel::ApplyContainer();
-	M3SuperelementModel::ApplyContainer();
+	M3RegularElementModel::ApplyContainer();
+	M3SuperElementModel::ApplyContainer();
+	M3BlockerModel::ApplyContainer();
 }
 
 M3CellModel_SharedPtr M3BoardModel::GetCell(int Col, int Row) const {
 	M3CellModel_SharedPtr CellModel = nullptr;
-	size_t Index = Col + Row * GetCols();
-	if (Index < Entity->Get()->Cells->Get()->size()) {
-		CellModel = Entity->Get()->Cells->Get()->data()[Index];
+	if (Col < GetCols() && Row < GetRows()) {
+		size_t Index = Col + Row * GetCols();
+		if (Index < Entity->Get()->Cells->Get()->size()) {
+			CellModel = Entity->Get()->Cells->Get()->data()[Index];
+		}
 	}
 	return CellModel;
 }

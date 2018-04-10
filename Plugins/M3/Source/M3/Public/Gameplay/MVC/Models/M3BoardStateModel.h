@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "M3Model.h"
 #include "M3Entity.h"
+#include "M3Scheme.h"
+#include "M3ElementModel.h"
 
 FORWARD_DECL_STRONG(M3ElementModel)
 
@@ -20,8 +22,13 @@ public:
 	PROP_STRONG(public, M3BoardStateEntity, Scores, int, 0)
 };
 
-class M3_API M3BoardStateModel : public M3Model<M3BoardStateEntity>
-{
+class M3_API M3BoardStateModel : public M3Model<M3BoardStateEntity> {
+
+private:
+
+	std::unordered_map<EM3ElementState, std::set<M3ElementModel_SharedPtr>> ElementsInState;
+	std::shared_ptr<M3AppEventModelProp> OnStateChangedEvent = nullptr;
+	void OnStateChanged(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop);
 
 public:
 
@@ -44,4 +51,6 @@ public:
 
 	void IncGameTurn();
 	void IncTimestamp();
+
+	bool IsSomeElementInAction() const;
 };

@@ -1,27 +1,41 @@
 // Copyright serhii serhiiv 2018 All rights reserved.
 
-#include "M3SuperelementModel.h"
+#include "M3SuperElementModel.h"
 
-M3SuperelementModel::M3SuperelementModel() {
+M3SuperElementModel::M3SuperElementModel() {
 }
 
-M3SuperelementModel::~M3SuperelementModel() {
+M3SuperElementModel::~M3SuperElementModel() {
 }
 
-void M3SuperelementModel::Init() {
-
-}
-
-void M3SuperelementModel::Serialize() {
+void M3SuperElementModel::Init() {
 
 }
 
-void M3SuperelementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+void M3SuperElementModel::Serialize() {
 
 }
 
-void M3SuperelementModel::Reset() {
+void M3SuperElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+
+}
+
+void M3SuperElementModel::Reset() {
 	M3Model::Reset();
 
-	Entity->Get()->Id->Set(EM3SuperelementId::UNKNOWN);
+	Entity->Get()->Id->Set(EM3ElementId::UNKNOWN);
+}
+
+int M3SuperElementModel::GetExplosionRadius(EM3ElementId Id) {
+	switch (Id) {
+	case EM3ElementId::SUPERELEMENT_MATCH4:
+		return 1;
+	case EM3ElementId::SUPERELEMENT_MATCH5:
+		return 2;
+	case EM3ElementId::SUPERELEMENT_MATCH6:
+		return 3;
+	case EM3ElementId::SUPERELEMENT_MATCH7:
+		return 4;
+	}
+	return 0;
 }

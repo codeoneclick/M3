@@ -2,6 +2,8 @@
 
 #include "M3ElementModel.h"
 #include "M3BoardStateModel.h"
+#include "M3RegularElementModel.h"
+#include "M3SuperElementModel.h"
 #include "M3SharedModel.h"
 
 M3ElementModelColorComponent::M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner) {
@@ -95,4 +97,12 @@ bool M3ElementModel::CanDrop() const {
 
 bool M3ElementModel::IsDropBlocked() const {
 	return false;
+}
+
+bool M3ElementModel::IsRegular() const {
+	return GetSubmodel<M3RegularElementModel>() != nullptr;
+}
+
+bool M3ElementModel::IsSuper() const {
+	return GetSubmodel<M3SuperElementModel>() != nullptr;
 }

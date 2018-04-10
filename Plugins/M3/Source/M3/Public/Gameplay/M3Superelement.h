@@ -5,24 +5,26 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "M3Utilities.h"
-#include "M3Superelement.generated.h"
+#include "M3SuperElement.generated.h"
 
-FORWARD_DECL_STRONG(M3SuperelementModel)
-FORWARD_DECL_STRONG(M3SuperelementView)
+FORWARD_DECL_STRONG(M3SuperElementModel)
+FORWARD_DECL_STRONG(M3SuperElementView)
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Views))
-class M3_API AM3Superelement : public ACharacter {
+class M3_API AM3SuperElement : public ACharacter {
 	GENERATED_BODY()
+
+private:
+
+	M3SuperElementModel_SharedPtr Model = nullptr;
+	M3SuperElementView_SharedPtr View = nullptr;
 
 public:
 
-	M3SuperelementModel_SharedPtr Model = nullptr;
-	M3SuperelementView_SharedPtr View = nullptr;
-
-	AM3Superelement();
+	AM3SuperElement();
 
 protected:
 

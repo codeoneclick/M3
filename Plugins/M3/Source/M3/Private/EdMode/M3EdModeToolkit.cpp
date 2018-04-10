@@ -85,6 +85,57 @@ class FEdMode* FM3EdModeToolkit::GetEditorMode() const
 	return GLevelEditorModeTools().GetActiveMode(FM3EdMode::EM_M3);
 }
 
+TSharedRef<SWidget> FM3EdModeToolkit::MAKE_Element_CheckBox_SLOT(FM3EdModeToolkit* SELF, EM3ElementId Id, AM3CellAppointmentScheme* Scheme, FLinearColor Color, FText Text) {
+	return SNew(SCheckBox)
+			.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(Id))
+			.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
+				if (State == ECheckBoxState::Checked) {
+					SelectedElementId = Id;
+					AM3CellScheme::EdModeSelectedAppointmentScheme = Scheme;
+				}
+			})
+			.Content()
+			[
+				SNew(SVerticalBox)
+				+ SVerticalBox::Slot()
+				.HAlign(HAlign_Left)
+				.AutoHeight()
+				.Padding(4.f)
+				[
+					SNew(SBox)
+					.HAlign(HAlign_Fill)
+					.VAlign(VAlign_Fill)
+					.WidthOverride(48)
+					.HeightOverride(48)
+					.MaxDesiredHeight(48)
+					.MaxDesiredWidth(48)
+					.Padding(2.f)
+					[
+						SNew(SImage)
+						.ColorAndOpacity(Color)
+					]
+				]
+				+ SVerticalBox::Slot()
+				.HAlign(HAlign_Left)
+				.AutoHeight()
+				.Padding(4.f)
+				[
+					SNew(SBox)
+					.HAlign(HAlign_Left)
+					.VAlign(VAlign_Top)
+					.WidthOverride(96)
+					.HeightOverride(48)
+					.Padding(2.f)
+					[
+						SNew(STextBlock)
+						.ColorAndOpacity(FLinearColor::White)
+						.AutoWrapText(true)
+						.Text(Text)
+					]
+				]
+			];
+}
+
 TSharedRef<SWidget> FM3EdModeToolkit::MAKE_Copyright_SLOT(FM3EdModeToolkit* SELF)
 {
 	return SNew(SVerticalBox)
@@ -94,7 +145,7 @@ TSharedRef<SWidget> FM3EdModeToolkit::MAKE_Copyright_SLOT(FM3EdModeToolkit* SELF
 		[
 			SNew(STextBlock)
 			.AutoWrapText(true)
-			.Text(LOCTEXT("CopyrightLabel", "Copyright (c) 2017 Serhii Serhiiv. All rights reserved."))
+			.Text(LOCTEXT("CopyrightLabel", "Copyright (c) 2018 Serhii Serhiiv. All rights reserved."))
 		];
 }
 
@@ -224,280 +275,93 @@ TSharedRef<SWidget> FM3EdModeToolkit::MAKE_BoardElements_SLOT(FM3EdModeToolkit* 
 			]
 			.BodyContent()
 			[
-				SNew(SHorizontalBox)
-				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Fill)
-				.AutoWidth()
-				.Padding(8.f)
-				[
-					SNew(SWrapBox)
-					.PreferredWidth(100.f)
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Top)
+					SNew(SUniformGridPanel)
+					.SlotPadding(4.f)
+					+ SUniformGridPanel::Slot(0, 0)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::UNKNOWN))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::UNKNOWN;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = nullptr;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(300)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(STextBlock)
-								.ColorAndOpacity(FLinearColor::White)
-								.Text(NSLOCTEXT("M3ElementNone", "M3ElementNone", "NONE"))
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::UNKNOWN, nullptr, FLinearColor::White, NSLOCTEXT("M3ElementNone", "M3ElementNone", "NONE"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Top)
+					+ SUniformGridPanel::Slot(1, 0)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::CELL_CLOSED))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::CELL_CLOSED;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->FunctionalCellClosedScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(300)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(STextBlock)
-								.ColorAndOpacity(FLinearColor::White)
-								.Text(NSLOCTEXT("M3CellClosed", "M3CellClosed", "CLOSED"))
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_CLOSED, GetM3App()->BoardScheme->FunctionalCellClosedScheme, FLinearColor::Black, NSLOCTEXT("M3CellClosed", "M3CellClosed", "CLOSED"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Top)
+					+ SUniformGridPanel::Slot(2, 0)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::CELL_HOLE))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::CELL_HOLE;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->FunctionalCellHoleScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(300)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(STextBlock)
-								.ColorAndOpacity(FLinearColor::White)
-								.Text(NSLOCTEXT("M3CellHole", "M3CellHole", "HOLE"))
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_HOLE, GetM3App()->BoardScheme->FunctionalCellHoleScheme, FLinearColor::Gray, NSLOCTEXT("M3CellHole", "M3CellHole", "HOLE"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Top)
+					+ SUniformGridPanel::Slot(3, 0)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::CELL_RANDOM))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::CELL_RANDOM;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->FunctionalCellRandomScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(300)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(STextBlock)
-								.ColorAndOpacity(FLinearColor::White)
-								.Text(NSLOCTEXT("M3CellRandom", "M3CellRandom", "RANDOM"))
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_RANDOM, GetM3App()->BoardScheme->FunctionalCellRandomScheme, FLinearColor::White, NSLOCTEXT("M3CellRandom", "M3CellRandom", "RANDOM"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Top)
+					+ SUniformGridPanel::Slot(0, 1)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::ELEMENT_RED))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::ELEMENT_RED;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->ElementRedScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(SImage)
-								.ColorAndOpacity(FLinearColor::Red)
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_RED, GetM3App()->BoardScheme->ElementRedScheme, FLinearColor::Red, NSLOCTEXT("M3RedElement", "M3RedElement", "RED"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Bottom)
+					+ SUniformGridPanel::Slot(1, 1)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::ELEMENT_GREEN))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::ELEMENT_GREEN;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->ElementGreenScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(SImage)
-								.ColorAndOpacity(FLinearColor::Green)
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_GREEN, GetM3App()->BoardScheme->ElementGreenScheme, FLinearColor::Green, NSLOCTEXT("M3GreenElement", "M3GreenElement", "GREEN"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Bottom)
+					+ SUniformGridPanel::Slot(2, 1)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::ELEMENT_BLUE))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::ELEMENT_BLUE;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->ElementBlueScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(SImage)
-								.ColorAndOpacity(FLinearColor::Blue)
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_BLUE, GetM3App()->BoardScheme->ElementBlueScheme, FLinearColor::Blue, NSLOCTEXT("M3BlueElement", "M3BlueElement", "BLUE"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Bottom)
+					+ SUniformGridPanel::Slot(3, 1)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::ELEMENT_YELLOW))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::ELEMENT_YELLOW;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->ElementYellowScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(SImage)
-								.ColorAndOpacity(FLinearColor::Yellow)
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_YELLOW, GetM3App()->BoardScheme->ElementYellowScheme, FLinearColor::Yellow, NSLOCTEXT("M3YellowElement", "M3YellowElement", "YELLOW"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Bottom)
+					+ SUniformGridPanel::Slot(4, 1)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::ELEMENT_ORANGE))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::ELEMENT_ORANGE;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->ElementOrangeScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(SImage)
-								.ColorAndOpacity(FLinearColor(1.f, .5f, 0.f, 1.f))
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_ORANGE, GetM3App()->BoardScheme->ElementOrangeScheme, FLinearColor(1.f, .5f, 0.f, 1.f), NSLOCTEXT("M3OrangeElement", "M3OrangeElement", "ORANGE"))
 					]
-					+ SWrapBox::Slot()
-					.Padding(5)
-					.VAlign(VAlign_Bottom)
+					+ SUniformGridPanel::Slot(5, 1)
 					[
-						SNew(SCheckBox)
-						.IsChecked_Static(&FM3EdModeToolkit::ON_Element_CHECKED, static_cast<int>(EM3ElementId::ELEMENT_PURPLE))
-						.OnCheckStateChanged_Lambda([=](ECheckBoxState State) {
-							if (State == ECheckBoxState::Checked) {
-								SelectedElementId = EM3ElementId::ELEMENT_PURPLE;
-								AM3CellScheme::EdModeSelectedAppointmentScheme = GetM3App()->BoardScheme->ElementPurpleScheme;
-							}
-						})
-						.Content()
-						[
-							SNew(SBox)
-							.HAlign(HAlign_Fill)
-							.VAlign(VAlign_Fill)
-							.WidthOverride(64)
-							.HeightOverride(64)
-							.Padding(15)
-							[
-								SNew(SImage)
-								.ColorAndOpacity(FLinearColor(.5f, .0f, .5f, 1.f))
-							]
-						]
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_PURPLE, GetM3App()->BoardScheme->ElementPurpleScheme, FLinearColor(.5f, .0f, .5f, 1.f), NSLOCTEXT("M3PurpleElement", "M3PurpleElement", "PURPLE"))
+					]
+					+ SUniformGridPanel::Slot(0, 2)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::SUPERELEMENT_MATCH4, GetM3App()->BoardScheme->SuperElementMatch4Scheme, FLinearColor::Black, NSLOCTEXT("M3SuperElementMatch4", "M3SuperElementMatch4", "SUPER ELEMENT MATCH4"))
+					]
+					+ SUniformGridPanel::Slot(1, 2)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::SUPERELEMENT_MATCH5, GetM3App()->BoardScheme->SuperElementMatch5Scheme, FLinearColor::Black, NSLOCTEXT("M3SuperElementMatch5", "M3SuperElementMatch5", "SUPER ELEMENT MATCH5"))
+					]
+					+ SUniformGridPanel::Slot(2, 2)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::SUPERELEMENT_MATCH6, GetM3App()->BoardScheme->SuperElementMatch6Scheme, FLinearColor::Black, NSLOCTEXT("M3SuperElementMatch6", "M3SuperElementMatch6", "SUPER ELEMENT MATCH6"))
+					]
+					+ SUniformGridPanel::Slot(3, 2)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::SUPERELEMENT_MATCH7, GetM3App()->BoardScheme->SuperElementMatch7Scheme, FLinearColor::Black, NSLOCTEXT("M3SuperElementMatch7", "M3SuperElementMatch7", "SUPER ELEMENT MATCH7"))
+					]
+					+ SUniformGridPanel::Slot(0, 3)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX1X, GetM3App()->BoardScheme->BlockerBox1XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerBox1X", "M3BlockerBox1X", "BLOCKER BOX1X"))
+					]
+					+ SUniformGridPanel::Slot(1, 3)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX2X, GetM3App()->BoardScheme->BlockerBox2XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerBox2X", "M3BlockerBox2X", "BLOCKER BOX2X"))
+					]
+					+ SUniformGridPanel::Slot(2, 3)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX3X, GetM3App()->BoardScheme->BlockerBox3XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerBox3X", "M3BlockerBox3X", "BLOCKER BOX3X"))
+					]
+					+ SUniformGridPanel::Slot(0, 4)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_ICE1X, GetM3App()->BoardScheme->BlockerIce1XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerIce1X", "M3BlockerIce1X", "BLOCKER ICE1X"))
+					]
+					+ SUniformGridPanel::Slot(1, 4)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_ICE2X, GetM3App()->BoardScheme->BlockerIce2XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerIce2X", "M3BlockerIce2X", "BLOCKER ICE2X"))
+					]
+					+ SUniformGridPanel::Slot(0, 5)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_WIRE1X, GetM3App()->BoardScheme->BlockerWire1XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerWire1X", "M3BlockerWire1X", "BLOCKER WIRE1X"))
+					]
+					+ SUniformGridPanel::Slot(1, 5)
+					[
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_WIRE2X, GetM3App()->BoardScheme->BlockerWire2XScheme, FLinearColor::Black, NSLOCTEXT("M3BlockerWire2X", "M3BlockerWire2X", "BLOCKER WIRE2X"))
 					]
 				]
-			]
 		];
 }
 
@@ -605,6 +469,22 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Purple Element Scheme should be assigned!");
 		return FReply::Handled();
 	}
+	if (!EdMode->EdModeProps_BoardCreate->SuperElementMatch4Scheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Super Element Match 4 Scheme should be assigned!");
+		return FReply::Handled();
+	}
+	if (!EdMode->EdModeProps_BoardCreate->SuperElementMatch5Scheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Super Element Match 5 Scheme should be assigned!");
+		return FReply::Handled();
+	}
+	if (!EdMode->EdModeProps_BoardCreate->SuperElementMatch6Scheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Super Element Match 6 Scheme should be assigned!");
+		return FReply::Handled();
+	}
+	if (!EdMode->EdModeProps_BoardCreate->SuperElementMatch7Scheme_BP) {
+		GEditor->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, "Super Element Match 7 Scheme should be assigned!");
+		return FReply::Handled();
+	}
 
 	UWorld* World = GEditor->GetEditorWorldContext().World();
 
@@ -679,6 +559,61 @@ FReply FM3EdModeToolkit::ON_BoardCreate_BTN() {
 			M3App->BoardScheme->ElementPurpleScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
 		}
 
+		if (!M3App->BoardScheme->SuperElementMatch4Scheme) {
+			M3App->BoardScheme->SuperElementMatch4Scheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->SuperElementMatch4Scheme_BP);
+			M3App->BoardScheme->SuperElementMatch4Scheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->SuperElementMatch5Scheme) {
+			M3App->BoardScheme->SuperElementMatch5Scheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->SuperElementMatch5Scheme_BP);
+			M3App->BoardScheme->SuperElementMatch5Scheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->SuperElementMatch6Scheme) {
+			M3App->BoardScheme->SuperElementMatch6Scheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->SuperElementMatch6Scheme_BP);
+			M3App->BoardScheme->SuperElementMatch6Scheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->SuperElementMatch7Scheme) {
+			M3App->BoardScheme->SuperElementMatch7Scheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->SuperElementMatch7Scheme_BP);
+			M3App->BoardScheme->SuperElementMatch7Scheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerBox1XScheme) {
+			M3App->BoardScheme->BlockerBox1XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerBox1XScheme_BP);
+			M3App->BoardScheme->BlockerBox1XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerBox2XScheme) {
+			M3App->BoardScheme->BlockerBox2XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerBox2XScheme_BP);
+			M3App->BoardScheme->BlockerBox2XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerBox3XScheme) {
+			M3App->BoardScheme->BlockerBox3XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerBox3XScheme_BP);
+			M3App->BoardScheme->BlockerBox3XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerIce1XScheme) {
+			M3App->BoardScheme->BlockerIce1XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerIce1XScheme_BP);
+			M3App->BoardScheme->BlockerIce1XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerIce2XScheme) {
+			M3App->BoardScheme->BlockerIce2XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerIce2XScheme_BP);
+			M3App->BoardScheme->BlockerIce2XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerWire1XScheme) {
+			M3App->BoardScheme->BlockerWire1XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerWire1XScheme_BP);
+			M3App->BoardScheme->BlockerWire1XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
+		if (!M3App->BoardScheme->BlockerWire2XScheme) {
+			M3App->BoardScheme->BlockerWire2XScheme = World->SpawnActor<AM3CellAppointmentScheme>(EdMode->EdModeProps_BoardCreate->BlockerWire2XScheme_BP);
+			M3App->BoardScheme->BlockerWire2XScheme->AttachToActor(M3App->BoardScheme, FAttachmentTransformRules::KeepWorldTransform);
+		}
+
 		GenerateElementsScheme(M3App);
 		GenerateElementsVisual(M3App);
 	}
@@ -739,6 +674,39 @@ FReply FM3EdModeToolkit::ON_BoardReskin_BTN() {
 			if (EdMode->EdModeProps_BoardReskin->PurpleElementMaterial) {
 				M3App->AssetsBundle->Element_PURPLE.Material = EdMode->EdModeProps_BoardReskin->PurpleElementMaterial;
 			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch4Material) {
+				M3App->AssetsBundle->SuperElement_MATCH4.Material = EdMode->EdModeProps_BoardReskin->SuperElementMatch4Material;
+			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch5Material) {
+				M3App->AssetsBundle->SuperElement_MATCH5.Material = EdMode->EdModeProps_BoardReskin->SuperElementMatch5Material;
+			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch6Material) {
+				M3App->AssetsBundle->SuperElement_MATCH6.Material = EdMode->EdModeProps_BoardReskin->SuperElementMatch6Material;
+			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch7Material) {
+				M3App->AssetsBundle->SuperElement_MATCH7.Material = EdMode->EdModeProps_BoardReskin->SuperElementMatch7Material;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerBox1XMaterial) {
+				M3App->AssetsBundle->Blocker_Box1X.Material = EdMode->EdModeProps_BoardReskin->BlockerBox1XMaterial;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerBox2XMaterial) {
+				M3App->AssetsBundle->Blocker_Box2X.Material = EdMode->EdModeProps_BoardReskin->BlockerBox2XMaterial;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerBox3XMaterial) {
+				M3App->AssetsBundle->Blocker_Box3X.Material = EdMode->EdModeProps_BoardReskin->BlockerBox3XMaterial;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerIce1XMaterial) {
+				M3App->AssetsBundle->Blocker_Ice1X.Material = EdMode->EdModeProps_BoardReskin->BlockerIce1XMaterial;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerIce2XMaterial) {
+				M3App->AssetsBundle->Blocker_Ice2X.Material = EdMode->EdModeProps_BoardReskin->BlockerIce2XMaterial;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerWire1XMaterial) {
+				M3App->AssetsBundle->Blocker_Wire1X.Material = EdMode->EdModeProps_BoardReskin->BlockerWire1XMaterial;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerWire2XMaterial) {
+				M3App->AssetsBundle->Blocker_Wire2X.Material = EdMode->EdModeProps_BoardReskin->BlockerWire2XMaterial;
+			}
 
 			if (EdMode->EdModeProps_BoardReskin->CellMesh) {
 				M3App->AssetsBundle->Cell.Mesh = EdMode->EdModeProps_BoardReskin->CellMesh;
@@ -761,6 +729,40 @@ FReply FM3EdModeToolkit::ON_BoardReskin_BTN() {
 			if (EdMode->EdModeProps_BoardReskin->PurpleElementMesh) {
 				M3App->AssetsBundle->Element_PURPLE.Mesh = EdMode->EdModeProps_BoardReskin->PurpleElementMesh;
 			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch4Mesh) {
+				M3App->AssetsBundle->SuperElement_MATCH4.Mesh = EdMode->EdModeProps_BoardReskin->SuperElementMatch4Mesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch5Mesh) {
+				M3App->AssetsBundle->SuperElement_MATCH5.Mesh = EdMode->EdModeProps_BoardReskin->SuperElementMatch5Mesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch6Mesh) {
+				M3App->AssetsBundle->SuperElement_MATCH6.Mesh = EdMode->EdModeProps_BoardReskin->SuperElementMatch6Mesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->SuperElementMatch7Mesh) {
+				M3App->AssetsBundle->SuperElement_MATCH7.Mesh = EdMode->EdModeProps_BoardReskin->SuperElementMatch7Mesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerBox1XMesh) {
+				M3App->AssetsBundle->Blocker_Box1X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerBox1XMesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerBox2XMesh) {
+				M3App->AssetsBundle->Blocker_Box2X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerBox2XMesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerBox3XMesh) {
+				M3App->AssetsBundle->Blocker_Box3X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerBox3XMesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerIce1XMesh) {
+				M3App->AssetsBundle->Blocker_Ice1X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerIce1XMesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerIce2XMesh) {
+				M3App->AssetsBundle->Blocker_Ice2X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerIce2XMesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerWire1XMesh) {
+				M3App->AssetsBundle->Blocker_Wire1X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerWire1XMesh;
+			}
+			if (EdMode->EdModeProps_BoardReskin->BlockerWire2XMesh) {
+				M3App->AssetsBundle->Blocker_Wire2X.Mesh = EdMode->EdModeProps_BoardReskin->BlockerWire2XMesh;
+			}
+
 			GenerateElementsVisual(M3App);
 		}
 	}
@@ -910,7 +912,7 @@ void FM3EdModeToolkit::GenerateElementsScheme(class AM3App* M3App) {
 				BoardScheme->Cells[Col + Row * Cols] = CellScheme;
 			}
 			CellScheme->SetActorRelativeLocation(FVector(Row * BoardScheme->ElementSize.X, Col * BoardScheme->ElementSize.Y, 0));
-			CellScheme->Appointments.Empty();
+			CellScheme->RemoveAllAppointments();
 		}
 	}
 
@@ -1010,6 +1012,29 @@ void FM3EdModeToolkit::GenerateElementsVisual(class AM3App* M3App) {
 					break;
 				}
 			}
+
+			if (CellScheme->IsAppointmentExist(EM3CellAppointment::SUPERELEMENT)) {
+				switch (CellScheme->GetAppointment(EM3CellAppointment::SUPERELEMENT)->Id) {
+				case EM3ElementId::SUPERELEMENT_MATCH4:
+					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH4.Mesh);
+					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH4.Material);
+					break;
+				case EM3ElementId::SUPERELEMENT_MATCH5:
+					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH5.Mesh);
+					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH5.Material);
+					break;
+				case EM3ElementId::SUPERELEMENT_MATCH6:
+					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH6.Mesh);
+					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH6.Material);
+					break;
+				case EM3ElementId::SUPERELEMENT_MATCH7:
+					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH7.Mesh);
+					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH7.Material);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 }
@@ -1101,6 +1126,39 @@ void FM3EdModeToolkit::FillBoardSchemeSettings() {
 
 			EdMode->EdModeProps_BoardReskin->PurpleElementMaterial = M3App->AssetsBundle->Element_PURPLE.Material;
 			EdMode->EdModeProps_BoardReskin->PurpleElementMesh = M3App->AssetsBundle->Element_PURPLE.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch4Material = M3App->AssetsBundle->SuperElement_MATCH4.Material;
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch4Mesh = M3App->AssetsBundle->SuperElement_MATCH4.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch5Material = M3App->AssetsBundle->SuperElement_MATCH5.Material;
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch5Mesh = M3App->AssetsBundle->SuperElement_MATCH5.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch6Material = M3App->AssetsBundle->SuperElement_MATCH6.Material;
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch6Mesh = M3App->AssetsBundle->SuperElement_MATCH6.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch7Material = M3App->AssetsBundle->SuperElement_MATCH7.Material;
+			EdMode->EdModeProps_BoardReskin->SuperElementMatch7Mesh = M3App->AssetsBundle->SuperElement_MATCH7.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerBox1XMaterial = M3App->AssetsBundle->Blocker_Box1X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerBox1XMesh = M3App->AssetsBundle->Blocker_Box1X.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerBox2XMaterial = M3App->AssetsBundle->Blocker_Box2X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerBox2XMesh = M3App->AssetsBundle->Blocker_Box2X.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerBox3XMaterial = M3App->AssetsBundle->Blocker_Box3X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerBox3XMesh = M3App->AssetsBundle->Blocker_Box3X.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerIce1XMaterial = M3App->AssetsBundle->Blocker_Ice1X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerIce1XMesh = M3App->AssetsBundle->Blocker_Ice1X.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerIce2XMaterial = M3App->AssetsBundle->Blocker_Ice2X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerIce2XMesh = M3App->AssetsBundle->Blocker_Ice2X.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerWire1XMaterial = M3App->AssetsBundle->Blocker_Wire1X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerWire1XMesh = M3App->AssetsBundle->Blocker_Wire1X.Mesh;
+
+			EdMode->EdModeProps_BoardReskin->BlockerWire2XMaterial = M3App->AssetsBundle->Blocker_Wire2X.Material;
+			EdMode->EdModeProps_BoardReskin->BlockerWire2XMesh = M3App->AssetsBundle->Blocker_Wire2X.Mesh;
 		}
 	}
 }

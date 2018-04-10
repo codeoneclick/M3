@@ -8,21 +8,21 @@
 #include "M3Scheme.h"
 #include "M3ElementModel.h"
 
-class M3RegularelementEntity : public M3Entity {
+class M3RegularElementEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3RegularelementEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3RegularElementEntity, M3Entity::GuidsContainer)
 
-	PROP_STRONG(public, M3RegularelementEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
+	PROP_STRONG(public, M3RegularElementEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
 };
 
-class M3_API M3RegularelementModel : public M3Model<M3RegularelementEntity>, public M3ElementModelColorComponent_INTERFACE {
+class M3_API M3RegularElementModel : public M3Model<M3RegularElementEntity>, public M3ElementModelColorComponent_INTERFACE {
 public:
 
-	CTTI_CLASS_GUID(M3RegularelementModel, M3Model_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3RegularElementModel, M3Model_INTERFACE::GuidsContainer)
 
-	M3RegularelementModel();
-	~M3RegularelementModel();
+	M3RegularElementModel();
+	~M3RegularElementModel();
 
 	void Init() override;
 

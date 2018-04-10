@@ -68,6 +68,39 @@ public:
 
 	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
 	TSubclassOf<AM3CellAppointmentScheme> ElementPurpleScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> SuperElementMatch4Scheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> SuperElementMatch5Scheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> SuperElementMatch6Scheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> SuperElementMatch7Scheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerBox1XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerBox2XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerBox3XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerIce1XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerIce2XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerWire1XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerWire2XScheme_BP;
 };
 
 UCLASS()
@@ -220,4 +253,70 @@ public:
 
 	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
 	class UStaticMesh* PurpleElementMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* SuperElementMatch4Material;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* SuperElementMatch4Mesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* SuperElementMatch5Material;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* SuperElementMatch5Mesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* SuperElementMatch6Material;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* SuperElementMatch6Mesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* SuperElementMatch7Material;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* SuperElementMatch7Mesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerBox1XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerBox1XMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerBox2XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerBox2XMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerBox3XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerBox3XMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerIce1XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerIce1XMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerIce2XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerIce2XMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerWire1XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerWire1XMesh;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UMaterialInterface* BlockerWire2XMaterial;
+
+	UPROPERTY(Category = "Assets", EditAnywhere, BlueprintReadWrite)
+	class UStaticMesh* BlockerWire2XMesh;
 };
