@@ -18,10 +18,10 @@ protected:
 
 public:
 
+	CTTI_CLASS_GUID(M3ModelComponent_INTERFACE, M3ModelComponent_INTERFACE::GuidsContainer)
+
 	M3ModelComponent_INTERFACE() = default;
 	virtual ~M3ModelComponent_INTERFACE() = default;
-
-	CTTI_CLASS_GUID(M3ModelComponent_INTERFACE, M3ModelComponent_INTERFACE::GuidsContainer)
 };
 
 class M3_API M3Model_INTERFACE : public M3KVListener_INTERFACE {

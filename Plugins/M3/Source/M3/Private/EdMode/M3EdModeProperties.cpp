@@ -83,6 +83,9 @@ UM3EdModeProps_BoardCreate::UM3EdModeProps_BoardCreate() {
 
 	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerWire2XScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerWire2X_BP.M3AppointmentBlockerWire2X_BP_c'"));
 	BlockerWire2XScheme_BP = AppointmentBlockerWire2XScheme_BP_RESOURCE.Class;
+
+	static ConstructorHelpers::FClassFinder<AM3CellAppointmentScheme> AppointmentBlockerNoneScheme_BP_RESOURCE(TEXT("Class'/M3/M3AppointmentBlockerNone_BP.M3AppointmentBlockerNone_BP_c'"));
+	BlockerNoneScheme_BP = AppointmentBlockerNoneScheme_BP_RESOURCE.Class;
 }
 
 #if WITH_EDITOR

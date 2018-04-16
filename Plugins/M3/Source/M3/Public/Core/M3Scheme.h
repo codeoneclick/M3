@@ -246,6 +246,9 @@ public:
 	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
 	AM3CellAppointmentScheme* BlockerWire2XScheme;
 
+	UPROPERTY(Category = "Scheme", EditAnywhere, BlueprintReadOnly)
+	AM3CellAppointmentScheme* BlockerNoneScheme;
+
 	UPROPERTY(Category = "Scheme", VisibleAnywhere, BlueprintReadOnly)
 	TArray<AM3CellScheme*> Cells;
 

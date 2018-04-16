@@ -23,7 +23,7 @@ private:
 	static TSharedRef<SWidget> MAKE_BoardReskin_SLOT(FM3EdModeToolkit* SELF);
 	static TSharedRef<SWidget> MAKE_Copyright_SLOT(FM3EdModeToolkit* SELF);
 	
-	static TSharedRef<SWidget> MAKE_Element_CheckBox_SLOT(FM3EdModeToolkit* SELF, EM3ElementId Id, AM3CellAppointmentScheme* Scheme, FLinearColor Color, FText Text);
+	static TSharedRef<SWidget> MAKE_Element_CheckBox_SLOT(FM3EdModeToolkit* SELF, EM3ElementId Id, AM3CellAppointmentScheme* Scheme, FName IconName, FText Text);
 
 	static ECheckBoxState ON_Element_CHECKED(int ElementId);
 
@@ -43,6 +43,7 @@ protected:
 
 	TSharedPtr<SWidget> ToolkitWidget;
 
+	static void InitAppointmentSchemes(class AM3App* M3App);
 	static void FillBoardSchemeSettings();
 
 	static class AM3App* GetM3App();

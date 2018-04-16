@@ -20,7 +20,8 @@ void M3RegularElementModel::Serialize() {
 }
 
 void M3RegularElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
-
+	AM3CellAppointmentScheme* Appointment = Cast<AM3CellAppointmentScheme>(Scheme);
+	Entity->Get()->Id->Set(Appointment->Id);
 }
 
 EM3ElementColor M3RegularElementModel::GetColor() {

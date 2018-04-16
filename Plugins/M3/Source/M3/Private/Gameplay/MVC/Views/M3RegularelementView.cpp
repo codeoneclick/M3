@@ -47,7 +47,6 @@ void M3RegularElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _Vie
 	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
 		if (!IsAssignedToView) {
 			Dispose<AM3RegularElement>();
-			UE_LOG(LogTemp, Warning, TEXT("RegularElement should be destroyed!"));
 		}
 	});
 }

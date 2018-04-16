@@ -5,6 +5,7 @@
 #include "M3RegularElementModel.h"
 #include "M3SuperElementModel.h"
 #include "M3SharedModel.h"
+#include "M3CellModel.h"
 
 M3ElementModelColorComponent::M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner) {
 	Owner = _Owner;
@@ -12,6 +13,26 @@ M3ElementModelColorComponent::M3ElementModelColorComponent(const std::shared_ptr
 
 EM3ElementColor M3ElementModelColorComponent::GetColor() {
 	return Owner->GetColor();
+}
+
+M3ElementModelBlockerComponent::M3ElementModelBlockerComponent(const std::shared_ptr<M3ElementModelBlockerComponent_INTERFACE>& _Owner) {
+	Owner = _Owner;
+}
+
+bool M3ElementModelBlockerComponent::CanDrop() const {
+	return Owner->CanDrop();
+}
+
+bool M3ElementModelBlockerComponent::CanSwap() const {
+	return Owner->CanSwap();
+}
+
+bool M3ElementModelBlockerComponent::CanMatch() const {
+	return Owner->CanMatch();
+}
+
+bool M3ElementModelBlockerComponent::CanRemove() const {
+	return Owner->CanRemove();
 }
 
 M3ElementModel::M3ElementModel() {
@@ -88,15 +109,75 @@ bool M3ElementModel::IsInIdle() const {
 }
 
 bool M3ElementModel::CanMatch() const {
-	return IsInState(EM3ElementState::IDLE);
+	bool Result = IsInState(EM3ElementState::IDLE);
+	if (Result) {
+		for (const auto Submodel : Submodels) {
+			if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+				Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanMatch();
+				break;
+			}
+		}
+	}
+	return Result;
 }
 
 bool M3ElementModel::CanDrop() const {
-	return IsInState(EM3ElementState::IDLE);
+	bool Result = IsInState(EM3ElementState::IDLE);
+	if (Result) {
+		for (const auto Submodel : Submodels) {
+			if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+				Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanDrop();
+				break;
+			}
+		}
+	}
+	return Result;
+}
+
+bool M3ElementModel::CanSwap() const {
+	bool Result = IsInState(EM3ElementState::IDLE);
+	if (Result) {
+		for (const auto Submodel : Submodels) {
+			if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+				Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanSwap();
+				break;
+			}
+		}
+	}
+	return Result;
+}
+
+bool M3ElementModel::CanRemove() const {
+	bool Result = true;
+	for (const auto Submodel : Submodels) {
+		if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+			Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanRemove();
+			break;
+		}
+	}
+	return Result;
 }
 
 bool M3ElementModel::IsDropBlocked() const {
-	return false;
+	bool Result = false;
+	for (const auto Submodel : Submodels) {
+		if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+			Result = !Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanDrop();
+			break;
+		}
+	}
+	return Result;
+}
+
+bool M3ElementModel::IsMatchBlocked() const {
+	bool Result = false;
+	for (const auto Submodel : Submodels) {
+		if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+			Result = true;
+			break;
+		}
+	}
+	return Result;
 }
 
 bool M3ElementModel::IsRegular() const {
@@ -105,4 +186,15 @@ bool M3ElementModel::IsRegular() const {
 
 bool M3ElementModel::IsSuper() const {
 	return GetSubmodel<M3SuperElementModel>() != nullptr;
+}
+
+bool M3ElementModel::IsNeighbours(const M3ElementModel_SharedPtr& CurrentElementModel, const M3ElementModel_SharedPtr& NeighbourElementModel) {
+	bool Result = false;
+
+	const auto& CurrentCellModel = CurrentElementModel->GetParent<M3CellModel>();
+	const auto& NeighbourCellModel = NeighbourElementModel->GetParent<M3CellModel>();
+
+	Result = M3CellModel::IsNeighbours(CurrentCellModel, NeighbourCellModel);
+
+	return Result;
 }

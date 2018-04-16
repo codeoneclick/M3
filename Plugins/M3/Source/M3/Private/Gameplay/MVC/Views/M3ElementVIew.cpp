@@ -122,7 +122,7 @@ M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {
 }
 
 M3ElementView::~M3ElementView() {
-	if (Accessor) {
+	if (Accessor && Accessor->IsRooted()) {
 		Accessor->RemoveFromRoot();
 	}
 	Accessor = nullptr;
@@ -191,11 +191,13 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 				}
 				break;
 			case EM3ElementState::MATCHING:
-				if (Delegate) {
+				if (Delegate && !ElementModel->IsMatchBlocked()) {
 					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
 					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
 
 					Delegate->OnMatch(Accessor);
+				} else if (ElementModel->IsMatchBlocked()) {
+					M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_MATCH_ENDED, ElementModel);
 				}
 				break;
 			case EM3ElementState::DROPPING:
@@ -206,13 +208,12 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 					Delegate->OnDrop(Accessor);
 				}
 				break;
-			case EM3ElementState::SPAWNING: {
-					if (Delegate) {
-						Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-						Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+			case EM3ElementState::SPAWNING:
+				if (Delegate) {
+					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
 
-						Delegate->OnSpawn(Accessor);
-					}
+					Delegate->OnSpawn(Accessor);
 				}
 				break;
 			case EM3ElementState::REMOVING: {
@@ -229,7 +230,6 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
 		if (!IsAssignedToView) {
 			Dispose<AM3Element>();
-			UE_LOG(LogTemp, Warning, TEXT("Element should be destroyed!"));
 		}
 	});
 

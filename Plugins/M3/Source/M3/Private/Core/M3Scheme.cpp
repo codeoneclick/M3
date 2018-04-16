@@ -154,6 +154,9 @@ void AM3CellScheme::OnEditorMouseReleased() {
 		UObject* Object = Selection->GetSelectedObject(i);
 		if (Object && Object->IsA(AM3CellScheme::StaticClass()) && Object == this) {
 			if (AM3CellScheme::EdModeSelectedAppointmentScheme) {
+
+				GEditor->SelectNone(true, true);
+
 				UWorld* World = GEditor->GetEditorWorldContext().World();
 				AM3App* M3App = nullptr;
 				for (TActorIterator<AActor> It(World, AM3App::StaticClass()); It; ++It) {
@@ -214,6 +217,9 @@ void AM3CellScheme::OnEditorMouseReleased() {
 						if (FunctionalAppointment &&
 							(FunctionalAppointment->Id == EM3ElementId::CELL_CLOSED ||
 							 FunctionalAppointment->Id == EM3ElementId::CELL_HOLE)) {
+							return;
+						}
+						if (AM3CellScheme::EdModeSelectedAppointmentScheme->Id == EM3ElementId::BLOCKER_NONE) {
 							return;
 						}
 					}
@@ -329,7 +335,6 @@ void AM3CellScheme::OnEditorMouseReleased() {
 							break;
 						}
 					}
-					GEditor->SelectNone(true, true);
 				}
 			}
 		}

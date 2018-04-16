@@ -101,6 +101,9 @@ public:
 
 	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
 	TSubclassOf<AM3CellAppointmentScheme> BlockerWire2XScheme_BP;
+
+	UPROPERTY(Category = "Scheme", EditAnywhere, meta = (ShowForTools = "Tool_M3_BP"), BlueprintReadWrite)
+	TSubclassOf<AM3CellAppointmentScheme> BlockerNoneScheme_BP;
 };
 
 UCLASS()

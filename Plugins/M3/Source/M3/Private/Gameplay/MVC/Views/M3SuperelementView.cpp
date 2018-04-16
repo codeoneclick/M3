@@ -47,7 +47,6 @@ void M3SuperElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewM
 	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
 		if (!IsAssignedToView) {
 			Dispose<AM3SuperElement>();
-			UE_LOG(LogTemp, Warning, TEXT("Super element should be destroyed!"));
 		}
 	});
 }

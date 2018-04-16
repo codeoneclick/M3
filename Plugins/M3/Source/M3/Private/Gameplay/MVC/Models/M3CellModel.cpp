@@ -39,3 +39,10 @@ bool M3CellModel::CanContainElement() {
 	}
 	return Result;
 }
+
+bool M3CellModel::IsNeighbours(const M3CellModel_SharedPtr& CurrentCellModel, const M3CellModel_SharedPtr& NeighbourCellModel) {
+	const int hDist = FMath::Abs(CurrentCellModel->GetCol() - NeighbourCellModel->GetCol());
+	const int vDist = FMath::Abs(CurrentCellModel->GetRow() - NeighbourCellModel->GetRow());
+
+	return (hDist == 1 && vDist == 0) || (hDist == 0 && vDist == 1);
+}

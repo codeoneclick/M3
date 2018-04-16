@@ -6,6 +6,8 @@
 #include "M3Entity.h"
 #include "M3Model.h"
 
+FORWARD_DECL_STRONG(M3ElementModel)
+
 enum EM3ElementState {
 	IDLE = 0,
 	SPAWNING,
@@ -30,6 +32,14 @@ public:
 	virtual EM3ElementColor GetColor() = 0;
 };
 
+class M3ElementModelBlockerComponent_INTERFACE {
+public:
+	virtual bool CanDrop() = 0;
+	virtual bool CanSwap() = 0;
+	virtual bool CanMatch() = 0;
+	virtual bool CanRemove() = 0;
+};
+
 class M3ElementModelColorComponent : public M3ModelComponent_INTERFACE {
 private:
 
@@ -37,8 +47,26 @@ private:
 
 public:
 
+	CTTI_CLASS_GUID(M3ElementModelColorComponent, M3ModelComponent_INTERFACE::GuidsContainer)
+
 	M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner);
 	EM3ElementColor GetColor();
+};
+
+class  M3ElementModelBlockerComponent : public M3ModelComponent_INTERFACE {
+private:
+
+	std::shared_ptr<M3ElementModelBlockerComponent_INTERFACE> Owner = nullptr;
+
+public:
+
+	CTTI_CLASS_GUID(M3ElementModelBlockerComponent, M3ModelComponent_INTERFACE::GuidsContainer)
+
+	M3ElementModelBlockerComponent(const std::shared_ptr<M3ElementModelBlockerComponent_INTERFACE>& _Owner);
+	bool CanDrop() const;
+	bool CanSwap() const;
+	bool CanMatch() const;
+	bool CanRemove() const;
 };
 
 class M3ElementEntity : public M3Entity {
@@ -81,9 +109,14 @@ public:
 	bool IsInIdle() const;
 	bool CanMatch() const;
 	bool CanDrop() const;
+	bool CanSwap() const;
+	bool CanRemove() const;
 
 	bool IsDropBlocked() const;
+	bool IsMatchBlocked() const;
 
 	bool IsRegular() const;
 	bool IsSuper() const;
+
+	static bool IsNeighbours(const M3ElementModel_SharedPtr& CurrentElementModel, const M3ElementModel_SharedPtr& NeighbourElementModel);
 };

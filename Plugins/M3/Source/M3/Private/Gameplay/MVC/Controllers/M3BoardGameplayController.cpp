@@ -103,8 +103,10 @@ void M3BoardGameplayController::OnElementSwapEnded(const M3ElementModel_SharedPt
 
 void M3BoardGameplayController::OnElementMatchEnded(const M3ElementModel_SharedPtr& ElementModel) {
 	ElementModel->SetState(EM3ElementState::IDLE);
-	ElementModel->SetState(EM3ElementState::REMOVING);
-
+	if (ElementModel->CanRemove()) {
+		ElementModel->SetState(EM3ElementState::REMOVING);
+	}
+	
 	const auto& BoardActionsAccumulationModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardActionsAccumulationModel>();
 	BoardActionsAccumulationModel->PushAction(EM3AccumulationAction::ON_ELEMENT_MATCH_ENDED);
 }

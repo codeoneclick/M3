@@ -6,6 +6,8 @@
 #include "M3Entity.h"
 #include "M3Model.h"
 
+FORWARD_DECL_STRONG(M3CellModel)
+
 class M3_API M3CellEntity : public M3Entity {
 public:
 
@@ -36,4 +38,6 @@ public:
 
 	bool IsContainElement();
 	bool CanContainElement();
+
+	static bool IsNeighbours(const M3CellModel_SharedPtr& CurrentCellModel, const M3CellModel_SharedPtr& NeighbourCellModel);
 };

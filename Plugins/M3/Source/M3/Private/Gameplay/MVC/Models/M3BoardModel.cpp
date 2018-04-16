@@ -67,7 +67,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 				AM3CellAppointmentScheme* Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::REGULARELEMENT);
 				if (Appointment) {
 					M3RegularElementModel_SharedPtr RegularElementModel = M3RegularElementModel::Construct<M3RegularElementModel>();
-					RegularElementModel->Entity->Get()->Id->Set(Appointment->Id);
+					RegularElementModel->Deserialize(Appointment);
 					ElementModel->AddSubmodel(RegularElementModel);
 					CellModel->AddSubmodel(ElementModel);
 				}
@@ -75,7 +75,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 				Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::SUPERELEMENT);
 				if (Appointment) {
 					M3SuperElementModel_SharedPtr SuperElementModel = M3SuperElementModel::Construct<M3SuperElementModel>();
-					SuperElementModel->Entity->Get()->Id->Set(Appointment->Id);
+					SuperElementModel->Deserialize(Appointment);
 					ElementModel->AddSubmodel(SuperElementModel);
 					CellModel->AddSubmodel(ElementModel);
 				}
@@ -83,7 +83,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 				Appointment = BoardScheme->Cells[i + j * Cols]->GetAppointment(EM3CellAppointment::BLOCKER);
 				if (Appointment) {
 					M3BlockerModel_SharedPtr BlockerModel = M3BlockerModel::Construct<M3BlockerModel>();
-					BlockerModel->Entity->Get()->Id->Set(Appointment->Id);
+					BlockerModel->Deserialize(Appointment);
 					ElementModel->AddSubmodel(BlockerModel);
 				}
 			}
@@ -178,7 +178,7 @@ void M3BoardModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
 
 M3CellModel_SharedPtr M3BoardModel::GetCell(int Col, int Row) const {
 	M3CellModel_SharedPtr CellModel = nullptr;
-	if (Col < GetCols() && Row < GetRows()) {
+	if (Col >= 0 && Row >= 0 && Col < GetCols() && Row < GetRows()) {
 		size_t Index = Col + Row * GetCols();
 		if (Index < Entity->Get()->Cells->Get()->size()) {
 			CellModel = Entity->Get()->Cells->Get()->data()[Index];

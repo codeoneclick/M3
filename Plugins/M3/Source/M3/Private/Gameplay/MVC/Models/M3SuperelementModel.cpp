@@ -17,7 +17,8 @@ void M3SuperElementModel::Serialize() {
 }
 
 void M3SuperElementModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
-
+	AM3CellAppointmentScheme* Appointment = Cast<AM3CellAppointmentScheme>(Scheme);
+	Entity->Get()->Id->Set(Appointment->Id);
 }
 
 void M3SuperElementModel::Reset() {

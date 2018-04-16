@@ -8,12 +8,11 @@
 #include "ISettingsModule.h"
 #include "ModuleManager.h"
 
-class FM3EdModeStyle
-{
+class FM3EdModeStyle {
 protected:
 
 	static FString InContent(const FString& RelativePath, const ANSICHAR* Extension);
-	static TSharedPtr< class FSlateStyleSet > StyleSet;
+	static TSharedPtr<class FSlateStyleSet > StyleSet;
 
 public:
 
@@ -22,7 +21,8 @@ public:
 
 	static void Startup();
 	static void Shutdown();
-	static TSharedPtr<class ISlateStyle> Get();
+
+	static TSharedPtr<class ISlateStyle> GetSlateStyle();
 };
 
 #endif

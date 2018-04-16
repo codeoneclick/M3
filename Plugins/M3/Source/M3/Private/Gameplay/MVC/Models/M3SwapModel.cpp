@@ -50,14 +50,16 @@ bool M3SwapModel::CanSwapElementWithElementColor(const std::shared_ptr<std::vect
 }
 
 bool M3SwapModel::CanSwapElements(const M3ElementModel_SharedPtr& ElementA, const M3ElementModel_SharedPtr& ElementB) {
-	bool Result = false;
-	const auto CellA = ElementA->GetParent<M3CellModel>();
-	const auto CellB = ElementB->GetParent<M3CellModel>();
+	bool Result = ElementA->CanSwap() && ElementB->CanSwap();
+	if (Result) {
+		const auto CellA = ElementA->GetParent<M3CellModel>();
+		const auto CellB = ElementB->GetParent<M3CellModel>();
 
-	const int swapHorizontal = FMath::Abs(CellA->Entity->Get()->Col->Get() - CellB->Entity->Get()->Col->Get());
-	const int swapVertical = FMath::Abs(CellA->Entity->Get()->Row->Get() - CellB->Entity->Get()->Row->Get());
-	if ((swapHorizontal == 1 && swapVertical == 0) || (swapVertical == 1 && swapHorizontal == 0)) {
-		Result = true;
+		const int swapHorizontal = FMath::Abs(CellA->Entity->Get()->Col->Get() - CellB->Entity->Get()->Col->Get());
+		const int swapVertical = FMath::Abs(CellA->Entity->Get()->Row->Get() - CellB->Entity->Get()->Row->Get());
+		if ((swapHorizontal == 1 && swapVertical == 0) || (swapVertical == 1 && swapHorizontal == 0)) {
+			Result = true;
+		}
 	}
 	return Result;
 }
@@ -136,12 +138,12 @@ void M3SwapModel::GeneratePotentialSwaps() {
 			const auto Cell = Cells->data()[Col + Row * Cols];
 			if (Cell) {
 				const auto Element = Cell->GetSubmodel<M3ElementModel>();
-				if (Element) {
+				if (Element && Element->CanSwap()) {
 					if (Col < Cols - 1) {
 						const auto OtherCell = Cells->data()[(Col + 1) + Row * Cols];
 						if (OtherCell) {
 							const auto OtherElement = OtherCell->GetSubmodel<M3ElementModel>();
-							if (OtherElement) {
+							if (OtherElement && OtherElement->CanSwap()) {
 								M3SwapModel::SwapElements(Cell, OtherCell);
 
 								int ColTo = Col + 1;
@@ -175,7 +177,7 @@ void M3SwapModel::GeneratePotentialSwaps() {
 						const auto OtherCell = Cells->data()[Col + (Row + 1) * Cols];
 						if (OtherCell) {
 							const auto OtherElement = OtherCell->GetSubmodel<M3ElementModel>();
-							if (OtherElement) {
+							if (OtherElement && OtherElement->CanSwap()) {
 								M3SwapModel::SwapElements(Cell, OtherCell);
 
 								int ColTo = Col;

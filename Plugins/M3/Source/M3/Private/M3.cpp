@@ -15,7 +15,7 @@ void M3Impl::StartupModule()
 #if WITH_EDITOR
 
 	FM3EdModeStyle::Startup();
-	FEditorModeRegistry::Get().RegisterMode<FM3EdMode>(FM3EdMode::EM_M3, NSLOCTEXT("EditorModes", "M3EdMode", "M3"), FSlateIcon(FM3EdModeStyle::Get()->GetStyleSetName(), "LevelEditor.M3Mode", "LevelEditor.M3Mode.Small"), true, 400);
+	FEditorModeRegistry::Get().RegisterMode<FM3EdMode>(FM3EdMode::EM_M3, NSLOCTEXT("EditorModes", "M3EdMode", "M3"), FSlateIcon(FM3EdModeStyle::GetSlateStyle()->GetStyleSetName(), "M3EdModeMainIcon", "M3EdModeMainIcon.Small"), true, 400);
 
 #endif
 }

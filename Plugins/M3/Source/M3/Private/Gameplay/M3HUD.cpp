@@ -37,11 +37,6 @@ AM3HUD::~AM3HUD() {
 
 void AM3HUD::BeginPlay() {
 	Super::BeginPlay();
-
-	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
-	const auto BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
-	OnDurationChanged(BoardStateModel->GetDuration(), BoardSettingsModel->GetDuration(), BoardSettingsModel->GetIsTurnBased());
-	OnScoresChanged(BoardStateModel->GetScores(), BoardSettingsModel->GetStar1Scores(), BoardSettingsModel->GetStar2Scores(), BoardSettingsModel->GetStar3Scores());
 }
 
 void AM3HUD::OnGameStarted() {
@@ -53,12 +48,14 @@ void AM3HUD::OnGameStarted() {
 	OnDurationChangedSlot->Attach([=](int _Duration) {
 		OnDurationChanged(BoardStateModel->GetDuration(), BoardSettingsModel->GetDuration(), BoardSettingsModel->GetIsTurnBased());
 	});
+	OnDurationChanged(BoardStateModel->GetDuration(), BoardSettingsModel->GetDuration(), BoardSettingsModel->GetIsTurnBased());
 
 	std::shared_ptr<M3KVSlot<int>> OnScoresChangedSlot = std::make_shared<M3KVSlot<int>>(BoardStateModel->Entity->Get()->Scores);
 	Slots[k_ON_SCORES_CHANGED] = OnScoresChangedSlot;
 	OnScoresChangedSlot->Attach([=](int _Scores) {
 		OnScoresChanged(BoardStateModel->GetScores(), BoardSettingsModel->GetStar1Scores(), BoardSettingsModel->GetStar2Scores(), BoardSettingsModel->GetStar3Scores());
 	});
+	OnScoresChanged(BoardStateModel->GetScores(), BoardSettingsModel->GetStar1Scores(), BoardSettingsModel->GetStar2Scores(), BoardSettingsModel->GetStar3Scores());
 
 	const auto GoalsModel = M3SharedModel::GetInstance()->GetSubmodel<M3GoalsModel>();
 	for (size_t i = 0; i < GoalsModel->GetGoals()->size(); ++i) {
