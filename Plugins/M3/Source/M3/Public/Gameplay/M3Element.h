@@ -13,6 +13,7 @@ FORWARD_DECL_STRONG(M3Model_INTERFACE)
 FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(UM3AssetsBundle)
 FORWARD_DECL_STRONG(UM3ViewDelegate_INTERFACE)
+FORWARD_DECL_STRONG(UM3ElementViewAccessor)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Views))
 class M3_API AM3Element : public ACharacter
@@ -39,11 +40,18 @@ public:
 	UPROPERTY(Category = "Delegates", EditAnywhere, BlueprintReadWrite)
 	UM3ViewDelegate_INTERFACE* Delegate;
 
+	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UM3ElementViewAccessor> Accessor_BP;
+
+	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
+	UM3ElementViewAccessor* Accessor;
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnLoad(UM3AssetsBundle* _Bundle);
 	virtual void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel);
 	virtual void OnBindViewDelegate();
+	virtual void OnBindViewAccessor();
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;

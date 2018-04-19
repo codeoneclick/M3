@@ -19,8 +19,6 @@ public:
 class M3_API M3RegularElementModel : public M3Model<M3RegularElementEntity>, public M3ElementModelColorComponent_INTERFACE {
 public:
 
-	CTTI_CLASS_GUID(M3RegularElementModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3RegularElementModel();
 	~M3RegularElementModel();
 

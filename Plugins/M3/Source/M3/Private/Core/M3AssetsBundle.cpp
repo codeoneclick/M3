@@ -31,7 +31,11 @@ AM3Cell* UM3BoardAssetsBundle::ConstructCell(UWorld* World) {
 
 AM3Element* UM3BoardAssetsBundle::ConstructElement(UWorld* World) {
 	AM3Element* Result = nullptr;
-	Result = World->SpawnActor<AM3Element>(FVector(0.f), FRotator(0.f));
+	if (Element_BP) {
+		Result = World->SpawnActor<AM3Element>(Element_BP);
+	} else {
+		Result = World->SpawnActor<AM3Element>(FVector(0.f), FRotator(0.f));
+	}
 	return Result;
 }
 
@@ -49,8 +53,7 @@ AM3SuperElement* UM3BoardAssetsBundle::ConstructSuperElement(UWorld* World) {
 	AM3SuperElement* Result = nullptr;
 	if (SuperElement_BP) {
 		Result = World->SpawnActor<AM3SuperElement>(SuperElement_BP);
-	}
-	else {
+	} else {
 		Result = World->SpawnActor<AM3SuperElement>(FVector(0.f), FRotator(0.f));
 	}
 	return Result;
@@ -58,10 +61,9 @@ AM3SuperElement* UM3BoardAssetsBundle::ConstructSuperElement(UWorld* World) {
 
 AM3Blocker* UM3BoardAssetsBundle::ConstructBlocker(UWorld* World) {
 	AM3Blocker* Result = nullptr;
-	if (SuperElement_BP) {
+	if (Blocker_BP) {
 		Result = World->SpawnActor<AM3Blocker>(Blocker_BP);
-	}
-	else {
+	} else {
 		Result = World->SpawnActor<AM3Blocker>(FVector(0.f), FRotator(0.f));
 	}
 	return Result;

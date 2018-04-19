@@ -14,8 +14,7 @@ FORWARD_DECL_STRONG(M3View_INTERFACE)
 FORWARD_DECL_STRONG(M3Model_INTERFACE)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3View))
-class M3_API AM3Board : public AActor
-{
+class M3_API AM3Board : public AActor {
 	GENERATED_BODY()
 	
 public:	
@@ -33,9 +32,10 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void OnLoad(UM3AssetsBundle* Bundle);
-	void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
-	void OnBindViewDelegate();
+	virtual void OnLoad(UM3AssetsBundle* Bundle);
+	virtual void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model);
+	virtual void OnBindViewDelegate();
+	virtual void OnBindViewAccessor();
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;

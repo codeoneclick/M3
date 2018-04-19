@@ -34,9 +34,10 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	void OnLoad(UM3AssetsBundle* _Bundle);
-	void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel);
-	void OnBindViewDelegate();
+	virtual void OnLoad(UM3AssetsBundle* _Bundle);
+	virtual void OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel);
+	virtual void OnBindViewDelegate();
+	virtual void OnBindViewAccessor();
 
 	M3View_INTERFACE_SharedPtr GetView() const;
 	M3Model_INTERFACE_SharedPtr GetModel() const;

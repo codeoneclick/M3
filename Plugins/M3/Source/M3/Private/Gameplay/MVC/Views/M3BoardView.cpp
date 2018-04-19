@@ -49,19 +49,21 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	const auto& BoardModel = GetViewModel<M3BoardModel>();
 	const auto& BoardEntity = BoardModel->Entity->Get();
 
-	std::shared_ptr<M3KVMultiSlot<M3CellModel_Container>> CellsContainerSlot = std::make_shared<M3KVMultiSlot<M3CellModel_Container>>();
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> CellsContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
 	Slots[k_ON_CELLS_CONTAINER_CHANGED] = CellsContainerSlot;
-	CellsContainerSlot->Attach(M3CellModel::Container, [=](const M3CellModel_Container& Value) {
+	const auto CellContainer = M3CellModel::Container();
+	CellsContainerSlot->Attach(CellContainer, [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
 		for (const auto& It : *Value.get()) {
-			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+			const auto CellModel = std::static_pointer_cast<M3CellModel>(It);
+			if (!CellModel->Entity->Get()->IsAssignedToView->Get()) {
 				AM3Cell* Cell = GetBundle<UM3BoardAssetsBundle>()->ConstructCell(GetSuperview()->GetWorld());
 				Cell->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
 				Cell->OnLoad(Bundle);
-				Cell->OnBindViewModel(It);
+				Cell->OnBindViewModel(CellModel);
 				Cell->OnBindViewDelegate();
+				Cell->OnBindViewAccessor();
 				AddSubview(Cell->GetView());
 
-				const auto CellModel = std::static_pointer_cast<M3CellModel>(It);
 				size_t Index = CellModel->GetCol() + CellModel->GetRow() * BoardModel->GetCols();
 				if (Cells.size() <= Index) {
 					Cells.resize(Index + 1);
@@ -71,19 +73,21 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 		}
 	});
 
-	std::shared_ptr<M3KVMultiSlot<M3ElementModel_Container>> ElementsContainerSlot = std::make_shared<M3KVMultiSlot<M3ElementModel_Container>>();
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> ElementsContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
 	Slots[k_ON_ELEMENTS_CONTAINER_CHANGED] = ElementsContainerSlot;
-	ElementsContainerSlot->Attach(M3ElementModel::Container, [=](const M3ElementModel_Container& Value) {
+	ElementsContainerSlot->Attach(M3ElementModel::Container(), [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
 		for (const auto& It : *Value.get()) {
-			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+			const auto ElementModel = std::static_pointer_cast<M3ElementModel>(It);
+			if (!ElementModel->Entity->Get()->IsAssignedToView->Get()) {
 				AM3Element* Element = GetBundle<UM3BoardAssetsBundle>()->ConstructElement(GetSuperview()->GetWorld());
 				Element->AttachToActor(GetSuperview(), FAttachmentTransformRules::KeepWorldTransform);
 				Element->OnLoad(Bundle);
-				Element->OnBindViewModel(It);
+				Element->OnBindViewModel(ElementModel);
 				Element->OnBindViewDelegate();
+				Element->OnBindViewAccessor();
 				AddSubview(Element->GetView());
 
-				const auto CellModel = It->GetParent<M3CellModel>();
+				const auto CellModel = ElementModel->GetParent<M3CellModel>();
 				ensure(CellModel != nullptr);
 				size_t Index = CellModel->GetCol() + CellModel->GetRow() * BoardModel->GetCols();
 				if (Elements.size() <= Index) {
@@ -94,17 +98,19 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 		}
 	});
 
-	std::shared_ptr<M3KVMultiSlot<M3RegularElementModel_Container>> RegularElementsContainerSlot = std::make_shared<M3KVMultiSlot<M3RegularElementModel_Container>>();
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> RegularElementsContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
 	Slots[k_ON_REGULAR_ELEMENTS_CONTAINER_CHANGED] = RegularElementsContainerSlot;
-	RegularElementsContainerSlot->Attach(M3RegularElementModel::Container, [=](const M3RegularElementModel_Container& Value) {
+	RegularElementsContainerSlot->Attach(M3RegularElementModel::Container(), [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
 		for (const auto& It : *Value.get()) {
-			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+			const auto RegularElementModel = std::static_pointer_cast<M3RegularElementModel>(It);
+			if (!RegularElementModel->Entity->Get()->IsAssignedToView->Get()) {
 				AM3RegularElement* RegularElement = GetBundle<UM3BoardAssetsBundle>()->ConstructRegularElement(GetSuperview()->GetWorld());
 				RegularElement->OnLoad(Bundle);
-				RegularElement->OnBindViewModel(It);
+				RegularElement->OnBindViewModel(RegularElementModel);
 				RegularElement->OnBindViewDelegate();
+				RegularElement->OnBindViewAccessor();
 
-				const auto ElementModel = It->GetParent<M3ElementModel>();
+				const auto ElementModel = RegularElementModel->GetParent<M3ElementModel>();
 				ensure(ElementModel != nullptr);
 				const auto CellModel = ElementModel->GetParent<M3CellModel>();
 				ensure(CellModel != nullptr);
@@ -118,17 +124,19 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 		}
 	});
 
-	std::shared_ptr<M3KVMultiSlot<M3SuperElementModel_Container>> SuperElementsContainerSlot = std::make_shared<M3KVMultiSlot<M3SuperElementModel_Container>>();
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> SuperElementsContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
 	Slots[k_ON_SUPER_ELEMENTS_CONTAINER_CHANGED] = SuperElementsContainerSlot;
-	SuperElementsContainerSlot->Attach(M3SuperElementModel::Container, [=](const M3SuperElementModel_Container& Value) {
+	SuperElementsContainerSlot->Attach(M3SuperElementModel::Container(), [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
 		for (const auto& It : *Value.get()) {
-			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+			const auto SuperElementModel = std::static_pointer_cast<M3SuperElementModel>(It);
+			if (!SuperElementModel->Entity->Get()->IsAssignedToView->Get()) {
 				AM3SuperElement* SuperElement = GetBundle<UM3BoardAssetsBundle>()->ConstructSuperElement(GetSuperview()->GetWorld());
 				SuperElement->OnLoad(Bundle);
-				SuperElement->OnBindViewModel(It);
+				SuperElement->OnBindViewModel(SuperElementModel);
 				SuperElement->OnBindViewDelegate();
+				SuperElement->OnBindViewAccessor();
 
-				const auto ElementModel = It->GetParent<M3ElementModel>();
+				const auto ElementModel = SuperElementModel->GetParent<M3ElementModel>();
 				ensure(ElementModel != nullptr);
 				const auto CellModel = ElementModel->GetParent<M3CellModel>();
 				ensure(CellModel != nullptr);
@@ -142,17 +150,19 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 		}
 	});
 
-	std::shared_ptr<M3KVMultiSlot<M3BlockerModel_Container>> BlockersContainerSlot = std::make_shared<M3KVMultiSlot<M3BlockerModel_Container>>();
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> BlockersContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
 	Slots[k_ON_BLOCKERS_CONTAINER_CHANGED] = BlockersContainerSlot;
-	BlockersContainerSlot->Attach(M3BlockerModel::Container, [=](const M3BlockerModel_Container& Value) {
+	BlockersContainerSlot->Attach(M3BlockerModel::Container(), [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
 		for (const auto& It : *Value.get()) {
-			if (!It->Entity->Get()->IsAssignedToView->Get()) {
+			const auto BlockerModel = std::static_pointer_cast<M3BlockerModel>(It);
+			if (!BlockerModel->Entity->Get()->IsAssignedToView->Get()) {
 				AM3Blocker* Blocker = GetBundle<UM3BoardAssetsBundle>()->ConstructBlocker(GetSuperview()->GetWorld());
 				Blocker->OnLoad(Bundle);
-				Blocker->OnBindViewModel(It);
+				Blocker->OnBindViewModel(BlockerModel);
 				Blocker->OnBindViewDelegate();
+				Blocker->OnBindViewAccessor();
 
-				const auto ElementModel = It->GetParent<M3ElementModel>();
+				const auto ElementModel = BlockerModel->GetParent<M3ElementModel>();
 				ensure(ElementModel != nullptr);
 				const auto CellModel = ElementModel->GetParent<M3CellModel>();
 				ensure(CellModel != nullptr);

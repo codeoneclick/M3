@@ -25,8 +25,6 @@ public:
 	M3GoalModel();
 	~M3GoalModel();
 
-	CTTI_CLASS_GUID(M3GoalModel, M3Model_INTERFACE::GuidsContainer)
-
 	void Serialize() override;
 	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 
@@ -58,8 +56,6 @@ public:
 
 	M3GoalsModel();
 	~M3GoalsModel();
-
-	CTTI_CLASS_GUID(M3GoalsModel, M3Model_INTERFACE::GuidsContainer)
 
 	void Serialize() override;
 	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;

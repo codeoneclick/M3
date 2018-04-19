@@ -203,7 +203,7 @@ void M3BoardModel::CreateHole(int Col, int Row) {
 		Cell->RemoveSubmodel(Element);
 
 		const auto BoardStateModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardStateModel>();
-		Element->Reset();
+		M3ElementModel::Destruct(Element);
 		ensure(Element->GetParent<M3CellModel>() == nullptr);
 		BoardStateModel->SetIsHolesExist(true);
 	}

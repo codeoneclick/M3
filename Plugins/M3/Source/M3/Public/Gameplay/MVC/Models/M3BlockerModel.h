@@ -21,8 +21,6 @@ public:
 class M3_API M3BlockerModel : public M3Model<M3BlockerEntity>, public M3ElementModelBlockerComponent_INTERFACE {
 public:
 
-	CTTI_CLASS_GUID(M3BlockerModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3BlockerModel();
 	~M3BlockerModel();
 

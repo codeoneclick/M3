@@ -45,7 +45,9 @@ void AM3SuperElement::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewMo
 }
 
 void AM3SuperElement::OnBindViewDelegate() {
+}
 
+void AM3SuperElement::OnBindViewAccessor() {
 }
 
 M3View_INTERFACE_SharedPtr AM3SuperElement::GetView() const {

@@ -35,8 +35,6 @@ class M3_API M3BoardActionsAccumulationModel : public M3Model<M3BoardActionsAccu
 {
 public:
 
-	CTTI_CLASS_GUID(M3BoardActionsAccumulationModel, M3Model<M3BoardActionsAccumulationEntity>::GuidsContainer)
-
 	M3BoardActionsAccumulationModel();
 	~M3BoardActionsAccumulationModel();
 

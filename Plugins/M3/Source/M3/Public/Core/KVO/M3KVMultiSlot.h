@@ -7,7 +7,7 @@
 #include "M3KVSlot.h"
 
 template <typename T>
-class M3KVMultiSlot : public M3KVSlot_INTERFACE
+class M3_API M3KVMultiSlot : public M3KVSlot_INTERFACE
 {
 private:
 

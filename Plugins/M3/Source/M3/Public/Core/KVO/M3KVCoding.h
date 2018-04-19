@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 
 template<typename T>
-class M3KVCoding
-{
+class M3_API M3KVCoding {
 protected:
 
 	std::function<T()> Getter = nullptr;

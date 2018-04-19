@@ -25,8 +25,6 @@ public:
 	M3PotentialSwapModel();
 	~M3PotentialSwapModel();
 
-	CTTI_CLASS_GUID(M3PotentialSwapModel, M3Model_INTERFACE::GuidsContainer)
-
 	void Serialize() override;
 	void Deserialize(AM3Scheme_INTERFACE* Scheme) override;
 

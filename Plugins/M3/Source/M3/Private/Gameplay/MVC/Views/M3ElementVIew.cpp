@@ -26,6 +26,21 @@ UM3ElementViewAccessor::UM3ElementViewAccessor() {
 	OnSpawnEndedDelegate.BindUFunction(this, FName("OnSpawnEnded"));
 }
 
+UM3ElementViewAccessor::~UM3ElementViewAccessor() {
+	
+}
+
+void UM3ElementViewAccessor::Dispose() {
+	UM3ViewAccessor_INTERFACE::Dispose();
+
+	View = nullptr;
+
+	OnSwapEndedDelegate.Unbind();
+	OnMatchEndedDelegate.Unbind();
+	OnDropEndedDelegate.Unbind();
+	OnSpawnEndedDelegate.Unbind();
+}
+
 void UM3ElementViewAccessor::OnSwapEnded() {
 	OnSwapEndedCallback.ExecuteIfBound();
 }
@@ -122,17 +137,97 @@ M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {
 }
 
 M3ElementView::~M3ElementView() {
-	if (Accessor && Accessor->IsRooted()) {
-		Accessor->RemoveFromRoot();
-	}
-	Accessor = nullptr;
 }
 
 void M3ElementView::Load(UM3AssetsBundle* _Bundle) {
 	M3View::Load(_Bundle);
+}
 
-	Accessor = NewObject<UM3ElementViewAccessor>();
-	Accessor->AddToRoot();
+void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
+	M3View::BindViewModel(_ViewModel);
+
+	const auto& ElementModel = GetViewModel<M3ElementModel>();
+	const auto& ElementEntity = ElementModel->Entity->Get();
+
+	std::shared_ptr<M3KVSlot<EM3ElementState>> OnElementStateChangedSlot = std::make_shared<M3KVSlot<EM3ElementState>>(ElementEntity->State);
+	Slots[ELEMENT_VIEW_CONNECTION::k_ON_ELEMENT_STATE_CHANGED] = OnElementStateChangedSlot;
+	OnElementStateChangedSlot->Attach([=] (EM3ElementState State) {
+		const auto Delegate = GetDelegate<UM3ElementViewDelegate>();
+		ensure(Delegate != nullptr);
+		const auto Accessor = GetAccessor<UM3ElementViewAccessor>();
+		ensure(Accessor != nullptr);
+
+		switch (State) {
+		case EM3ElementState::SWAPPING: {
+			const auto SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
+			Accessor->IsPosibleToSwap = SwapModel->IsPossibleToSwap();
+
+			Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+			Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+
+			const auto OppositeElementModel = SwapModel->GetSwapElementA() == GetViewModel<M3ElementModel>() ? SwapModel->GetSwapElementB() : SwapModel->GetSwapElementA();
+
+			Accessor->OppositeCol = OppositeElementModel->GetParent<M3CellModel>()->GetCol();
+			Accessor->OppositeRow = OppositeElementModel->GetParent<M3CellModel>()->GetRow();
+
+			Delegate->OnSwap(Accessor);
+		}
+			break;
+		case EM3ElementState::MATCHING: {
+			if (!ElementModel->IsMatchBlocked()) {
+				Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+				Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+				Delegate->OnMatch(Accessor);
+			}
+			else if (ElementModel->IsMatchBlocked()) {
+				M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_MATCH_ENDED, ElementModel);
+			}
+		}
+			break;
+		case EM3ElementState::DROPPING: {
+			Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+			Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+			Delegate->OnDrop(Accessor);
+		}
+			break;
+		case EM3ElementState::SPAWNING: {
+			Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+			Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+			Delegate->OnSpawn(Accessor);
+		}
+			break;
+		case EM3ElementState::REMOVING: {
+
+		}
+			break;
+			default:
+				break;
+		}
+	});
+
+	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(ElementModel->Entity->Get()->IsAssignedToView);
+	Slots[ELEMENT_VIEW_CONNECTION::k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
+	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
+		if (!IsAssignedToView) {
+			Dispose<AM3Element>();
+		}
+	});
+
+	const auto& CellModel = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>();
+	int Col = CellModel->Entity->Get()->Col->Get();
+	int Row = CellModel->Entity->Get()->Row->Get();
+
+	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
+	GetSuperview()->SetActorRelativeLocation(FVector(Row * BoardSettingsModel->GetElementSize().Y, Col * BoardSettingsModel->GetElementSize().X, 0));
+}
+
+void M3ElementView::BindViewAccessor(UM3ViewAccessor_INTERFACE* _Accessor) {
+	M3View::BindViewAccessor(_Accessor);
+
+	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
+	const auto Accessor = GetAccessor<UM3ElementViewAccessor>();
+	Accessor->ElementSize = BoardSettingsModel->GetElementSize();
+
 	Accessor->View = Superview;
 
 	Accessor->OnSwapEndedCallback.BindLambda([=]() {
@@ -155,87 +250,4 @@ void M3ElementView::Load(UM3AssetsBundle* _Bundle) {
 		const auto ElementModel = GetViewModel<M3ElementModel>();
 		M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_SPAWN_ENDED, ElementModel);
 	});
-}
-
-void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
-	M3View::BindViewModel(_ViewModel);
-
-	const auto BoardSettingsModel = M3SharedModel::GetInstance()->GetSubmodel<M3BoardSettingsModel>();
-
-	Accessor->ElementSize = BoardSettingsModel->GetElementSize();
-
-	const auto& ElementModel = GetViewModel<M3ElementModel>();
-	const auto& ElementEntity = ElementModel->Entity->Get();
-
-	std::shared_ptr<M3KVSlot<EM3ElementState>> OnElementStateChangedSlot = std::make_shared<M3KVSlot<EM3ElementState>>(ElementEntity->State);
-	Slots[ELEMENT_VIEW_CONNECTION::k_ON_ELEMENT_STATE_CHANGED] = OnElementStateChangedSlot;
-	OnElementStateChangedSlot->Attach([=] (EM3ElementState State) {
-		const auto Delegate = GetDelegate<UM3ElementViewDelegate>();
-		assert(Delegate != nullptr);
-
-		switch (State) {
-			case EM3ElementState::SWAPPING:
-				if (Delegate) {
-					const auto SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
-					Accessor->IsPosibleToSwap = SwapModel->IsPossibleToSwap();
-
-					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
-
-					const auto OppositeElementModel = SwapModel->GetSwapElementA() == GetViewModel<M3ElementModel>() ? SwapModel->GetSwapElementB() : SwapModel->GetSwapElementA();
-					
-					Accessor->OppositeCol = OppositeElementModel->GetParent<M3CellModel>()->GetCol();
-					Accessor->OppositeRow = OppositeElementModel->GetParent<M3CellModel>()->GetRow();
-
-					Delegate->OnSwap(Accessor);
-				}
-				break;
-			case EM3ElementState::MATCHING:
-				if (Delegate && !ElementModel->IsMatchBlocked()) {
-					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
-
-					Delegate->OnMatch(Accessor);
-				} else if (ElementModel->IsMatchBlocked()) {
-					M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_MATCH_ENDED, ElementModel);
-				}
-				break;
-			case EM3ElementState::DROPPING:
-				if (Delegate) {
-					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
-
-					Delegate->OnDrop(Accessor);
-				}
-				break;
-			case EM3ElementState::SPAWNING:
-				if (Delegate) {
-					Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-					Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
-
-					Delegate->OnSpawn(Accessor);
-				}
-				break;
-			case EM3ElementState::REMOVING: {
-
-				}
-				break;
-			default:
-				break;
-		}
-	});
-
-	std::shared_ptr<M3KVSlot<bool>> OnAssignedStateChangedSlot = std::make_shared<M3KVSlot<bool>>(ElementModel->Entity->Get()->IsAssignedToView);
-	Slots[ELEMENT_VIEW_CONNECTION::k_ON_ASSIGNED_STATE_CHANGED] = OnAssignedStateChangedSlot;
-	OnAssignedStateChangedSlot->Attach([=](bool IsAssignedToView) {
-		if (!IsAssignedToView) {
-			Dispose<AM3Element>();
-		}
-	});
-
-	const auto& CellModel = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>();
-	int Col = CellModel->Entity->Get()->Col->Get();
-	int Row = CellModel->Entity->Get()->Row->Get();
-
-	GetSuperview()->SetActorRelativeLocation(FVector(Row * BoardSettingsModel->GetElementSize().Y, Col * BoardSettingsModel->GetElementSize().X, 0));
 }

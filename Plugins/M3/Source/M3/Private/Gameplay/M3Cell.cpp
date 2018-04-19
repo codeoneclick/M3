@@ -38,7 +38,9 @@ void AM3Cell::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 }
 
 void AM3Cell::OnBindViewDelegate() {
-	CellView->BindViewDelegate(nullptr);
+}
+
+void AM3Cell::OnBindViewAccessor() {
 }
 
 M3View_INTERFACE_SharedPtr AM3Cell::GetView() const {

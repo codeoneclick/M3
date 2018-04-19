@@ -22,10 +22,9 @@ public:
 class M3_API M3CellModel : public M3Model<M3CellEntity>
 {
 public:
+
 	M3CellModel();
 	~M3CellModel();
-
-	CTTI_CLASS_GUID(M3CellModel, M3Model<M3CellEntity>::GuidsContainer)
 
 	PROP_DECL_R(Col, int);
 	PROP_DECL_R(Row, int);

@@ -32,8 +32,7 @@ public:
 	PROP_STRONG(public, M3SpawnEntity, SuperElementSpawners, std::shared_ptr<std::list<M3SuperElementSpawner_SharedPtr>>, std::make_shared<std::list<M3SuperElementSpawner_SharedPtr>>())
 };
 
-class M3_API M3SpawnModel : public M3Model<M3SpawnEntity>
-{
+class M3_API M3SpawnModel : public M3Model<M3SpawnEntity> {
 public:
 
 	M3SpawnModel();

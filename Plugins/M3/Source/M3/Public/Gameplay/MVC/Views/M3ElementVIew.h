@@ -5,32 +5,36 @@
 #include "CoreMinimal.h"
 #include "M3View.h"
 #include "M3ViewDelegate.h"
+#include "M3ViewAccessor.h"
 #include "M3ElementView.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE(FElementViewAnimationDelegate);
 DECLARE_DELEGATE(FElementViewAnimationCallback);
 
-UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Accessors))
-class M3_API UM3ElementViewAccessor : public UObject {
-private:
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Accessors))
+class M3_API UM3ElementViewAccessor : public UM3ViewAccessor_INTERFACE {
+protected:
 
 	GENERATED_BODY()
 
-	UFUNCTION(BlueprintCallable, Category = "Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	void OnSwapEnded();
 	
-	UFUNCTION(BlueprintCallable, Category = "Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	void OnMatchEnded();
 
-	UFUNCTION(BlueprintCallable, Category = "Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	void OnDropEnded();
 
-	UFUNCTION(BlueprintCallable, Category = "Delegates")
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	void OnSpawnEnded();
 
 public:
 
 	UM3ElementViewAccessor();
+	virtual ~UM3ElementViewAccessor();
+
+	virtual void Dispose() override;
 
 	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	AActor* View = nullptr;
@@ -77,8 +81,7 @@ public:
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Delegates))
-class M3_API UM3ElementViewDelegate : public UM3ViewDelegate_INTERFACE
-{
+class M3_API UM3ElementViewDelegate : public UM3ViewDelegate_INTERFACE {
 private:
 
 	GENERATED_BODY()
@@ -101,11 +104,7 @@ public:
 	void OnSpawn(UM3ElementViewAccessor* Accessor);
 };
 
-class M3_API M3ElementView : public M3View
-{
-protected:
-
-	UM3ElementViewAccessor* Accessor = nullptr;
+class M3_API M3ElementView : public M3View {
 
 public:
 
@@ -114,6 +113,7 @@ public:
 	M3ElementView(AActor* _Superview);
 	~M3ElementView();
 
-	virtual void Load(UM3AssetsBundle* Bundle);
-	virtual void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);
+	virtual void Load(UM3AssetsBundle* _Bundle) override;
+	virtual void BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) override;
+	virtual void BindViewAccessor(UM3ViewAccessor_INTERFACE* _Accessor) override;
 };

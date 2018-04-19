@@ -32,8 +32,6 @@ private:
 
 public:
 
-	CTTI_CLASS_GUID(M3BoardStateModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3BoardStateModel();
 	~M3BoardStateModel();
 

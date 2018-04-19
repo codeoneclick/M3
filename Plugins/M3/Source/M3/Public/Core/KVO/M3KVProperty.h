@@ -7,8 +7,7 @@
 #include "M3KVCoding.h"
 #include "M3Utilities.h"
 
-class M3KVProperty_INTERFACE : public M3KVDispatcher, public std::enable_shared_from_this<M3KVProperty_INTERFACE>
-{
+class M3_API M3KVProperty_INTERFACE : public M3KVDispatcher, public std::enable_shared_from_this<M3KVProperty_INTERFACE> {
 protected:
 
 	std::string Id;
@@ -32,7 +31,7 @@ public:
 FORWARD_DECL_STRONG(M3KVProperty_INTERFACE)
 
 template<typename T>
-class M3KVProperty : public M3KVCoding<T>, public M3KVProperty_INTERFACE
+class M3_API M3KVProperty : public M3KVCoding<T>, public M3KVProperty_INTERFACE
 {
 private:
 

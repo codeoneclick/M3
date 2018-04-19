@@ -46,8 +46,6 @@ public:
 	M3ChainModel();
 	~M3ChainModel();
 
-	CTTI_CLASS_GUID(M3ChainModel, M3Model<M3ChainEntity>::GuidsContainer)
-
 	void Init();
 
 	void Serialize();

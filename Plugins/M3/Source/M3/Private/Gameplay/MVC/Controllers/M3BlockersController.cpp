@@ -22,7 +22,7 @@ void M3BlockersController::Execute(float Deltatime) {
 	for (const auto& BlockerModel : BlockersToRemove) {
 		const auto& ElementModel = BlockerModel->GetParent<M3ElementModel>();
 		ElementModel->RemoveSubmodel(BlockerModel);
-		BlockerModel->Reset();
+		M3BlockerModel::Destruct(BlockerModel);
 	}
 	BlockersToRemove.clear();
 }
@@ -57,7 +57,7 @@ void M3BlockersController::OnElementMatchEnded(const M3ElementModel_SharedPtr& _
 	if (BlockerModel) {
 		OnBlockerAffected(_ElementModel, BlockerModel);
 	} else {
-		const auto& Blockers = M3BlockerModel::Container->Get();
+		const auto& Blockers = M3BlockerModel::Container()->Get();
 		for (auto It = Blockers->begin(); It != Blockers->end(); ++It) {
 			const auto& BlockerModel = std::static_pointer_cast<M3BlockerModel>((*It));
 			if (BlockerModel->GetId() == EM3ElementId::BLOCKER_BOX3X ||

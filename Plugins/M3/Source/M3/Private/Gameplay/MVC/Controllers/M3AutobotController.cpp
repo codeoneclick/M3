@@ -38,7 +38,7 @@ void M3AutobotController::Execute(float Deltatime) {
 	}
 
 	M3SuperElementModel_SharedPtr SuperElementModelToUse = nullptr;
-	const auto& SuperElements = M3SuperElementModel::Container->Get();
+	const auto& SuperElements = M3SuperElementModel::Container()->Get();
 	for (auto It = SuperElements->begin(); It != SuperElements->end(); ++It) {
 		const auto& ElementModel = (*It)->GetParent<M3ElementModel>();
 		if (ElementModel && ElementModel->CanMatch()) {

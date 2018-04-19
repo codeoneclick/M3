@@ -98,6 +98,9 @@ public:
 	TSubclassOf<AM3Cell> Cell_BP;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AM3Element> Element_BP;
+
+	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AM3RegularElement> RegularElement_BP;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)

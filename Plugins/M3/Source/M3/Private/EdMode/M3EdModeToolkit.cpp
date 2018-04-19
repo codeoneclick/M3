@@ -884,38 +884,34 @@ void FM3EdModeToolkit::GenerateElementsVisual(class AM3App* M3App) {
 		for (int j = 0; j < Rows; ++j) {
 			const auto CellScheme = BoardScheme->Cells[i + j * Cols];
 
-			UStaticMeshComponent* MeshComponent = nullptr;
-			TArray<UActorComponent*> MeshesComponents = CellScheme->GetComponentsByClass(UStaticMeshComponent::StaticClass());
-			for (UActorComponent* ActorComponent : MeshesComponents) {
-				MeshComponent = Cast<UStaticMeshComponent>(ActorComponent);
-				break;
-			}
+			UStaticMeshComponent* ElementMeshComponent = CellScheme->ElementMeshComponent;
+			UStaticMeshComponent* BlockerMeshComponent = CellScheme->BlockerMeshComponent;
 
 			if (CellScheme->IsAppointmentExist(EM3CellAppointment::REGULARELEMENT)) {
 				switch (CellScheme->GetAppointment(EM3CellAppointment::REGULARELEMENT)->Id) {
 				case EM3ElementId::ELEMENT_RED:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_RED.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_RED.Material);
 					break;
 				case EM3ElementId::ELEMENT_GREEN:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_GREEN.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_GREEN.Material);
 					break;
 				case EM3ElementId::ELEMENT_BLUE:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_BLUE.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_BLUE.Material);
 					break;
 				case EM3ElementId::ELEMENT_YELLOW:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_YELLOW.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_YELLOW.Material);
 					break;
 				case EM3ElementId::ELEMENT_ORANGE:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_ORANGE.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_ORANGE.Material);
 					break;
 				case EM3ElementId::ELEMENT_PURPLE:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->Element_PURPLE.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->Element_PURPLE.Material);
 					break;
 				default:
 					break;
@@ -925,20 +921,55 @@ void FM3EdModeToolkit::GenerateElementsVisual(class AM3App* M3App) {
 			if (CellScheme->IsAppointmentExist(EM3CellAppointment::SUPERELEMENT)) {
 				switch (CellScheme->GetAppointment(EM3CellAppointment::SUPERELEMENT)->Id) {
 				case EM3ElementId::SUPERELEMENT_MATCH4:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH4.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH4.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH4.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH4.Material);
 					break;
 				case EM3ElementId::SUPERELEMENT_MATCH5:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH5.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH5.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH5.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH5.Material);
 					break;
 				case EM3ElementId::SUPERELEMENT_MATCH6:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH6.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH6.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH6.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH6.Material);
 					break;
 				case EM3ElementId::SUPERELEMENT_MATCH7:
-					MeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH7.Mesh);
-					MeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH7.Material);
+					ElementMeshComponent->SetStaticMesh(BoardAssetsBundle->SuperElement_MATCH7.Mesh);
+					ElementMeshComponent->SetMaterial(0, BoardAssetsBundle->SuperElement_MATCH7.Material);
+					break;
+				default:
+					break;
+				}
+			}
+
+			if (CellScheme->IsAppointmentExist(EM3CellAppointment::BLOCKER)) {
+				switch (CellScheme->GetAppointment(EM3CellAppointment::BLOCKER)->Id) {
+				case EM3ElementId::BLOCKER_BOX1X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Box1X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Box1X.Material);
+					break;
+				case EM3ElementId::BLOCKER_BOX2X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Box2X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Box2X.Material);
+					break;
+				case EM3ElementId::BLOCKER_BOX3X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Box3X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Box3X.Material);
+					break;
+				case EM3ElementId::BLOCKER_ICE1X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Ice1X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Ice1X.Material);
+					break;
+				case EM3ElementId::BLOCKER_ICE2X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Ice2X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Ice2X.Material);
+					break;
+				case EM3ElementId::BLOCKER_WIRE1X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Wire1X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Wire1X.Material);
+					break;
+				case EM3ElementId::BLOCKER_WIRE2X:
+					BlockerMeshComponent->SetStaticMesh(BoardAssetsBundle->Blocker_Wire2X.Mesh);
+					BlockerMeshComponent->SetMaterial(0, BoardAssetsBundle->Blocker_Wire2X.Material);
 					break;
 				default:
 					break;

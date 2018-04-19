@@ -7,8 +7,7 @@
 #include "M3KVListener.h"
 
 template<typename T>
-class M3KVConnection : public M3KVListener<T>
-{
+class M3_API M3KVConnection : public M3KVListener<T> {
 private:
 
 	std::function<void(const T&)> Callback;

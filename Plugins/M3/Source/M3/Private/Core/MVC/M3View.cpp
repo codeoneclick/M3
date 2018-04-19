@@ -51,11 +51,7 @@ AActor* M3View::GetSuperview() const {
 }
 
 void M3View::Load(UM3AssetsBundle* _Bundle) {
-	this->Bundle = _Bundle;
-}
-
-void M3View::BindViewDelegate(UM3ViewDelegate_INTERFACE* _Delegate) {
-	Delegate = _Delegate;
+	Bundle = _Bundle;
 }
 
 void M3View::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
@@ -64,4 +60,12 @@ void M3View::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 	const auto Entity = GetViewModel<M3Model<M3Entity>>()->Entity->Get();
 	assert(Entity->IsAssignedToView->Get() == false);
 	Entity->IsAssignedToView->Set(true);
+}
+
+void M3View::BindViewDelegate(UM3ViewDelegate_INTERFACE* _Delegate) {
+	Delegate = _Delegate;
+}
+
+void M3View::BindViewAccessor(UM3ViewAccessor_INTERFACE* _Accessor) {
+	Accessor = _Accessor;
 }

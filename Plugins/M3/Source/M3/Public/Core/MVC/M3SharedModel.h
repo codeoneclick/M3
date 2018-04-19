@@ -15,12 +15,20 @@ public:
 };
 
 FORWARD_DECL_STRONG(M3SharedModel)
+FORWARD_DECL_STRONG(M3Model_INTERFACE)
 
 class M3_API M3SharedModel : public M3Model<M3SharedEntity>
 {
 private:
 
 	static M3SharedModel_SharedPtr Instance;
+
+protected:
+
+	std::array<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>, std::numeric_limits<uint8_t>::max()> Pools;
+
+	std::array<std::shared_ptr<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>, std::numeric_limits<uint8_t>::max()> Containers;
+	std::array<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>, std::numeric_limits<uint8_t>::max()> TempContainers;
 
 public:
 
@@ -35,4 +43,53 @@ public:
 
 	void Serialize();
 	void Deserialize(AM3Scheme_INTERFACE* Scheme);
+
+	template<typename T>
+	void RegisterContainer() {
+		ensure(Containers[T::ClassGuid()] == nullptr);
+		Containers[T::ClassGuid()] = std::make_shared<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>(std::make_shared<std::list<M3Model_INTERFACE_SharedPtr>>());
+		
+		ensure(TempContainers[T::ClassGuid()] == nullptr);
+		TempContainers[T::ClassGuid()] = std::make_shared<std::list<M3Model_INTERFACE_SharedPtr>>();
+
+		ensure(Pools[T::ClassGuid()] == nullptr);
+		Pools[T::ClassGuid()] = std::make_shared<std::list<M3Model_INTERFACE_SharedPtr>>();
+	};
+
+	template<typename T>
+	void UnregisterContainer() {
+		ensure(Containers[T::ClassGuid()] != nullptr);
+		Containers[T::ClassGuid()]->Get()->clear();
+		Containers[T::ClassGuid()] = nullptr;
+
+		ensure(TempContainers[T::ClassGuid()] != nullptr);
+		TempContainers[T::ClassGuid()]->clear();
+		TempContainers[T::ClassGuid()] = nullptr;
+
+		ensure(Pools[T::ClassGuid()] == nullptr);
+		Pools[T::ClassGuid()]->clear();
+		Pools[T::ClassGuid()] = nullptr;
+	};
+
+	void UnregisterAllContainers();
+
+	template<typename T>
+	std::shared_ptr<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> Container() {
+		return Container(T::ClassGuid());
+	};
+
+	template<typename T>
+	std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> TempContainer() {
+		return TempContainer(T::ClassGuid());
+	};
+
+	template<typename T>
+	std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> Pool() {
+		return Pool(T::ClassGuid());
+	};
+
+	std::shared_ptr<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> Container(uintptr_t Guid);
+	std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> TempContainer(uintptr_t Guid);
+
+	std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> Pool(uintptr_t Guid);
 };

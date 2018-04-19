@@ -49,11 +49,12 @@ void AM3Board::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& Model) {
 }
 
 void AM3Board::OnBindViewDelegate() {
-	BoardView->BindViewDelegate(nullptr);
 }
 
-void AM3Board::Tick(float DeltaTime)
-{
+void AM3Board::OnBindViewAccessor() {
+}
+
+void AM3Board::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 

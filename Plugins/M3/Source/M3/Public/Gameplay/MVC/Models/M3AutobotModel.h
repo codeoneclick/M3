@@ -23,8 +23,6 @@ public:
 class M3_API M3AutobotModel : public M3Model<M3AutobotEntity> {
 public:
 
-	CTTI_CLASS_GUID(M3AutobotModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3AutobotModel();
 	~M3AutobotModel();
 

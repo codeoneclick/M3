@@ -5,3 +5,7 @@
 UM3ViewDelegate_INTERFACE::UM3ViewDelegate_INTERFACE() {
 
 }
+
+void UM3ViewDelegate_INTERFACE::Dispose() {
+
+}

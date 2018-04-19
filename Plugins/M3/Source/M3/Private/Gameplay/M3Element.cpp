@@ -52,6 +52,16 @@ void AM3Element::OnBindViewDelegate() {
 	View->BindViewDelegate(Delegate);
 }
 
+void AM3Element::OnBindViewAccessor() {
+	if (Accessor_BP) {
+		Accessor = NewObject<UM3ElementViewAccessor>(this, Accessor_BP);
+	}
+	else {
+		Accessor = NewObject<UM3ElementViewAccessor>();
+	}
+	View->BindViewAccessor(Accessor);
+}
+
 M3View_INTERFACE_SharedPtr AM3Element::GetView() const {
 	return View;
 }

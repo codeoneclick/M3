@@ -6,7 +6,7 @@
 #include "M3Utilities.h"
 #include "M3KVProperty.h"
 
-class M3KVListener_INTERFACE : public std::enable_shared_from_this<M3KVListener_INTERFACE>
+class M3_API M3KVListener_INTERFACE : public std::enable_shared_from_this<M3KVListener_INTERFACE>
 {
 protected:
 
@@ -17,7 +17,7 @@ public:
 };
 
 template<typename T>
-class M3KVListener : public M3KVListener_INTERFACE
+class M3_API M3KVListener : public M3KVListener_INTERFACE
 {
 private:
 

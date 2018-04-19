@@ -6,8 +6,7 @@
 #include "M3KVBinding.h"
 #include "M3Utilities.h"
 
-class M3KVDispatcher : public M3KVBinding
-{
+class M3_API M3KVDispatcher : public M3KVBinding {
 protected:
 
 	std::vector<M3KVListener_INTERFACE_SharedPtr> Listeners;

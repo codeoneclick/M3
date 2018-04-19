@@ -27,12 +27,12 @@ enum EM3ElementColor {
 	PURPLE
 };
 
-class M3ElementModelColorComponent_INTERFACE {
+class M3_API M3ElementModelColorComponent_INTERFACE {
 public:
 	virtual EM3ElementColor GetColor() = 0;
 };
 
-class M3ElementModelBlockerComponent_INTERFACE {
+class M3_API M3ElementModelBlockerComponent_INTERFACE {
 public:
 	virtual bool CanDrop() = 0;
 	virtual bool CanSwap() = 0;
@@ -40,7 +40,7 @@ public:
 	virtual bool CanRemove() = 0;
 };
 
-class M3ElementModelColorComponent : public M3ModelComponent_INTERFACE {
+class M3_API M3ElementModelColorComponent : public M3ModelComponent_INTERFACE {
 private:
 
 	std::shared_ptr<M3ElementModelColorComponent_INTERFACE> Owner = nullptr;
@@ -53,7 +53,7 @@ public:
 	EM3ElementColor GetColor();
 };
 
-class  M3ElementModelBlockerComponent : public M3ModelComponent_INTERFACE {
+class M3_API M3ElementModelBlockerComponent : public M3ModelComponent_INTERFACE {
 private:
 
 	std::shared_ptr<M3ElementModelBlockerComponent_INTERFACE> Owner = nullptr;
@@ -69,7 +69,7 @@ public:
 	bool CanRemove() const;
 };
 
-class M3ElementEntity : public M3Entity {
+class M3_API M3ElementEntity : public M3Entity {
 public:
 
 	CTTI_CLASS_GUID(M3ElementEntity, M3Entity::GuidsContainer)
@@ -78,14 +78,8 @@ public:
 	PROP_STRONG(public, M3ElementEntity, Timestamp, int64, 0)
 };
 
-class M3_API M3ElementModel : public M3Model<M3ElementEntity>
-{
-private:
-
-
+class M3_API M3ElementModel : public M3Model<M3ElementEntity> {
 public:
-
-	CTTI_CLASS_GUID(M3ElementModel, M3Model_INTERFACE::GuidsContainer)
 
 	M3ElementModel();
 	~M3ElementModel();

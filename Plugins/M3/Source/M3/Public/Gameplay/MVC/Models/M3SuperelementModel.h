@@ -18,8 +18,6 @@ public:
 class M3_API M3SuperElementModel : public M3Model<M3SuperElementEntity> {
 public:
 
-	CTTI_CLASS_GUID(M3SuperElementModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3SuperElementModel();
 	~M3SuperElementModel();
 

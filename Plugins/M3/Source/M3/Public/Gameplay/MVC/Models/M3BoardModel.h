@@ -23,8 +23,6 @@ public:
 class M3_API M3BoardModel : public M3Model<M3BoardEntity> {
 public:
 
-	CTTI_CLASS_GUID(M3BoardModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3BoardModel();
 	~M3BoardModel();
 

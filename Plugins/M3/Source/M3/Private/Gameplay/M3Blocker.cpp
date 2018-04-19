@@ -41,7 +41,9 @@ void AM3Blocker::OnBindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) 
 }
 
 void AM3Blocker::OnBindViewDelegate() {
+}
 
+void AM3Blocker::OnBindViewAccessor() {
 }
 
 M3View_INTERFACE_SharedPtr AM3Blocker::GetView() const {

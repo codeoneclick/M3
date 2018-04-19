@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 #include "M3Utilities.h"
 #include "M3ViewDelegate.generated.h"
 
@@ -12,10 +11,10 @@ class M3_API UM3ViewDelegate_INTERFACE : public UObject {
 
 	GENERATED_BODY()
 
-protected:
-
 public:
 
 	UM3ViewDelegate_INTERFACE();
 	virtual ~UM3ViewDelegate_INTERFACE() = default;
+
+	virtual void Dispose();
 };

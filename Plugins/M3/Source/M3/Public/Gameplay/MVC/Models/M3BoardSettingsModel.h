@@ -28,8 +28,6 @@ class M3_API M3BoardSettingsModel : public M3Model<M3BoardSettingsEntity>
 {
 public:
 
-	CTTI_CLASS_GUID(M3BoardSettingsModel, M3Model_INTERFACE::GuidsContainer)
-
 	M3BoardSettingsModel();
 	~M3BoardSettingsModel();
 

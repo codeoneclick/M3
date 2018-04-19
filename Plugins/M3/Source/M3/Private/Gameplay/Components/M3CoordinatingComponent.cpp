@@ -38,24 +38,8 @@ UM3CoordinatingComponent::UM3CoordinatingComponent() {
 }
 
 UM3CoordinatingComponent::~UM3CoordinatingComponent() {
-	M3BoardModel::Unregister();
-	M3CellModel::Unregister();
-	M3ElementModel::Unregister();
-	M3GestureModel::Unregister();
-	M3SwapModel::Unregister();
-	M3BoardActionsAccumulationModel::Unregister();
-	M3ChainModel::Unregister();
-	M3BoardStateModel::Unregister();
-	M3BoardSettingsModel::Unregister();
-	M3GoalModel::Unregister();
-	M3GoalsModel::Unregister();
-	M3RegularElementModel::Unregister();
-	M3SuperElementModel::Unregister();
-	M3BlockerModel::Unregister();
-	M3SpawnModel::Unregister();
-	M3AutobotModel::Unregister();
-
 	M3SharedModel::GetInstance()->RemoveAllSubmodels();
+	M3SharedModel::GetInstance()->UnregisterAllContainers();
 }
 
 void UM3CoordinatingComponent::BeginPlay() {
@@ -69,22 +53,21 @@ void UM3CoordinatingComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UM3CoordinatingComponent::CreateModels() {
 
-	M3BoardSettingsModel::Register();
-	M3BoardModel::Register();
-	M3CellModel::Register();
-	M3ElementModel::Register();
-	M3GestureModel::Register();
-	M3SwapModel::Register();
-	M3BoardActionsAccumulationModel::Register();
-	M3ChainModel::Register();
-	M3BoardStateModel::Register();
-	M3GoalModel::Register();
-	M3GoalsModel::Register();
-	M3RegularElementModel::Register();
-	M3SuperElementModel::Register();
-	M3BlockerModel::Register();
-	M3SpawnModel::Register();
-	M3AutobotModel::Register();
+	M3SharedModel::GetInstance()->RegisterContainer<M3BoardSettingsModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3BoardModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3CellModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3ElementModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3GestureModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3SwapModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3BoardActionsAccumulationModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3BoardStateModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3GoalModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3GoalsModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3RegularElementModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3SuperElementModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3BlockerModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3SpawnModel>();
+	M3SharedModel::GetInstance()->RegisterContainer<M3AutobotModel>();
 
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardSettingsModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardModel>());
@@ -118,6 +101,7 @@ void UM3CoordinatingComponent::CreateViews(UM3AssetsBundle* _Bundle) {
 	Board->OnLoad(_Bundle);
 	Board->OnBindViewModel(M3SharedModel::GetInstance()->GetSubmodel<M3BoardModel>());
 	Board->OnBindViewDelegate();
+	Board->OnBindViewAccessor();
 }
 
 void UM3CoordinatingComponent::OnModelChanged(AM3Scheme_INTERFACE* Scheme) {
