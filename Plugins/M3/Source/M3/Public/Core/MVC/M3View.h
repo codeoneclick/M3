@@ -19,8 +19,6 @@ FORWARD_DECL_WEAK(M3View_INTERFACE)
 class M3_API M3View_INTERFACE : public std::enable_shared_from_this<M3View_INTERFACE> {
 protected:
 
-	static std::set<uintptr_t> GuidsContainer;
-
 	M3View_INTERFACE_WeakPtr Parent;
 	std::vector<M3View_INTERFACE_SharedPtr> Subviews;
 
@@ -32,7 +30,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3View_INTERFACE, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3View_INTERFACE)
 
 	M3View_INTERFACE() = default;
 	virtual ~M3View_INTERFACE() = default;
@@ -79,7 +77,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3View, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3View)
 	
 	M3View(AActor* Superview);
 	virtual ~M3View();

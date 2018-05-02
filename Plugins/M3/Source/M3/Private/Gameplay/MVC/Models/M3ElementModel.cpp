@@ -64,8 +64,8 @@ EM3ElementColor M3ElementModel::GetColor() {
 	EM3ElementColor Result = EM3ElementColor::NONE;
 
 	for (const auto Submodel : Submodels) {
-		if (Submodel && Submodel->GetComponent<M3ElementModelColorComponent>()) {
-			Result = Submodel->GetComponent<M3ElementModelColorComponent>()->GetColor();
+		if (Submodel.second && Submodel.second->GetComponent<M3ElementModelColorComponent>()) {
+			Result = Submodel.second->GetComponent<M3ElementModelColorComponent>()->GetColor();
 			break;
 		}
 	}
@@ -112,8 +112,8 @@ bool M3ElementModel::CanMatch() const {
 	bool Result = IsInState(EM3ElementState::IDLE);
 	if (Result) {
 		for (const auto Submodel : Submodels) {
-			if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
-				Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanMatch();
+			if (Submodel.second && Submodel.second->GetComponent<M3ElementModelBlockerComponent>()) {
+				Result = Submodel.second->GetComponent<M3ElementModelBlockerComponent>()->CanMatch();
 				break;
 			}
 		}
@@ -125,8 +125,8 @@ bool M3ElementModel::CanDrop() const {
 	bool Result = IsInState(EM3ElementState::IDLE);
 	if (Result) {
 		for (const auto Submodel : Submodels) {
-			if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
-				Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanDrop();
+			if (Submodel.second && Submodel.second->GetComponent<M3ElementModelBlockerComponent>()) {
+				Result = Submodel.second->GetComponent<M3ElementModelBlockerComponent>()->CanDrop();
 				break;
 			}
 		}
@@ -138,8 +138,8 @@ bool M3ElementModel::CanSwap() const {
 	bool Result = IsInState(EM3ElementState::IDLE);
 	if (Result) {
 		for (const auto Submodel : Submodels) {
-			if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
-				Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanSwap();
+			if (Submodel.second && Submodel.second->GetComponent<M3ElementModelBlockerComponent>()) {
+				Result = Submodel.second->GetComponent<M3ElementModelBlockerComponent>()->CanSwap();
 				break;
 			}
 		}
@@ -150,8 +150,8 @@ bool M3ElementModel::CanSwap() const {
 bool M3ElementModel::CanRemove() const {
 	bool Result = true;
 	for (const auto Submodel : Submodels) {
-		if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
-			Result = Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanRemove();
+		if (Submodel.second && Submodel.second->GetComponent<M3ElementModelBlockerComponent>()) {
+			Result = Submodel.second->GetComponent<M3ElementModelBlockerComponent>()->CanRemove();
 			break;
 		}
 	}
@@ -161,8 +161,8 @@ bool M3ElementModel::CanRemove() const {
 bool M3ElementModel::IsDropBlocked() const {
 	bool Result = false;
 	for (const auto Submodel : Submodels) {
-		if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
-			Result = !Submodel->GetComponent<M3ElementModelBlockerComponent>()->CanDrop();
+		if (Submodel.second && Submodel.second->GetComponent<M3ElementModelBlockerComponent>()) {
+			Result = !Submodel.second->GetComponent<M3ElementModelBlockerComponent>()->CanDrop();
 			break;
 		}
 	}
@@ -172,7 +172,7 @@ bool M3ElementModel::IsDropBlocked() const {
 bool M3ElementModel::IsMatchBlocked() const {
 	bool Result = false;
 	for (const auto Submodel : Submodels) {
-		if (Submodel && Submodel->GetComponent<M3ElementModelBlockerComponent>()) {
+		if (Submodel.second && Submodel.second->GetComponent<M3ElementModelBlockerComponent>()) {
 			Result = true;
 			break;
 		}

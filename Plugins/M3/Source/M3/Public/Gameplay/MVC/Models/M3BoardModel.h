@@ -13,7 +13,7 @@ FORWARD_DECL_STRONG(M3ElementModel)
 class M3BoardEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3BoardEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3BoardEntity)
 
 	PROP_STRONG(public, M3BoardEntity, Cols, int, 0)
 	PROP_STRONG(public, M3BoardEntity, Rows, int, 0)

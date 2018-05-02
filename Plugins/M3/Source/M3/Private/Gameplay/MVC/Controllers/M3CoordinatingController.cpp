@@ -11,7 +11,7 @@ M3CoordinatingController::~M3CoordinatingController() {
 }
 
 void M3CoordinatingController::OnUpdate(float Deltatime) {
-	for (const auto& Controller : Controllers) {
+	for (const auto& Controller : OrderedControllers) {
 		if (Controller->CanBeExecuted()) {
 			Controller->Execute(Deltatime);
 		}
@@ -19,72 +19,64 @@ void M3CoordinatingController::OnUpdate(float Deltatime) {
 }
 
 void M3CoordinatingController::AddView(const M3View_INTERFACE_SharedPtr& View) {
-	const auto Id = View->InstanceGuid();
-	const auto& It = std::find_if(Views.begin(), Views.end(), [Id](const M3View_INTERFACE_SharedPtr& View) {
-		return View->InstanceGuid() == Id;
-	});
+	const auto& It = Views.find(View->InstanceGuid());
 	if (It == Views.end()) {
-		Views.push_back(View);
+		Views[View->InstanceGuid()] = View;
 	} else {
-		assert(false);
+		ensure(false);
 	}
 }
 
 void M3CoordinatingController::RemoveView(const M3View_INTERFACE_SharedPtr& View) {
-	const auto& It = std::find(Views.begin(), Views.end(), View);
+	RemoveView(View->InstanceGuid());
+}
+
+void M3CoordinatingController::RemoveView(uintptr_t Id) {
+	const auto& It = Views.find(Id);
 	if (It != Views.end()) {
 		Views.erase(It);
 	}
 }
 
-void M3CoordinatingController::RemoveView(int Id) {
-	const auto& It = std::find_if(Views.begin(), Views.end(), [Id](const M3View_INTERFACE_SharedPtr& View) {
-		return View->InstanceGuid() == Id;
-	});
-	if (It != Views.end()) {
-		Views.erase(It);
+M3View_INTERFACE_SharedPtr M3CoordinatingController::GetView(uintptr_t Id) {
+	M3View_INTERFACE_SharedPtr View = nullptr;
+	const auto& It = Views.find(Id);
+	if(It != Views.end()) {
+		View = It->second;
 	}
-}
-
-M3View_INTERFACE_SharedPtr M3CoordinatingController::GetView(int Id) {
-	const auto& It = std::find_if(Views.begin(), Views.end(), [Id](const M3View_INTERFACE_SharedPtr& View) {
-		return View->InstanceGuid() == Id;
-	});
-	return (*It);
+	return View;
 }
 
 void M3CoordinatingController::AddController(const M3MediatingController_INTERFACE_SharedPtr& Controller) {
 	const auto Id = Controller->InstanceGuid();
-	const auto& It = std::find_if(Controllers.begin(), Controllers.end(), [Id](const M3MediatingController_INTERFACE_SharedPtr& Controller) {
-		return Controller->InstanceGuid() == Id;
-	});
+	const auto& It = Controllers.find(Controller->InstanceGuid());
 	if (It == Controllers.end()) {
-		Controllers.push_back(Controller);
-	}
-	else {
-		assert(false);
+		Controllers[Controller->InstanceGuid()] = Controller;
+		OrderedControllers.push_back(Controller);
+	} else {
+		ensure(false);
 	}
 }
 
 void M3CoordinatingController::RemoveController(const M3MediatingController_INTERFACE_SharedPtr& Controller) {
-	const auto& It = std::find(Controllers.begin(), Controllers.end(), Controller);
+	RemoveController(Controller->InstanceGuid());
+}
+
+void M3CoordinatingController::RemoveController(uintptr_t Id) {
+	const auto& It = Controllers.find(Id);
 	if (It != Controllers.end()) {
 		Controllers.erase(It);
 	}
+	OrderedControllers.erase(std::remove_if(OrderedControllers.begin(), OrderedControllers.end(), [=](const M3MediatingController_INTERFACE_SharedPtr& Controller) {
+		return Controller->InstanceGuid() == Id;
+	}), OrderedControllers.end());
 }
 
-void M3CoordinatingController::RemoveController(int Id) {
-	const auto& It = std::find_if(Controllers.begin(), Controllers.end(), [Id](const M3MediatingController_INTERFACE_SharedPtr& Controller) {
-		return Controller->InstanceGuid() == Id;
-	});
+M3MediatingController_INTERFACE_SharedPtr M3CoordinatingController::GetController(uintptr_t Id) {
+	M3MediatingController_INTERFACE_SharedPtr Controller = nullptr;
+	const auto& It = Controllers.find(Id);
 	if (It != Controllers.end()) {
-		Controllers.erase(It);
+		Controller = It->second;
 	}
-}
-
-M3MediatingController_INTERFACE_SharedPtr M3CoordinatingController::GetController(int Id){
-	const auto& It = std::find_if(Controllers.begin(), Controllers.end(), [Id](const M3MediatingController_INTERFACE_SharedPtr& Controller) {
-		return Controller->InstanceGuid() == Id;
-	});
-	return (*It);
+	return Controller;
 }

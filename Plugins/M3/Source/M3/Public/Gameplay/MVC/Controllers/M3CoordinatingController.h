@@ -12,8 +12,9 @@ class M3_API M3CoordinatingController
 {
 protected:
 
-	std::vector<M3MediatingController_INTERFACE_SharedPtr> Controllers;
-	std::vector<M3View_INTERFACE_SharedPtr> Views;
+	std::unordered_map<uintptr_t, M3MediatingController_INTERFACE_SharedPtr> Controllers;
+	std::vector<M3MediatingController_INTERFACE_SharedPtr> OrderedControllers;
+	std::unordered_map<uintptr_t, M3View_INTERFACE_SharedPtr> Views;
 
 public:
 
@@ -24,13 +25,13 @@ public:
 
 	void AddView(const M3View_INTERFACE_SharedPtr& View);
 	void RemoveView(const M3View_INTERFACE_SharedPtr& View);
-	void RemoveView(int Id);
-	M3View_INTERFACE_SharedPtr GetView(int Id);
+	void RemoveView(uintptr_t Id);
+	M3View_INTERFACE_SharedPtr GetView(uintptr_t Id);
 
 	void AddController(const M3MediatingController_INTERFACE_SharedPtr& Controller);
 	void RemoveController(const M3MediatingController_INTERFACE_SharedPtr& Controller);
-	void RemoveController(int Id);
-	M3MediatingController_INTERFACE_SharedPtr GetController(int Id);
+	void RemoveController(uintptr_t Id);
+	M3MediatingController_INTERFACE_SharedPtr GetController(uintptr_t Id);
 
 	template<typename T> 
 	std::shared_ptr<T> GetControllerAs() {

@@ -7,7 +7,7 @@
 
 FORWARD_DECL_STRONG(M3KVListener_INTERFACE)
 
-class M3_API M3KVBinding
+class M3KVBinding
 {
 public:
 	virtual void Subscribe(const M3KVListener_INTERFACE_SharedPtr& Listener) = 0;

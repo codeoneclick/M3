@@ -8,7 +8,7 @@
 class M3_API M3ElementsSpawnController : public M3MediatingController {
 public:
 
-	CTTI_CLASS_GUID(M3ElementsSpawnController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3ElementsSpawnController)
 
 	M3ElementsSpawnController();
 	~M3ElementsSpawnController();

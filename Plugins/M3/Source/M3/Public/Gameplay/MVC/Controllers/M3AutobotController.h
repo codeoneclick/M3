@@ -9,7 +9,7 @@ class M3_API M3AutobotController : public M3MediatingController
 {
 public:
 
-	CTTI_CLASS_GUID(M3AutobotController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3AutobotController)
 
 	M3AutobotController();
 	~M3AutobotController();

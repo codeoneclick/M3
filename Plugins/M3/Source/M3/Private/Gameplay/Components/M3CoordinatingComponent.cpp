@@ -105,7 +105,16 @@ void UM3CoordinatingComponent::CreateViews(UM3AssetsBundle* _Bundle) {
 }
 
 void UM3CoordinatingComponent::OnModelChanged(AM3Scheme_INTERFACE* Scheme) {
-	M3SharedModel::GetInstance()->Deserialize(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3BoardSettingsModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3BoardModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3GestureModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3SwapModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3BoardActionsAccumulationModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3ChainModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3BoardStateModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3GoalsModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3SpawnModel>(Scheme);
+	M3SharedModel::GetInstance()->Deserialize<M3AutobotModel>(Scheme);
 }
 
 void UM3CoordinatingComponent::OnStart() {

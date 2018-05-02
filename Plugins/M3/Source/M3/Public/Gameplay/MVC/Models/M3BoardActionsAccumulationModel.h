@@ -25,7 +25,7 @@ public:
 class M3BoardActionsAccumulationEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3BoardActionsAccumulationEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3BoardActionsAccumulationEntity)
 
 	PROP_STRONG(public, M3BoardActionsAccumulationEntity, Actions, std::shared_ptr<std::list<M3AccumulationAction>>, std::make_shared<std::list<M3AccumulationAction>>())
 	PROP_STRONG(public, M3BoardActionsAccumulationEntity, Revision, int, 0)

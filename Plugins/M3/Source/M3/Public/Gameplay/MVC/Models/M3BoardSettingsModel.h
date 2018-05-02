@@ -10,7 +10,7 @@
 class M3BoardSettingsEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3BoardSettingsEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3BoardSettingsEntity)
 
 	PROP_STRONG(public, M3BoardSettingsEntity, Duration, int, 0)
 	PROP_STRONG(public, M3BoardSettingsEntity, IsTurnBased, bool, false)

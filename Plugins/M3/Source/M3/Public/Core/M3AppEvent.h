@@ -112,7 +112,7 @@ class M3AppEventModelProp : public M3AppEvent_INTERFACE {
 
 public:
 
-	M3AppEventModelProp(int _ModelId, const std::string& _PropId, const M3AppEvent_Callback_INTERFACE_SharedPtr& _Callback) :
+	M3AppEventModelProp(uintptr_t _ModelId, const std::string& _PropId, const M3AppEvent_Callback_INTERFACE_SharedPtr& _Callback) :
 		M3AppEvent_INTERFACE(GenerateGuid(_ModelId, _PropId), _Callback) {
 	}
 
@@ -122,9 +122,9 @@ public:
 		std::static_pointer_cast<M3AppEventModelProp_Callback>(Callback)->Call(_Model, _Prop);
 	}
 
-	static std::string GenerateGuid(int _ModelId, const std::string& _PropId) {
+	static std::string GenerateGuid(uintptr_t _ModelId, const std::string& _PropId) {
 		std::stringstream StringStream;
-		StringStream << static_cast<int>(_ModelId) << _PropId;
+		StringStream << _ModelId << _PropId;
 		return StringStream.str();
 	}
 };

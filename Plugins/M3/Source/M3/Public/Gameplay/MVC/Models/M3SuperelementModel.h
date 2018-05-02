@@ -10,7 +10,7 @@
 class M3SuperElementEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3SuperElementEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3SuperElementEntity)
 
 	PROP_STRONG(public, M3SuperElementEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
 };

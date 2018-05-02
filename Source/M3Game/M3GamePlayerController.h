@@ -22,7 +22,7 @@ private:
 
 protected:
 
-	M3AppEventModelProp_SharedPtr OnMatchingEvent;
+	M3AppEventModelProp_SharedPtr OnMatchingEvent = nullptr;
 	void OnMatching(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop);
 
 	virtual void BeginPlay() override;
@@ -40,6 +40,9 @@ public:
 
 	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UM3ElementExplosionViewAccessor> ElementExplosionViewAccessor_BP;
+
+	class AM3App* GetM3App() const;
+	class AM3Board* GetM3Board() const;
 };
 
 

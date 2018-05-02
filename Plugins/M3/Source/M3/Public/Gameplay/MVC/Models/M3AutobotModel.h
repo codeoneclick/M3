@@ -12,7 +12,7 @@ FORWARD_DECL_STRONG(M3ElementModel)
 class M3_API M3AutobotEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3AutobotEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3AutobotEntity)
 
 	PROP_STRONG(public, M3CellEntity, Enabled, bool, false)
 	PROP_STRONG(public, M3CellEntity, AnimationSpeed, float, .0001f)

@@ -27,7 +27,7 @@ public:
 class M3_API M3ChainEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3ChainEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3ChainEntity)
 
 	PROP_STRONG(public, M3ChainEntity, HorizontalChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())
 	PROP_STRONG(public, M3ChainEntity, VerticalChains, std::shared_ptr<std::vector<M3Chain_SharedPtr>>, std::make_shared<std::vector<M3Chain_SharedPtr>>())

@@ -27,7 +27,7 @@ FORWARD_DECL_STRONG(M3SuperElementSpawner)
 class M3SpawnEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3SpawnEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3SpawnEntity)
 
 	PROP_STRONG(public, M3SpawnEntity, SuperElementSpawners, std::shared_ptr<std::list<M3SuperElementSpawner_SharedPtr>>, std::make_shared<std::list<M3SuperElementSpawner_SharedPtr>>())
 };

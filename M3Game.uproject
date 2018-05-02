@@ -24,7 +24,7 @@
 		},
 		{
 			"Name": "ApexDestruction",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "AppleARKit",

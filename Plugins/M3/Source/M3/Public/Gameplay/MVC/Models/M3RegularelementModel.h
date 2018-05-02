@@ -11,7 +11,7 @@
 class M3RegularElementEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3RegularElementEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3RegularElementEntity)
 
 	PROP_STRONG(public, M3RegularElementEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
 };

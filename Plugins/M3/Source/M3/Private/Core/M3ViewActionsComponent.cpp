@@ -103,6 +103,9 @@ void UM3MoveToAction::Setup(AActor* _Actor, float _Duration, const FVector& Loca
 void UM3MoveToAction::OnUpdate(float DeltaTime) {
 	UM3Action::OnUpdate(DeltaTime);
 	Actor->SetActorLocation(FMath::Lerp(OldLocation, MoveToLocation, FMath::Clamp(CurrentDuration / Duration, 0.f, 1.f)));
+	if (bIsDone) {
+		Actor->SetActorLocation(MoveToLocation);
+	}
 }
 
 UM3ScaleToAction::UM3ScaleToAction() {
@@ -118,6 +121,9 @@ void UM3ScaleToAction::Setup(AActor* _Actor, float _Duration, const FVector& Sca
 void UM3ScaleToAction::OnUpdate(float DeltaTime) {
 	UM3Action::OnUpdate(DeltaTime);
 	Actor->SetActorScale3D(FMath::Lerp(OldScale, ScaleTo, FMath::Clamp(CurrentDuration / Duration, 0.f, 1.f)));
+	if (bIsDone) {
+		Actor->SetActorScale3D(ScaleTo);
+	}
 }
 
 UM3CallbackAction::UM3CallbackAction() {

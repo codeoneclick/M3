@@ -2,8 +2,6 @@
 
 #include "M3MediatingController.h"
 
-std::set<uintptr_t> M3MediatingController_INTERFACE::GuidsContainer;
-
 M3MediatingController_INTERFACE::M3MediatingController_INTERFACE() {
 
 }

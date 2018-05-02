@@ -11,7 +11,7 @@ FORWARD_DECL_STRONG(M3CellModel)
 class M3_API M3CellEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3CellEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3CellEntity)
 
 	PROP_STRONG(public, M3CellEntity, Col, int, 0)
 	PROP_STRONG(public, M3CellEntity, Row, int, 0)

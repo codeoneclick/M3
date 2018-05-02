@@ -12,7 +12,7 @@ FORWARD_DECL_STRONG(M3ElementModel)
 class M3_API M3PotentialSwapEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3PotentialSwapEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3PotentialSwapEntity)
 
 	PROP_STRONG(public, M3PotentialSwapEntity, SwapElementA, M3ElementModel_SharedPtr, nullptr)
 	PROP_STRONG(public, M3PotentialSwapEntity, SwapElementB, M3ElementModel_SharedPtr, nullptr)
@@ -45,7 +45,7 @@ FORWARD_DECL_STRONG(M3PotentialSwapModel)
 class M3_API M3SwapEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3SwapEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3SwapEntity)
 
 	PROP_STRONG(public, M3SwapEntity, SwapElementA, M3ElementModel_SharedPtr, nullptr)
 	PROP_STRONG(public, M3SwapEntity, SwapElementB, M3ElementModel_SharedPtr, nullptr)
@@ -62,7 +62,7 @@ private:
 
 public:
 
-	CTTI_CLASS_GUID(M3SwapModel, M3Model_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3SwapModel)
 
 	M3SwapModel();
 	~M3SwapModel();

@@ -32,13 +32,9 @@ public:
 };
 
 class M3_API M3ModelComponent_INTERFACE {
-protected:
-
-	static std::set<uintptr_t> GuidsContainer;
-
 public:
 
-	CTTI_CLASS_GUID(M3ModelComponent_INTERFACE, M3ModelComponent_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3ModelComponent_INTERFACE)
 
 	M3ModelComponent_INTERFACE() = default;
 	virtual ~M3ModelComponent_INTERFACE() = default;
@@ -47,21 +43,17 @@ public:
 class M3_API M3Model_INTERFACE : public M3KVListener_INTERFACE {
 protected:
 
-	static std::set<uintptr_t> GuidsContainer;
-
-	static std::array<std::list<M3Model_INTERFACE_SharedPtr>, std::numeric_limits<uint8_t>::max()> Pool;
-
 	std::weak_ptr<M3Model_INTERFACE> Parent;
-	std::array<std::shared_ptr<M3Model_INTERFACE>, std::numeric_limits<uint8_t>::max()> Submodels;
+	std::unordered_map<uintptr_t, std::shared_ptr<M3Model_INTERFACE>> Submodels;
 	
-	std::array<std::shared_ptr<M3ModelComponent_INTERFACE>, std::numeric_limits<uint8_t>::max()> Components;
+	std::unordered_map<uintptr_t, std::shared_ptr<M3ModelComponent_INTERFACE>> Components;
 
 public:
 
 	M3Model_INTERFACE() = default;
 	virtual ~M3Model_INTERFACE() = default;
 
-	CTTI_CLASS_GUID(M3Model_INTERFACE, M3Model_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3Model_INTERFACE)
 
 	virtual void Init() = 0;
 	virtual void Serialize() = 0;
@@ -69,25 +61,32 @@ public:
 	virtual void Reset() = 0;
 
 	void AddComponent(const std::shared_ptr<M3ModelComponent_INTERFACE>& Component) {
+		ensure(Components.find(Component->InstanceGuid()) == Components.end() && "Can't add same component");
 		Components[Component->InstanceGuid()] = Component;
 	};
 
 	void RemoveComponent(const std::shared_ptr<M3ModelComponent_INTERFACE>& Component) {
-		Components[Component->InstanceGuid()] = nullptr;
+		const auto& It = Components.find(Component->InstanceGuid());
+		if (It != Components.end()) {
+			Components.erase(It);
+		} else {
+			ensure(false && "Can't remove nonexistent component");
+		}
 	};
 
 	void RemoveAllComponents() {
-		for (const auto Component : Components) {
-			if (Component) {
-				Components[Component->InstanceGuid()] = nullptr;
-			}
-		}
+		Components.clear();
 	};
 
 	template<typename TComponent>
 	std::shared_ptr<TComponent> GetComponent() const {
 		static_assert(std::is_base_of<M3ModelComponent_INTERFACE, TComponent>::value, "TComponent must derive from M3ModelComponent_INTERFACE");
-		return std::static_pointer_cast<TComponent>(Components[TComponent::ClassGuid()]);
+		std::shared_ptr<TComponent> Component = nullptr;
+		const auto& It = Components.find(TComponent::ClassGuid());
+		if (It != Components.end()) {
+			Component = std::static_pointer_cast<TComponent>(It->second);
+		}
+		return Component;
 	};
 
 	template<typename TModel>
@@ -109,14 +108,13 @@ public:
 	template<typename TSubmodel>
 	void AddSubmodel(const std::shared_ptr<TSubmodel>& Submodel) {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TSubmodel>::value, "TSubmodel must derive from M3Model_INTERFACE");
-		if (!Submodels[Submodel->InstanceGuid()]) {
+		const auto& It = Submodels.find(Submodel->InstanceGuid());
+		ensure(It == Submodels.end() && "Can't add same model");
+
+		if (It == Submodels.end()) {
 			Submodels[Submodel->InstanceGuid()] = Submodel;
 			const auto Instance = M3Model_INTERFACE::shared_from_this();
 			Submodel->SetParent(std::static_pointer_cast<M3Model_INTERFACE>(Instance));
-		}
-		else {
-			UE_LOG(LogTemp, Error, TEXT("Can't add same model to Shared Model"));
-			assert(false);
 		}
 	};
 
@@ -124,24 +122,34 @@ public:
 	void RemoveSubmodel(const std::shared_ptr<TSubmodel>& Submodel) {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TSubmodel>::value, "TSubmodel must derive from M3Model_INTERFACE");
 		Submodel->ResetParent();
-		Submodels[Submodel->InstanceGuid()] = nullptr;
+
+		const auto& It = Submodels.find(Submodel->InstanceGuid());
+		if (It != Submodels.end()) {
+			Submodels.erase(It);
+		} else {
+			ensure(false && "Can't remove nonexistent submodel");
+		}
 	};
 
 	void RemoveAllSubmodels() {
-		std::for_each(Submodels.begin(), Submodels.end(), [=](const M3Model_INTERFACE_SharedPtr& Submodel) {
-			if (Submodel) {
-				RemoveSubmodel(Submodel);
-			}
+		std::for_each(Submodels.begin(), Submodels.end(), [=](const std::pair<uintptr_t, M3Model_INTERFACE_SharedPtr>& It) {
+			It.second->ResetParent();
 		});
+		Submodels.clear();
 	};
 
 	template<typename TSubmodel>
 	std::shared_ptr<TSubmodel> GetSubmodel() const {
 		static_assert(std::is_base_of<M3Model_INTERFACE, TSubmodel>::value, "TSubmodel must derive from M3Model_INTERFACE");
-		return std::static_pointer_cast<TSubmodel>(Submodels[TSubmodel::ClassGuid()]);
+		std::shared_ptr<TSubmodel> Submodel = nullptr;
+		const auto& It = Submodels.find(TSubmodel::ClassGuid());
+		if (It != Submodels.end()) {
+			Submodel = std::static_pointer_cast<TSubmodel>(It->second);
+		}
+		return Submodel;
 	};
 
-	std::array<std::shared_ptr<M3Model_INTERFACE>, std::numeric_limits<uint8_t>::max()>& GetSubmodels() {
+	std::unordered_map<uintptr_t, std::shared_ptr<M3Model_INTERFACE>>& GetSubmodels() {
 		return Submodels;
 	};
 
@@ -156,18 +164,18 @@ static_assert(std::is_base_of<M3Entity, T>::value, "T must derive from M3Entity"
 
 public:
 
-	CTTI_CLASS_GUID(M3Model<T>, M3Model<T>::GuidsContainer)
+	CTTI_CLASS_GUID(M3Model<T>)
 
 	PROP_STRONG(public, M3Model<T>, Entity, std::shared_ptr<T>, nullptr)
 
 	M3Model() {
 		Entity->Set(std::make_shared<T>());
 		Parent.reset();
-		Submodels.fill(nullptr);
 	};
+
 	virtual ~M3Model() {
 		Parent.reset();
-		Submodels.fill(nullptr);
+		Submodels.clear();
 	};
 
 	template<typename RESULT>
@@ -187,11 +195,11 @@ public:
 
 	static void Destruct(const std::shared_ptr<M3Model<T>>& Model) {
 		const auto Submodels = Model->GetSubmodels();
-		std::for_each(Submodels.begin(), Submodels.end(), [=](const M3Model_INTERFACE_SharedPtr& Submodel) {
-			if (Submodel) {
-				const auto SubmodelTemp = std::static_pointer_cast<M3Model>(Submodel);
-				Model->RemoveSubmodel(std::static_pointer_cast<M3Model>(Submodel));
-				Destruct(SubmodelTemp);
+		std::for_each(Submodels.begin(), Submodels.end(), [=](const std::pair<uintptr_t, M3Model_INTERFACE_SharedPtr>& It) {
+			if (It.second) {
+				const auto Submodel = std::static_pointer_cast<M3Model>(It.second);
+				Model->RemoveSubmodel(Submodel);
+				Destruct(Submodel);
 			}
 		});
 
@@ -244,7 +252,7 @@ public:
 		Prop->Subscribe(Instance);
 	};
 
-	void OnChanged(const M3KVProperty_INTERFACE_SharedPtr& Prop) {
+	void OnChanged(const M3KVProperty_INTERFACE_SharedPtr& Prop) override {
 		const auto& ModelInstance = std::static_pointer_cast<M3Model_INTERFACE>(shared_from_this());
 		M3GlobalDispatcher::GetInstance()->Publish<M3AppEventModelProp>(M3AppEventModelProp::GenerateGuid(InstanceGuid(), Prop->GetId()), ModelInstance, Prop);
 	};

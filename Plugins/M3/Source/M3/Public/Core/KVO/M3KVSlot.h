@@ -7,7 +7,7 @@
 #include "M3KVConnection.h"
 #include "M3Utilities.h"
 
-class M3_API M3KVSlot_INTERFACE : public std::enable_shared_from_this<M3KVSlot_INTERFACE>
+class M3KVSlot_INTERFACE : public std::enable_shared_from_this<M3KVSlot_INTERFACE>
 {
 public:
 
@@ -16,7 +16,7 @@ public:
 };
 
 template <typename T>
-class M3_API M3KVSlot : public M3KVSlot_INTERFACE
+class M3KVSlot : public M3KVSlot_INTERFACE
 {
 private:
 
@@ -40,9 +40,9 @@ public:
 	}
 
 	void Detach(const std::shared_ptr<M3KVConnection<T>>& Connection) {
-		std::remove_if(Connections.begin(), Connections.end(), [Connection](const std::shared_ptr<M3KVConnection<T>>& aConnection) {
+		Connections.erase(std::remove_if(Connections.begin(), Connections.end(), [Connection](const std::shared_ptr<M3KVConnection<T>>& aConnection) {
 			return aConnection == Connection;
-		});
+		}), Connections.end());
 		Property->Unsubscribe(Connection);
 	}
 

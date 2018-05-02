@@ -108,7 +108,7 @@ class M3_API M3ElementView : public M3View {
 
 public:
 
-	CTTI_CLASS_GUID(M3ElementView, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3ElementView)
 
 	M3ElementView(AActor* _Superview);
 	~M3ElementView();

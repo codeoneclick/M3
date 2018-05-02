@@ -25,7 +25,7 @@ public:
 class M3GestureEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3GestureEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3GestureEntity)
 
 	PROP_STRONG(public, M3GestureEntity, Gestures, std::shared_ptr<std::list<M3Gesture>>, std::make_shared<std::list<M3Gesture>>())
 	PROP_STRONG(public, M3GestureEntity, IsPanned, bool, false)

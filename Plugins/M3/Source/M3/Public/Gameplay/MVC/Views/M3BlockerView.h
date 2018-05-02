@@ -13,7 +13,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3BlockerView, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3BlockerView)
 
 	M3BlockerView(AActor* _Superview);
 	~M3BlockerView();

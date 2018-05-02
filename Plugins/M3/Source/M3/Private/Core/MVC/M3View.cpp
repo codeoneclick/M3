@@ -7,8 +7,6 @@
 #include "M3ViewDelegate.h"
 #include "Engine/World.h"
 
-std::set<uintptr_t> M3View_INTERFACE::GuidsContainer;
-
 void M3View_INTERFACE::AddSubview(const M3View_INTERFACE_SharedPtr& Subview) {
 	Subviews.push_back(Subview);
 	std::static_pointer_cast<M3View>(Subview)->Parent = shared_from_this();

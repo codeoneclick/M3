@@ -32,20 +32,19 @@
 #include <ctime>
 #include <iomanip>
 
-#define CTTI_CLASS_GUID(__class__, __guids_container__, ...) \
-static uint8_t ClassGuid() \
+#define CTTI_CLASS_GUID(__class__, ...) \
+static uintptr_t ClassGuid() \
 { \
-static uint8_t Guid = 0; \
+static uintptr_t Guid = 0; \
 static std::once_flag CachedClassesGuids; \
 std::call_once(CachedClassesGuids, [] { \
-__guids_container__.insert(reinterpret_cast<uintptr_t>(&ClassGuid)); \
-Guid = __guids_container__.size(); \
+Guid = reinterpret_cast<uintptr_t>(&ClassGuid); \
 });\
-return static_cast<uint8_t>(Guid);\
-}\
-virtual uint8_t InstanceGuid() __VA_ARGS__\
+return Guid; \
+} \
+virtual uintptr_t InstanceGuid() __VA_ARGS__\
 {\
-return static_cast<uint8_t>(__class__::ClassGuid());\
+return __class__::ClassGuid();\
 }\
 
 #define PROP_STRONG(__directive__, __class__, __prop__, __type__, ...) \

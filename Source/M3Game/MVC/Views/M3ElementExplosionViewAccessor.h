@@ -16,4 +16,22 @@ public:
 
 	UM3ElementExplosionViewAccessor();
 	~UM3ElementExplosionViewAccessor();
+
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
+	int ExplosionCol = -1;
+
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
+	int ExplosionRow = -1;
+
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
+	bool IsExplosion = false;
+
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
+	FVector GetExplosionLocation();
+
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
+	FVector GetExplosionIteration1Location();
+
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
+	FVector GetExplosionIteration2Location();
 };

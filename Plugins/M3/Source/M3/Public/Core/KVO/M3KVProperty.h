@@ -6,8 +6,45 @@
 #include "M3KVDispatcher.h"
 #include "M3KVCoding.h"
 #include "M3Utilities.h"
+#include "M3KVProperty.generated.h"
 
-class M3_API M3KVProperty_INTERFACE : public M3KVDispatcher, public std::enable_shared_from_this<M3KVProperty_INTERFACE> {
+FORWARD_DECL_STRONG(M3KVProperty_INTERFACE)
+
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Core))
+class M3_API UM3KVProperty_INTERFACE : public UObject {
+private:
+
+	GENERATED_BODY()
+
+public:
+
+	virtual ~UM3KVProperty_INTERFACE() = default;
+};
+
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Core))
+class M3_API UM3KVListener_INTERFACE : public UObject {
+private:
+
+	GENERATED_BODY()
+
+public:
+
+	virtual ~UM3KVListener_INTERFACE() = default;
+
+	virtual void OnChanged(const UM3KVProperty_INTERFACE* Prop) { };
+};
+
+class M3KVListener_INTERFACE : public std::enable_shared_from_this<M3KVListener_INTERFACE>
+{
+protected:
+
+public:
+
+	virtual ~M3KVListener_INTERFACE() = default;
+	virtual void OnChanged(const M3KVProperty_INTERFACE_SharedPtr& Prop) = 0;
+};
+
+class M3KVProperty_INTERFACE : public M3KVDispatcher, public std::enable_shared_from_this<M3KVProperty_INTERFACE> {
 protected:
 
 	std::string Id;
@@ -31,7 +68,7 @@ public:
 FORWARD_DECL_STRONG(M3KVProperty_INTERFACE)
 
 template<typename T>
-class M3_API M3KVProperty : public M3KVCoding<T>, public M3KVProperty_INTERFACE
+class M3KVProperty : public M3KVCoding<T>, public M3KVProperty_INTERFACE
 {
 private:
 

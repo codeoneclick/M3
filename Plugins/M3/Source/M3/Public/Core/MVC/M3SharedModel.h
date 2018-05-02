@@ -9,7 +9,7 @@
 class M3SharedEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3SharedEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3SharedEntity)
 
 	PROP_STRONG(public, M3SharedEntity, Version, int, 0)
 };
@@ -25,10 +25,10 @@ private:
 
 protected:
 
-	std::array<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>, std::numeric_limits<uint8_t>::max()> Pools;
+	std::unordered_map<uintptr_t, std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>> Pools;
 
-	std::array<std::shared_ptr<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>, std::numeric_limits<uint8_t>::max()> Containers;
-	std::array<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>, std::numeric_limits<uint8_t>::max()> TempContainers;
+	std::unordered_map<uintptr_t, std::shared_ptr<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>> Containers;
+	std::unordered_map<uintptr_t, std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>> TempContainers;
 
 public:
 
@@ -37,7 +37,7 @@ public:
 
 	static M3SharedModel_SharedPtr GetInstance();
 
-	CTTI_CLASS_GUID(M3SharedModel, M3Model_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3SharedModel)
 
 	void Init();
 
@@ -92,4 +92,12 @@ public:
 	std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> TempContainer(uintptr_t Guid);
 
 	std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> Pool(uintptr_t Guid);
+
+	template<typename TModel>
+	void Deserialize(AM3Scheme_INTERFACE* Scheme) {
+		const auto& It = Submodels.find(TModel::ClassGuid());
+		if (It != Submodels.end()) {
+			It->second->Deserialize(Scheme);
+		}
+	};
 };

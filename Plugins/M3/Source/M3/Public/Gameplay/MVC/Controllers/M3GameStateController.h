@@ -12,7 +12,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3GameStateController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3GameStateController)
 
 	M3GameStateController();
 	~M3GameStateController();

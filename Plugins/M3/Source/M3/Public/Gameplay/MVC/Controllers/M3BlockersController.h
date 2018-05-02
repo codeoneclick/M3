@@ -18,7 +18,7 @@ private:
 
 public:
 
-	CTTI_CLASS_GUID(M3BlockersController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3BlockersController)
 
 	M3BlockersController();
 	~M3BlockersController();

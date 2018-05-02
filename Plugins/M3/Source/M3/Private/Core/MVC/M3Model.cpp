@@ -14,6 +14,3 @@ std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> M3ModelContainer_INTERFA
 std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>> M3ModelPool_INTERFACE::Pool(uintptr_t Guid) {
 	return M3SharedModel::GetInstance()->Pool(Guid);
 }
-
-std::set<uintptr_t> M3ModelComponent_INTERFACE::GuidsContainer;
-std::set<uintptr_t> M3Model_INTERFACE::GuidsContainer;

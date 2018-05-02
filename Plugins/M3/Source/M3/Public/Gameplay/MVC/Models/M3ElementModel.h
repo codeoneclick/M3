@@ -47,7 +47,7 @@ private:
 
 public:
 
-	CTTI_CLASS_GUID(M3ElementModelColorComponent, M3ModelComponent_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3ElementModelColorComponent)
 
 	M3ElementModelColorComponent(const std::shared_ptr<M3ElementModelColorComponent_INTERFACE>& _Owner);
 	EM3ElementColor GetColor();
@@ -60,7 +60,7 @@ private:
 
 public:
 
-	CTTI_CLASS_GUID(M3ElementModelBlockerComponent, M3ModelComponent_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3ElementModelBlockerComponent)
 
 	M3ElementModelBlockerComponent(const std::shared_ptr<M3ElementModelBlockerComponent_INTERFACE>& _Owner);
 	bool CanDrop() const;
@@ -72,7 +72,7 @@ public:
 class M3_API M3ElementEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3ElementEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3ElementEntity)
 
 	PROP_STRONG(public, M3ElementEntity, State, EM3ElementState, EM3ElementState::IDLE)
 	PROP_STRONG(public, M3ElementEntity, Timestamp, int64, 0)

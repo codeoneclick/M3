@@ -11,7 +11,7 @@
 class M3BlockerEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3BlockerEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3BlockerEntity)
 
 	PROP_STRONG(public, M3BlockerEntity, Id, EM3ElementId, EM3ElementId::UNKNOWN)
 	PROP_STRONG(public, M3BlockerEntity, Density, int, 0)

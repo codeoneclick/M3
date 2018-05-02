@@ -287,39 +287,39 @@ TSharedRef<SWidget> FM3EdModeToolkit::MAKE_BoardElements_SLOT(FM3EdModeToolkit* 
 					]
 					+ SUniformGridPanel::Slot(1, 0)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_CLOSED, GetM3App()->BoardScheme->FunctionalCellClosedScheme, FName(""), NSLOCTEXT("M3CellClosed", "M3CellClosed", "CLOSED"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_CLOSED, GetM3App()->BoardScheme->FunctionalCellClosedScheme, FName("M3EdModeIcon.Closed"), NSLOCTEXT("M3CellClosed", "M3CellClosed", "CLOSED"))
 					]
 					+ SUniformGridPanel::Slot(2, 0)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_HOLE, GetM3App()->BoardScheme->FunctionalCellHoleScheme, FName(""), NSLOCTEXT("M3CellHole", "M3CellHole", "HOLE"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_HOLE, GetM3App()->BoardScheme->FunctionalCellHoleScheme, FName("M3EdModeIcon.Hole"), NSLOCTEXT("M3CellHole", "M3CellHole", "HOLE"))
 					]
 					+ SUniformGridPanel::Slot(3, 0)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_RANDOM, GetM3App()->BoardScheme->FunctionalCellRandomScheme, FName(""), NSLOCTEXT("M3CellRandom", "M3CellRandom", "RANDOM"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::CELL_RANDOM, GetM3App()->BoardScheme->FunctionalCellRandomScheme, FName("M3EdModeIcon.Random"), NSLOCTEXT("M3CellRandom", "M3CellRandom", "RANDOM"))
 					]
 					+ SUniformGridPanel::Slot(0, 1)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_RED, GetM3App()->BoardScheme->ElementRedScheme, FName(""), NSLOCTEXT("M3RedElement", "M3RedElement", "RED"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_RED, GetM3App()->BoardScheme->ElementRedScheme, FName("M3EdModeIcon.ElementRed"), NSLOCTEXT("M3RedElement", "M3RedElement", "RED"))
 					]
 					+ SUniformGridPanel::Slot(1, 1)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_GREEN, GetM3App()->BoardScheme->ElementGreenScheme, FName(""), NSLOCTEXT("M3GreenElement", "M3GreenElement", "GREEN"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_GREEN, GetM3App()->BoardScheme->ElementGreenScheme, FName("M3EdModeIcon.ElementGreen"), NSLOCTEXT("M3GreenElement", "M3GreenElement", "GREEN"))
 					]
 					+ SUniformGridPanel::Slot(2, 1)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_BLUE, GetM3App()->BoardScheme->ElementBlueScheme, FName(""), NSLOCTEXT("M3BlueElement", "M3BlueElement", "BLUE"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_BLUE, GetM3App()->BoardScheme->ElementBlueScheme, FName("M3EdModeIcon.ElementBlue"), NSLOCTEXT("M3BlueElement", "M3BlueElement", "BLUE"))
 					]
 					+ SUniformGridPanel::Slot(3, 1)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_YELLOW, GetM3App()->BoardScheme->ElementYellowScheme, FName(""), NSLOCTEXT("M3YellowElement", "M3YellowElement", "YELLOW"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_YELLOW, GetM3App()->BoardScheme->ElementYellowScheme, FName("M3EdModeIcon.ElementYellow"), NSLOCTEXT("M3YellowElement", "M3YellowElement", "YELLOW"))
 					]
 					+ SUniformGridPanel::Slot(4, 1)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_ORANGE, GetM3App()->BoardScheme->ElementOrangeScheme, FName(""), NSLOCTEXT("M3OrangeElement", "M3OrangeElement", "ORANGE"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_ORANGE, GetM3App()->BoardScheme->ElementOrangeScheme, FName("M3EdModeIcon.ElementOrange"), NSLOCTEXT("M3OrangeElement", "M3OrangeElement", "ORANGE"))
 					]
 					+ SUniformGridPanel::Slot(5, 1)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_PURPLE, GetM3App()->BoardScheme->ElementPurpleScheme, FName(""), NSLOCTEXT("M3PurpleElement", "M3PurpleElement", "PURPLE"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::ELEMENT_PURPLE, GetM3App()->BoardScheme->ElementPurpleScheme, FName("M3EdModeIcon.ElementPurple"), NSLOCTEXT("M3PurpleElement", "M3PurpleElement", "PURPLE"))
 					]
 					+ SUniformGridPanel::Slot(0, 2)
 					[
@@ -339,35 +339,35 @@ TSharedRef<SWidget> FM3EdModeToolkit::MAKE_BoardElements_SLOT(FM3EdModeToolkit* 
 					]
 					+ SUniformGridPanel::Slot(0, 3)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_NONE, GetM3App()->BoardScheme->BlockerNoneScheme, FName(""), NSLOCTEXT("M3BlockerNone", "M3BlockerNone", "REMOVE BLOCKER"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_NONE, GetM3App()->BoardScheme->BlockerNoneScheme, FName("M3EdModeIcon.Closed"), NSLOCTEXT("M3BlockerNone", "M3BlockerNone", "REMOVE BLOCKER"))
 					]
 					+ SUniformGridPanel::Slot(0, 4)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX1X, GetM3App()->BoardScheme->BlockerBox1XScheme, FName(""), NSLOCTEXT("M3BlockerBox1X", "M3BlockerBox1X", "BLOCKER BOX1X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX1X, GetM3App()->BoardScheme->BlockerBox1XScheme, FName("M3EdModeIcon.BlockerBox1X"), NSLOCTEXT("M3BlockerBox1X", "M3BlockerBox1X", "BLOCKER BOX1X"))
 					]
 					+ SUniformGridPanel::Slot(1, 4)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX2X, GetM3App()->BoardScheme->BlockerBox2XScheme, FName(""), NSLOCTEXT("M3BlockerBox2X", "M3BlockerBox2X", "BLOCKER BOX2X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX2X, GetM3App()->BoardScheme->BlockerBox2XScheme, FName("M3EdModeIcon.BlockerBox2X"), NSLOCTEXT("M3BlockerBox2X", "M3BlockerBox2X", "BLOCKER BOX2X"))
 					]
 					+ SUniformGridPanel::Slot(2, 4)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX3X, GetM3App()->BoardScheme->BlockerBox3XScheme, FName(""), NSLOCTEXT("M3BlockerBox3X", "M3BlockerBox3X", "BLOCKER BOX3X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_BOX3X, GetM3App()->BoardScheme->BlockerBox3XScheme, FName("M3EdModeIcon.BlockerBox3X"), NSLOCTEXT("M3BlockerBox3X", "M3BlockerBox3X", "BLOCKER BOX3X"))
 					]
 					+ SUniformGridPanel::Slot(0, 5)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_ICE1X, GetM3App()->BoardScheme->BlockerIce1XScheme, FName(""), NSLOCTEXT("M3BlockerIce1X", "M3BlockerIce1X", "BLOCKER ICE1X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_ICE1X, GetM3App()->BoardScheme->BlockerIce1XScheme, FName("M3EdModeIcon.BlockerIce1X"), NSLOCTEXT("M3BlockerIce1X", "M3BlockerIce1X", "BLOCKER ICE1X"))
 					]
 					+ SUniformGridPanel::Slot(1, 5)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_ICE2X, GetM3App()->BoardScheme->BlockerIce2XScheme, FName(""), NSLOCTEXT("M3BlockerIce2X", "M3BlockerIce2X", "BLOCKER ICE2X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_ICE2X, GetM3App()->BoardScheme->BlockerIce2XScheme, FName("M3EdModeIcon.BlockerIce2X"), NSLOCTEXT("M3BlockerIce2X", "M3BlockerIce2X", "BLOCKER ICE2X"))
 					]
 					+ SUniformGridPanel::Slot(0, 6)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_WIRE1X, GetM3App()->BoardScheme->BlockerWire1XScheme, FName(""), NSLOCTEXT("M3BlockerWire1X", "M3BlockerWire1X", "BLOCKER WIRE1X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_WIRE1X, GetM3App()->BoardScheme->BlockerWire1XScheme, FName("M3EdModeIcon.BlockerWire1X"), NSLOCTEXT("M3BlockerWire1X", "M3BlockerWire1X", "BLOCKER WIRE1X"))
 					]
 					+ SUniformGridPanel::Slot(1, 6)
 					[
-						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_WIRE2X, GetM3App()->BoardScheme->BlockerWire2XScheme, FName(""), NSLOCTEXT("M3BlockerWire2X", "M3BlockerWire2X", "BLOCKER WIRE2X"))
+						MAKE_Element_CheckBox_SLOT(SELF, EM3ElementId::BLOCKER_WIRE2X, GetM3App()->BoardScheme->BlockerWire2XScheme, FName("M3EdModeIcon.BlockerWire2X"), NSLOCTEXT("M3BlockerWire2X", "M3BlockerWire2X", "BLOCKER WIRE2X"))
 					]
 				]
 		];

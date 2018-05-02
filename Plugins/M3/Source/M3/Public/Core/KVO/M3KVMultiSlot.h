@@ -7,7 +7,7 @@
 #include "M3KVSlot.h"
 
 template <typename T>
-class M3_API M3KVMultiSlot : public M3KVSlot_INTERFACE
+class M3KVMultiSlot : public M3KVSlot_INTERFACE
 {
 private:
 
@@ -29,12 +29,12 @@ public:
 	};
 
 	void Detach(const std::shared_ptr<M3KVConnection<T>>& Connection) {
-		std::remove_if(Connections.begin(), Connections.end(), [Connection](const std::pair<std::shared_ptr<M3KVProperty<T>>, std::shared_ptr<M3KVConnection<T>>>& It) {
+		Connections.erase(std::remove_if(Connections.begin(), Connections.end(), [Connection](const std::pair<std::shared_ptr<M3KVProperty<T>>, std::shared_ptr<M3KVConnection<T>>>& It) {
 			if (It.second == Connection) {
 				It.first->Unsubscribe(Connection);
 			}
 			return It.second == Connection;
-		});
+		}), Connections.end());
 	};
 
 	void DetachAll() override {

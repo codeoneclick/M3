@@ -11,7 +11,7 @@
 class M3_API M3GoalEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3GoalEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3GoalEntity)
 
 	PROP_STRONG(public, M3GoalEntity, Id, EM3GoalId, EM3GoalId::UNKNOWN)
 	PROP_STRONG(public, M3GoalEntity, Index, int, 0)
@@ -45,7 +45,7 @@ FORWARD_DECL_STRONG(M3GoalModel)
 class M3_API M3GoalsEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3GoalsEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3GoalsEntity)
 
 	PROP_STRONG(public, M3GoalsEntity, Goals, std::shared_ptr<std::vector<M3GoalModel_SharedPtr>>, std::make_shared<std::vector<M3GoalModel_SharedPtr>>())
 

@@ -5,8 +5,7 @@
 M3SharedModel_SharedPtr M3SharedModel::Instance = nullptr;
 
 M3SharedModel::M3SharedModel() {
-	Containers.fill(nullptr);
-	TempContainers.fill(nullptr);
+
 }
 
 M3SharedModel::~M3SharedModel() {
@@ -28,34 +27,30 @@ void M3SharedModel::Serialize() {
 }
 
 void M3SharedModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
-	for (const auto& Submodel : Submodels) {
-		if (Submodel) {
-			Submodel->Deserialize(Scheme);
-		}
-	}
+
 }
 
 void M3SharedModel::UnregisterAllContainers() {
-	for (const auto It : Containers) {
-		if (It) {
-			It->Get()->clear();
+	for (const auto& It : Containers) {
+		if (It.second) {
+			It.second->Get()->clear();
 		}
 	}
-	Containers.fill(nullptr);
+	Containers.clear();
 
 	for (const auto It : TempContainers) {
-		if (It) {
-			It->clear();
+		if (It.second) {
+			It.second->clear();
 		}
 	}
-	TempContainers.fill(nullptr);
+	TempContainers.clear();
 
 	for (const auto It : Pools) {
-		if (It) {
-			It->clear();
+		if (It.second) {
+			It.second->clear();
 		}
 	}
-	Pools.fill(nullptr);
+	Pools.clear();
 }
 
 std::shared_ptr<M3KVProperty<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> M3SharedModel::Container(uintptr_t Guid) {

@@ -11,7 +11,7 @@ public:
 
 	M3CellView(AActor* Superview);
 
-	CTTI_CLASS_GUID(M3CellView, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3CellView)
 
 	void Load(UM3AssetsBundle* Bundle);
 	void BindViewModel(const M3Model_INTERFACE_SharedPtr& ViewModel);

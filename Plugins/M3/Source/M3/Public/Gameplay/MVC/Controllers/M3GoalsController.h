@@ -17,7 +17,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3GoalsController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3GoalsController)
 
 	M3GoalsController();
 	~M3GoalsController();

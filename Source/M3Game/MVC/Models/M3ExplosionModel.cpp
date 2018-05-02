@@ -2,8 +2,14 @@
 
 #include "M3ExplosionModel.h"
 
-M3ExplosionModel::M3ExplosionModel() {
+/*void M3ExplosionModel::Init() {
+
 }
 
-M3ExplosionModel::~M3ExplosionModel() {
+void M3ExplosionModel::Serialize() {
+
 }
+
+void M3ExplosionModel::Deserialize(AM3Scheme_INTERFACE* Scheme) {
+
+}*/

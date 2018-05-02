@@ -6,18 +6,8 @@
 #include "M3Utilities.h"
 #include "M3KVProperty.h"
 
-class M3_API M3KVListener_INTERFACE : public std::enable_shared_from_this<M3KVListener_INTERFACE>
-{
-protected:
-
-public:
-
-	virtual ~M3KVListener_INTERFACE() = default;
-	virtual void OnChanged(const M3KVProperty_INTERFACE_SharedPtr& Prop) = 0;
-};
-
 template<typename T>
-class M3_API M3KVListener : public M3KVListener_INTERFACE
+class M3KVListener : public M3KVListener_INTERFACE
 {
 private:
 

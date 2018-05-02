@@ -19,7 +19,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3GestureRecognitionController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3GestureRecognitionController)
 
 	M3GestureRecognitionController();
 	~M3GestureRecognitionController();

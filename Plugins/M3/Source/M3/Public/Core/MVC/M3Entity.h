@@ -6,17 +6,10 @@
 #include "M3Utilities.h"
 #include "M3KVProperty.h"
 
-class M3_API M3Entity : public std::enable_shared_from_this<M3Entity>
-{
-private:
-
-protected:
-
-	static std::set<uintptr_t> GuidsContainer;
-
+class M3_API M3Entity : public std::enable_shared_from_this<M3Entity> {
 public:
 
-	CTTI_CLASS_GUID(M3Entity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3Entity)
 
 	PROP_STRONG(public, M3Entity, IsAssignedToView, bool, false)
 

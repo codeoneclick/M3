@@ -13,7 +13,7 @@ FORWARD_DECL_STRONG(M3ElementModel)
 class M3BoardStateEntity : public M3Entity {
 public:
 
-	CTTI_CLASS_GUID(M3BoardStateEntity, M3Entity::GuidsContainer)
+	CTTI_CLASS_GUID(M3BoardStateEntity)
 
 	PROP_STRONG(public, M3ElementEntity, Timestamp, int64, 0)
 	PROP_STRONG(public, M3BoardStateEntity, IsHolesExist, bool, true)

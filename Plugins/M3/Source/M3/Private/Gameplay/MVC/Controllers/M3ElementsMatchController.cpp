@@ -51,6 +51,7 @@ void M3ElementsMatchController::Execute(float Deltatime) {
 			
 			const auto CellModel = ElementWithMaxTimestamp->GetParent<M3CellModel>();
 			BoardModel->CreateHole(CellModel->GetCol(), CellModel->GetRow());
+			ensure(CellModel->CanContainElement());
 			SpawnModel->PushSuperElementSpawner(CellModel, SuperElementChainLength);
 		}
 	}

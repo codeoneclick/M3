@@ -137,6 +137,7 @@ M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {
 }
 
 M3ElementView::~M3ElementView() {
+
 }
 
 void M3ElementView::Load(UM3AssetsBundle* _Bundle) {

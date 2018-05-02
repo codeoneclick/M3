@@ -15,7 +15,7 @@ protected:
 	
 public:
 
-	CTTI_CLASS_GUID(M3SuperElementView, M3View_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3SuperElementView)
 
 	M3SuperElementView(AActor* _Superview);
 	~M3SuperElementView();

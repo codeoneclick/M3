@@ -1,6 +1,7 @@
 // Copyright serhii serhiiv 2018 All rights reserved.
 
 #include "M3BoardView.h"
+#include "EngineUtils.h"
 #include "M3AssetsBundle.h"
 #include "M3BoardModel.h"
 #include "M3CellModel.h"
@@ -32,11 +33,15 @@ const std::string k_ON_BLOCKERS_CONTAINER_CHANGED = "ON_BLOCKERS_CONTAINER_CHANG
 const std::string k_ON_SIZE_CHANGED = "ON_SIZE_CHANGED";
 
 M3BoardView::M3BoardView(AActor* _Superview) : M3View(_Superview) {
-
+	std::shared_ptr<M3AppEventModelProp_Callback> OnStateChangedCallback = std::make_shared<M3AppEventModelProp_Callback>(std::bind(&M3BoardView::OnStateChanged, this, std::placeholders::_1, std::placeholders::_2));
+	OnStateChangedEvent = std::make_shared<M3AppEventModelProp>(M3ElementModel::ClassGuid(), M3ElementEntity::PROPERTY_ID_State(), OnStateChangedCallback);
+	M3GlobalDispatcher::GetInstance()->Subscribe(OnStateChangedEvent);
 }
 
 M3BoardView::~M3BoardView() {
-
+	if (OnStateChangedEvent) {
+		M3GlobalDispatcher::GetInstance()->Unsubscribe(OnStateChangedEvent);
+	}
 }
 
 void M3BoardView::Load(UM3AssetsBundle* _Bundle) {
@@ -65,9 +70,6 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 				AddSubview(Cell->GetView());
 
 				size_t Index = CellModel->GetCol() + CellModel->GetRow() * BoardModel->GetCols();
-				if (Cells.size() <= Index) {
-					Cells.resize(Index + 1);
-				}
 				Cells[Index] = Cell;
 			}
 		}
@@ -90,9 +92,6 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 				const auto CellModel = ElementModel->GetParent<M3CellModel>();
 				ensure(CellModel != nullptr);
 				size_t Index = CellModel->GetCol() + CellModel->GetRow() * BoardModel->GetCols();
-				if (Elements.size() <= Index) {
-					Elements.resize(Index + 1);
-				}
 				Elements[Index] = Element;
 			}
 		}
@@ -184,11 +183,49 @@ void M3BoardView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel) {
 		FVector CurrentLocation = GetSuperview()->GetActorLocation();
 		float LocationY = -Value * BoardSettingsModel->GetElementSize().Y * 0.5 + BoardSettingsModel->GetElementSize().Y * 0.5;
 		GetSuperview()->SetActorLocation(FVector(CurrentLocation.X, LocationY, CurrentLocation.Z));
+
+		int Cols = BoardModel->GetCols();
+		int Rows = BoardModel->GetRows();
+
+		Cells.resize(Cols * Rows, nullptr);
+		Elements.resize(Cols * Rows, nullptr);
 	});
 
 	SizeSlot->Attach(BoardEntity->Rows, [=](const int& Value) {
 		FVector CurrentLocation = GetSuperview()->GetActorLocation();
 		float LocationX = -Value * BoardSettingsModel->GetElementSize().X * 0.5 + BoardSettingsModel->GetElementSize().X * 0.5;
 		GetSuperview()->SetActorLocation(FVector(LocationX, CurrentLocation.Y, CurrentLocation.Z));
+
+		int Cols = BoardModel->GetCols();
+		int Rows = BoardModel->GetRows();
+
+		Cells.resize(Cols * Rows, nullptr);
+		Elements.resize(Cols * Rows, nullptr);
 	});
+}
+
+void M3BoardView::OnStateChanged(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop) {
+
+}
+
+AM3Cell* M3BoardView::GetCell(int Col, int Row) {
+	AM3Cell* Cell = nullptr;
+	const auto& BoardModel = GetViewModel<M3BoardModel>();
+	size_t Index = Col + Row * BoardModel->GetCols();
+	if (Index < Cells.size()) {
+		Cell = Cells[Index];
+	}
+	return Cell;
+}
+
+AM3Element* M3BoardView::GetElement(int Col, int Row) {
+	AM3Element* Element = nullptr;
+	const auto& BoardModel = GetViewModel<M3BoardModel>();
+	const auto& ElementModel = BoardModel->GetElement(Col, Row);
+	for (TActorIterator<AActor> It(GetSuperview()->GetWorld(), AM3Element::StaticClass()); It; ++It) {
+		if (Cast<AM3Element>(*It)->GetModel() == ElementModel) {
+			Element = Cast<AM3Element>(*It);
+		}
+	}
+	return Element;
 }

@@ -23,7 +23,7 @@ protected:
 
 public:
 
-	CTTI_CLASS_GUID(M3SuperElementsController, M3MediatingController_INTERFACE::GuidsContainer)
+	CTTI_CLASS_GUID(M3SuperElementsController)
 
 	M3SuperElementsController();
 	~M3SuperElementsController();
