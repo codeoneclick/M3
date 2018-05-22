@@ -8,8 +8,10 @@
 #include "M3Cell.h"
 #include "M3CellModel.h"
 #include "M3Blocker.h"
+#include "M3BlockerModel.h"
 #include "M3Element.h"
 #include "M3ElementModel.h"
+#include "M3SuperElement.h"
 #include "M3SuperElementModel.h"
 #include "M3BoardModel.h"
 #include "M3SharedModel.h"
@@ -17,8 +19,17 @@
 #include "M3AppEvent.h"
 #include "M3GlobalDispatcher.h"
 #include "M3AssetsBundle.h"
+#include "M3KVMultiSlot.h"
 #include "MVC/Views/M3ElementExplosionViewDelegate.h"
 #include "MVC/Views/M3ElementExplosionViewAccessor.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/TextRenderComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Components/M3BlockerVisualComponent.h"
+#include "Components/M3SuperElementVisualComponent.h"
+
+const std::string K_ON_SUPERELEMENTS_CONTAINER_CHANGED = "ON_SUPERELEMENTS_CONTAINER_CHANGED";
+const std::string k_ON_BLOCKERS_CONTAINER_CHANGED = "ON_BLOCKERS_CONTAINER_CHANGED";
 
 AM3GamePlayerController::AM3GamePlayerController() {
 	bShowMouseCursor = true;
@@ -31,6 +42,10 @@ AM3GamePlayerController::~AM3GamePlayerController() {
 	if (OnMatchingEvent) {
 		M3GlobalDispatcher::GetInstance()->Unsubscribe(OnMatchingEvent);
 	}
+
+	for (const auto& Slot : Slots) {
+		Slot.second->DetachAll();
+	}
 }
 
 void AM3GamePlayerController::BeginPlay() {
@@ -41,11 +56,6 @@ void AM3GamePlayerController::BeginPlay() {
 	M3GlobalDispatcher::GetInstance()->Subscribe(OnMatchingEvent);
 
 	UWorld* World = GetWorld();
-
-	for (TActorIterator<AActor> It(World, AM3App::StaticClass()); It; ++It) {
-		const auto App = Cast<AM3App>(*It);
-		App->AssetsBundle->Element_BP = ElementExplosion_BP;
-	}
 
 	for (TActorIterator<AActor> It(World, AM3Cell::StaticClass()); It; ++It) {
 		FVector Location = It->GetActorLocation();
@@ -59,15 +69,37 @@ void AM3GamePlayerController::BeginPlay() {
 		It->SetActorLocation(Location);
 	}
 
-	for (TActorIterator<AActor> It(World, AM3Element::StaticClass()); It; ++It) {
-		const auto Element = Cast<AM3Element>(*It);
-		if (ElementExplosion_BP) {
-			Element->Delegate_BP = ElementExplosionViewDelegate_BP;
-			Element->Accessor_BP = ElementExplosionViewAccessor_BP;
-			Element->OnBindViewDelegate();
-			Element->OnBindViewAccessor();
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> BlockersContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
+	Slots[k_ON_BLOCKERS_CONTAINER_CHANGED] = BlockersContainerSlot;
+	BlockersContainerSlot->Attach(M3BlockerModel::Container(), [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
+		for (const auto& It : *Value.get()) {
+			const auto& BlockerModel = std::static_pointer_cast<M3BlockerModel>(It);
+			const auto& ElementModel = BlockerModel->GetParent<M3ElementModel>();
+			const auto& CellModel = ElementModel->GetParent<M3CellModel>();
+			const auto Col = CellModel->GetCol();
+			const auto Row = CellModel->GetRow();
+
+			const auto Board = GetM3Board();
+			const auto BoardView = std::static_pointer_cast<M3BoardView>(Board->GetView());
+			const auto Blocker = BoardView->GetBlocker(Col, Row);
 		}
-	}
+	});
+
+	std::shared_ptr<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>> SuperElementsContainerSlot = std::make_shared<M3KVMultiSlot<std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>>>();
+	Slots[K_ON_SUPERELEMENTS_CONTAINER_CHANGED] = BlockersContainerSlot;
+	SuperElementsContainerSlot->Attach(M3SuperElementModel::Container(), [=](const std::shared_ptr<std::list<M3Model_INTERFACE_SharedPtr>>& Value) {
+		for (const auto& It : *Value.get()) {
+			const auto& SuperElementModel = std::static_pointer_cast<M3SuperElementModel>(It);
+			const auto& ElementModel = SuperElementModel->GetParent<M3ElementModel>();
+			const auto& CellModel = ElementModel->GetParent<M3CellModel>();
+			const auto Col = CellModel->GetCol();
+			const auto Row = CellModel->GetRow();
+
+			const auto Board = GetM3Board();
+			const auto BoardView = std::static_pointer_cast<M3BoardView>(Board->GetView());
+			const auto SuperElement = BoardView->GetSuperElement(Col, Row);
+		}
+	});
 }
 
 void AM3GamePlayerController::OnMatching(const M3Model_INTERFACE_SharedPtr& Model, const M3KVProperty_INTERFACE_SharedPtr& Prop) {
@@ -133,3 +165,6 @@ class AM3Board* AM3GamePlayerController::GetM3Board() const {
 	return M3Board;
 }
 
+void AM3GamePlayerController::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+}

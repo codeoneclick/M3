@@ -12,6 +12,7 @@ DECLARE_DYNAMIC_DELEGATE(FM3ActionCallback);
 DECLARE_DELEGATE(FM3ActionNativeCallback);
 
 FORWARD_DECL_STRONG(UM3Action)
+FORWARD_DECL_STRONG(UM3Sequence)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Actions), meta = (BlueprintSpawnableComponent))
 class M3_API UM3ViewActionsComponent : public UActorComponent {
@@ -32,17 +33,23 @@ public:
 	TArray<UM3Action*> Actions;
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
-	void RunAction(UM3Action* Action);
+	void RunAction(UM3Action* _Action);
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
-	UM3Action* MoveToAction(float Duration, const FVector& Location);
+	UM3Sequence* CreateSequence(float _Duration);
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
-	UM3Action* ScaleToAction(float Duration, const FVector& Scale);
+	void AddToSequence(UM3Sequence* _Sequence, UM3Action* _Action);
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
-	UM3Action* CallbackAction(float Duration, FM3ActionCallback Callback);
-	UM3Action* CallbackAction(float Duration, FM3ActionNativeCallback Callback);
+	UM3Action* MoveToAction(float _Duration, const FVector& _Location);
+
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	UM3Action* ScaleToAction(float _Duration, const FVector& _Scale);
+
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	UM3Action* CallbackAction(float _Duration, FM3ActionCallback _Callback);
+	UM3Action* CallbackAction(float _Duration, FM3ActionNativeCallback _Callback);
 };
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3Actions))
@@ -82,10 +89,12 @@ public:
 	UM3Sequence();
 	virtual ~UM3Sequence() = default;
 
-	virtual void Setup(AActor* _Actor);
+	virtual void Setup(AActor* _Actor, float _Duration);
 
 	UPROPERTY(Category = "Actions", EditAnywhere, BlueprintReadWrite)
 	TArray<UM3Action*> Actions;
+
+	void AddAction(UM3Action* _Action);
 
 	virtual void OnUpdate(float DeltaTime);
 	virtual bool IsDone() const;

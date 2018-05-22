@@ -23,11 +23,11 @@ AM3CellAppointmentScheme* AM3CellScheme::EdModeSelectedAppointmentScheme = nullp
 AM3CellScheme::AM3CellScheme() {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellClosedMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_CellClosed.M3_SM_CellClosed'"));
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellClosedMesh_RESOURCE(TEXT("StaticMesh'/M3/SM_M3_CellFunctional.SM_M3_CellFunctional'"));
 	CellClosedMesh = CellClosedMesh_RESOURCE.Get();
-	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellHoleMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_Element.M3_SM_Element'"));
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellHoleMesh_RESOURCE(TEXT("StaticMesh'/M3/SM_M3_CellFunctional.SM_M3_CellFunctional'"));
 	CellHoleMesh = CellHoleMesh_RESOURCE.Get();
-	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellRandomMesh_RESOURCE(TEXT("StaticMesh'/M3/M3_SM_Element.M3_SM_Element'"));
+	static ConstructorHelpers::FObjectFinderOptional<UStaticMesh> CellRandomMesh_RESOURCE(TEXT("StaticMesh'/M3/SM_M3_CellFunctional.SM_M3_CellFunctional'"));
 	CellRandomMesh = CellRandomMesh_RESOURCE.Get();
 
 	static ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> CellClosedMaterial_RESOURCE(TEXT("MaterialInstanceConstant'/M3/M3_MI_RED.M3_MI_RED'"));
@@ -46,6 +46,7 @@ AM3CellScheme::AM3CellScheme() {
 	BlockerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellSchemeBlockerMeshComponent"));
 	BlockerMeshComponent->SetupAttachment(GetRootComponent());
 	BlockerMeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BlockerMeshComponent->SetRelativeLocation(FVector(0.f, 0.f, 1.f));
 }
 
 void AM3CellScheme::BeginPlay() {

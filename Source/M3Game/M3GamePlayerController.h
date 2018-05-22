@@ -13,6 +13,9 @@ FORWARD_DECL_STRONG(M3KVProperty_INTERFACE)
 FORWARD_DECL_STRONG(UM3ElementExplosionViewDelegate)
 FORWARD_DECL_STRONG(UM3ElementExplosionViewAccessor)
 FORWARD_DECL_STRONG(AM3Element)
+FORWARD_DECL_STRONG(AM3Blocker)
+FORWARD_DECL_STRONG(AM3SuperElement)
+FORWARD_DECL_STRONG(M3KVSlot_INTERFACE)
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (M3))
 class AM3GamePlayerController : public APlayerController {
@@ -27,22 +30,17 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	std::unordered_map<std::string, M3KVSlot_INTERFACE_SharedPtr> Slots;
+
 public:
 
 	AM3GamePlayerController();
 	~AM3GamePlayerController();
 
-	UPROPERTY(Category = "M3", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Element> ElementExplosion_BP;
-
-	UPROPERTY(Category = "Delegates", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3ElementExplosionViewDelegate> ElementExplosionViewDelegate_BP;
-
-	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UM3ElementExplosionViewAccessor> ElementExplosionViewAccessor_BP;
-
 	class AM3App* GetM3App() const;
 	class AM3Board* GetM3Board() const;
+
+	virtual void Tick(float DeltaTime) override;
 };
 
 

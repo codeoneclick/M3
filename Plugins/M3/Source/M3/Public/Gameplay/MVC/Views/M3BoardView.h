@@ -38,4 +38,6 @@ public:
 
 	AM3Cell* GetCell(int Col, int Row);
 	AM3Element* GetElement(int Col, int Row);
+	AM3Blocker* GetBlocker(int Col, int Row);
+	AM3SuperElement* GetSuperElement(int Col, int Row);
 };

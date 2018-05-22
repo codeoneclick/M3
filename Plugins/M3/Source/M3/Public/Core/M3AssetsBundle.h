@@ -92,22 +92,22 @@ public:
 	FM3BoardAsset Blocker_Wire2X;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Board> Board_BP;
+	TSubclassOf<AM3Board> Board_BP = nullptr;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Cell> Cell_BP;
+	TSubclassOf<AM3Cell> Cell_BP = nullptr;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Element> Element_BP;
+	TSubclassOf<AM3Element> Element_BP = nullptr;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3RegularElement> RegularElement_BP;
+	TSubclassOf<AM3RegularElement> RegularElement_BP = nullptr;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3SuperElement> SuperElement_BP;
+	TSubclassOf<AM3SuperElement> SuperElement_BP = nullptr;
 
 	UPROPERTY(Category = "Bundle", EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AM3Blocker> Blocker_BP;
+	TSubclassOf<AM3Blocker> Blocker_BP = nullptr;
 
 	UFUNCTION(BlueprintCallable, Category = "Bundle")
 	AM3Board* ConstructBoard(UWorld* World);

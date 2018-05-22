@@ -57,6 +57,9 @@ public:
 	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	bool IsPosibleToSwap = false;
 
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
+	bool IsPosibleToMatch = false;
+
 	UPROPERTY(Category = "Accessors", EditAnywhere, BlueprintReadWrite)
 	FElementViewAnimationDelegate OnSwapEndedDelegate;
 	FElementViewAnimationCallback OnSwapEndedCallback;

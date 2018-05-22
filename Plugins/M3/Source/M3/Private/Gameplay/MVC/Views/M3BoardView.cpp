@@ -229,3 +229,29 @@ AM3Element* M3BoardView::GetElement(int Col, int Row) {
 	}
 	return Element;
 }
+
+AM3Blocker* M3BoardView::GetBlocker(int Col, int Row) {
+	AM3Blocker* Blocker = nullptr;
+	const auto& BoardModel = GetViewModel<M3BoardModel>();
+	const auto& ElementModel = BoardModel->GetElement(Col, Row);
+	const auto& BlockerModel = ElementModel->GetSubmodel<M3BlockerModel>();
+	for (TActorIterator<AActor> It(GetSuperview()->GetWorld(), AM3Blocker::StaticClass()); It; ++It) {
+		if (Cast<AM3Blocker>(*It)->GetModel() == BlockerModel) {
+			Blocker = Cast<AM3Blocker>(*It);
+		}
+	}
+	return Blocker;
+}
+
+AM3SuperElement* M3BoardView::GetSuperElement(int Col, int Row) {
+	AM3SuperElement* SuperElement = nullptr;
+	const auto& BoardModel = GetViewModel<M3BoardModel>();
+	const auto& ElementModel = BoardModel->GetElement(Col, Row);
+	const auto& SuperElementModel = ElementModel->GetSubmodel<M3SuperElementModel>();
+	for (TActorIterator<AActor> It(GetSuperview()->GetWorld(), AM3SuperElement::StaticClass()); It; ++It) {
+		if (Cast<AM3SuperElement>(*It)->GetModel() == SuperElementModel) {
+			SuperElement = Cast<AM3SuperElement>(*It);
+		}
+	}
+	return SuperElement;
+}

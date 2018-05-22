@@ -34,4 +34,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Accessors")
 	FVector GetExplosionIteration2Location();
+
+	UFUNCTION(BlueprintCallable, Category = "Accessors")
+	void Reset();
 };

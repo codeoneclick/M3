@@ -34,3 +34,9 @@ FVector UM3ElementExplosionViewAccessor::GetExplosionIteration2Location() {
 
 	return FVector(CurrentLocation.X + Direction.X * Distance, CurrentLocation.Y + Direction.Y * Distance, 0);
 }
+
+void UM3ElementExplosionViewAccessor::Reset() {
+	ExplosionCol = -1;
+	ExplosionRow = -1;
+	IsExplosion = false;
+}

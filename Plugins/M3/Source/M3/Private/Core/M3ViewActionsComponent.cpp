@@ -13,12 +13,29 @@ void UM3ViewActionsComponent::BeginPlay() {
 
 void UM3ViewActionsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (Actions.Num() != 0) {
-		Actions[0]->OnUpdate(DeltaTime);
-		if (Actions[0]->IsDone()) {
-			Actions.RemoveAt(0);
+	int Count = Actions.Num();
+	for (int i = 0; i < Count; ++i) {
+		if (!Actions[i]->IsDone()) {
+			Actions[i]->OnUpdate(DeltaTime);
 		}
 	}
+	Count = Actions.Num();
+	for (int i = 0; i < Count; ++i) {
+		if (Actions[i]->IsDone()) {
+			Actions.RemoveAt(i);
+			break;
+		}
+	}
+}
+
+UM3Sequence* UM3ViewActionsComponent::CreateSequence(float _Duration) {
+	const auto Sequence = NewObject<UM3Sequence>(this);
+	Sequence->Setup(GetOwner(), _Duration);
+	return Sequence;
+}
+
+void UM3ViewActionsComponent::AddToSequence(UM3Sequence* _Sequence, UM3Action* _Action) {
+	_Sequence->Actions.Add(_Action);
 }
 
 UM3Action* UM3ViewActionsComponent::MoveToAction(float Duration, const FVector& Location) {
@@ -73,8 +90,8 @@ UM3Sequence::UM3Sequence() {
 
 }
 
-void UM3Sequence::Setup(AActor* _Actor) {
-	
+void UM3Sequence::Setup(AActor* _Actor, float _Duration) {
+	UM3Action::Setup(_Actor, _Duration);
 }
 
 void UM3Sequence::OnUpdate(float DeltaTime) {
@@ -84,6 +101,10 @@ void UM3Sequence::OnUpdate(float DeltaTime) {
 			Actions.RemoveAt(0);
 		}
 	}
+}
+
+void UM3Sequence::AddAction(UM3Action* _Action) {
+	Actions.Add(_Action);
 }
 
 bool UM3Sequence::IsDone() const {

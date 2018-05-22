@@ -95,18 +95,25 @@ void UM3ElementViewDelegate::OnSwap_Implementation(UM3ElementViewAccessor* Acces
 
 void UM3ElementViewDelegate::OnMatch_Implementation(UM3ElementViewAccessor* Accessor) {
 	const auto ActionsComponent = static_cast<UM3ViewActionsComponent *>(Accessor->View->GetComponentByClass(UM3ViewActionsComponent::StaticClass()));
-
-	ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.15, FVector(1.25f)));
-	FM3ActionNativeCallback CallbackA;
-	CallbackA.BindLambda([=]() {
-		ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.15, FVector(0.001f)));
-		FM3ActionNativeCallback CallbackB;
-		CallbackB.BindLambda([=]() {
+	if (Accessor->IsPosibleToMatch) {
+		ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.15, FVector(1.25f)));
+		FM3ActionNativeCallback CallbackA;
+		CallbackA.BindLambda([=]() {
+			ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.15, FVector(0.001f)));
+			FM3ActionNativeCallback CallbackB;
+			CallbackB.BindLambda([=]() {
+				Accessor->OnMatchEndedCallback.ExecuteIfBound();
+			});
+			ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackB));
+		});
+		ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+	} else {
+		FM3ActionNativeCallback CallbackA;
+		CallbackA.BindLambda([=]() {
 			Accessor->OnMatchEndedCallback.ExecuteIfBound();
 		});
-		ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackB));
-	});
-	ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+		ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+	}
 }
 
 void UM3ElementViewDelegate::OnDrop_Implementation(UM3ElementViewAccessor* Accessor) {
@@ -162,27 +169,19 @@ void M3ElementView::BindViewModel(const M3Model_INTERFACE_SharedPtr& _ViewModel)
 		case EM3ElementState::SWAPPING: {
 			const auto SwapModel = M3SharedModel::GetInstance()->GetSubmodel<M3SwapModel>();
 			Accessor->IsPosibleToSwap = SwapModel->IsPossibleToSwap();
-
 			Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
 			Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
-
 			const auto OppositeElementModel = SwapModel->GetSwapElementA() == GetViewModel<M3ElementModel>() ? SwapModel->GetSwapElementB() : SwapModel->GetSwapElementA();
-
 			Accessor->OppositeCol = OppositeElementModel->GetParent<M3CellModel>()->GetCol();
 			Accessor->OppositeRow = OppositeElementModel->GetParent<M3CellModel>()->GetRow();
-
 			Delegate->OnSwap(Accessor);
 		}
 			break;
 		case EM3ElementState::MATCHING: {
-			if (!ElementModel->IsMatchBlocked()) {
-				Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
-				Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
-				Delegate->OnMatch(Accessor);
-			}
-			else if (ElementModel->IsMatchBlocked()) {
-				M3GlobalDispatcher::GetInstance()->Publish<M3AppEvent<M3ElementModel_SharedPtr>, M3ElementModel_SharedPtr>(M3Events::ON_ELEMENT_MATCH_ENDED, ElementModel);
-			}
+			Accessor->IsPosibleToMatch = !ElementModel->IsMatchBlocked();
+			Accessor->CurrentCol = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetCol();
+			Accessor->CurrentRow = GetViewModel<M3ElementModel>()->GetParent<M3CellModel>()->GetRow();
+			Delegate->OnMatch(Accessor);
 		}
 			break;
 		case EM3ElementState::DROPPING: {

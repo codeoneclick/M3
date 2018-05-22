@@ -2,6 +2,7 @@
 
 #include "M3EdModeProperties.h"
 #include "M3Scheme.h"
+#include "M3App.h"
 #include "M3AssetsBundle.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -96,7 +97,13 @@ void UM3EdModeProps_BoardReskin::PostEditChangeProperty(struct FPropertyChangedE
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(UM3EdModeProps_BoardReskin, AssetsBundle_BP)) {
 		if (AssetsBundle_BP) {
 			UWorld* World = GEditor->GetEditorWorldContext().World();
-			AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(this, AssetsBundle_BP));
+			AM3App* M3App = nullptr;
+			for (TActorIterator<AActor> It(World, AM3App::StaticClass()); It; ++It) {
+				M3App = static_cast<AM3App*>(*It);
+				break;
+			}
+			ensure(M3App != nullptr);
+			AssetsBundle = static_cast<UM3BoardAssetsBundle*>(NewObject<UM3AssetsBundle>(M3App, AssetsBundle_BP));
 
 			CellMaterial = AssetsBundle->Cell.Material;
 			CellMesh = AssetsBundle->Cell.Mesh;
