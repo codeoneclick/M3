@@ -76,67 +76,67 @@ UM3ElementViewDelegate::~UM3ElementViewDelegate() {
 void UM3ElementViewDelegate::OnSwap_Implementation(UM3ElementViewAccessor* Accessor) {
 	const auto ActionsComponent = static_cast<UM3ViewActionsComponent *>(Accessor->View->GetComponentByClass(UM3ViewActionsComponent::StaticClass()));
 
-	ActionsComponent->RunAction(ActionsComponent->MoveToAction(0.3, Accessor->GetOppositeLocation()));
+	ActionsComponent->RunAction(ActionsComponent->MoveToAction(Accessor->DefaultAnimationDuration, Accessor->GetOppositeLocation()));
 	FM3ActionNativeCallback CallbackA;
 	CallbackA.BindLambda([=]() {
 		if (Accessor->IsPosibleToSwap) {
 			Accessor->OnSwapEndedCallback.ExecuteIfBound();
 		} else {
-			ActionsComponent->RunAction(ActionsComponent->MoveToAction(0.3, Accessor->GetCurrentLocation()));
+			ActionsComponent->RunAction(ActionsComponent->MoveToAction(Accessor->DefaultAnimationDuration, Accessor->GetCurrentLocation()));
 			FM3ActionNativeCallback CallbackB;
 			CallbackB.BindLambda([=]() {
 				Accessor->OnSwapEndedCallback.ExecuteIfBound();
 			});
-			ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackB));
+			ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackB));
 		}
 	});
-	ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+	ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackA));
 }
 
 void UM3ElementViewDelegate::OnMatch_Implementation(UM3ElementViewAccessor* Accessor) {
 	const auto ActionsComponent = static_cast<UM3ViewActionsComponent *>(Accessor->View->GetComponentByClass(UM3ViewActionsComponent::StaticClass()));
 	if (Accessor->IsPosibleToMatch) {
-		ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.15, FVector(1.25f)));
+		ActionsComponent->RunAction(ActionsComponent->ScaleToAction(Accessor->DefaultAnimationDuration, FVector(1.25f)));
 		FM3ActionNativeCallback CallbackA;
 		CallbackA.BindLambda([=]() {
-			ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.15, FVector(0.001f)));
+			ActionsComponent->RunAction(ActionsComponent->ScaleToAction(Accessor->DefaultAnimationDuration, FVector(0.001f)));
 			FM3ActionNativeCallback CallbackB;
 			CallbackB.BindLambda([=]() {
 				Accessor->OnMatchEndedCallback.ExecuteIfBound();
 			});
-			ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackB));
+			ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackB));
 		});
-		ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+		ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackA));
 	} else {
 		FM3ActionNativeCallback CallbackA;
 		CallbackA.BindLambda([=]() {
 			Accessor->OnMatchEndedCallback.ExecuteIfBound();
 		});
-		ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+		ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackA));
 	}
 }
 
 void UM3ElementViewDelegate::OnDrop_Implementation(UM3ElementViewAccessor* Accessor) {
 	const auto ActionsComponent = static_cast<UM3ViewActionsComponent *>(Accessor->View->GetComponentByClass(UM3ViewActionsComponent::StaticClass()));
 
-	ActionsComponent->RunAction(ActionsComponent->MoveToAction(0.3, Accessor->GetCurrentLocation()));
+	ActionsComponent->RunAction(ActionsComponent->MoveToAction(Accessor->DefaultAnimationDuration, Accessor->GetCurrentLocation()));
 	FM3ActionNativeCallback CallbackA;
 	CallbackA.BindLambda([=]() {
 		Accessor->OnDropEndedCallback.ExecuteIfBound();
 	});
-	ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+	ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackA));
 }
 
 void UM3ElementViewDelegate::OnSpawn_Implementation(UM3ElementViewAccessor* Accessor) {
 	const auto ActionsComponent = static_cast<UM3ViewActionsComponent *>(Accessor->View->GetComponentByClass(UM3ViewActionsComponent::StaticClass()));
 	Accessor->View->SetActorScale3D(FVector(0.f));
 	Accessor->View->SetActorLocation(Accessor->GetCurrentLocation());
-	ActionsComponent->RunAction(ActionsComponent->ScaleToAction(0.3, FVector(1.f)));
+	ActionsComponent->RunAction(ActionsComponent->ScaleToAction(Accessor->DefaultAnimationDuration, FVector(1.f)));
 	FM3ActionNativeCallback CallbackA;
 	CallbackA.BindLambda([=]() {
 		Accessor->OnSpawnEndedCallback.ExecuteIfBound();
 	});
-	ActionsComponent->RunAction(ActionsComponent->CallbackAction(0.01, CallbackA));
+	ActionsComponent->RunAction(ActionsComponent->CallbackAction(Accessor->DefaultAnimationDuration, CallbackA));
 }
 
 M3ElementView::M3ElementView(AActor* _Superview) : M3View(_Superview) {

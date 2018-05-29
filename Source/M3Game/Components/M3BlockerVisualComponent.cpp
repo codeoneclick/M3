@@ -31,7 +31,7 @@ void UM3BlockerVisualComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		case EM3ElementId::BLOCKER_BOX3X:
 		{
 			MutableMaterial->SetScalarParameterValue(FName(TEXT("GridSpacing")), 1);
-			MutableMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), FLinearColor(1.f, 1.f, 1.f, 1.f));
+			MutableMaterial->SetVectorParameterValue(FName(TEXT("BaseColor")), FLinearColor(.25f, .25f, .25f, 1.f));
 			if (TextComponent) {
 				TextComponent->SetText(FString::Printf(TEXT("BOX %s"), *FString::FromInt(BlockerModel->GetDensity())));
 			}

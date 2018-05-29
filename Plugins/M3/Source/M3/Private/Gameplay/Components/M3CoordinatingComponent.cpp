@@ -51,7 +51,8 @@ void UM3CoordinatingComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	OnUpdate(DeltaTime);
 }
 
-void UM3CoordinatingComponent::CreateModels() {
+void UM3CoordinatingComponent::RegisterAllModels() {
+	M3SharedModel::GetInstance()->UnregisterAllContainers();
 
 	M3SharedModel::GetInstance()->RegisterContainer<M3BoardSettingsModel>();
 	M3SharedModel::GetInstance()->RegisterContainer<M3BoardModel>();
@@ -68,7 +69,9 @@ void UM3CoordinatingComponent::CreateModels() {
 	M3SharedModel::GetInstance()->RegisterContainer<M3BlockerModel>();
 	M3SharedModel::GetInstance()->RegisterContainer<M3SpawnModel>();
 	M3SharedModel::GetInstance()->RegisterContainer<M3AutobotModel>();
+}
 
+void UM3CoordinatingComponent::CreateModels() {
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardSettingsModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3BoardModel>());
 	M3SharedModel::GetInstance()->AddSubmodel(std::make_shared<M3GestureModel>());

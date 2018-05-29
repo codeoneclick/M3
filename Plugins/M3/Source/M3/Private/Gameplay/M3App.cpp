@@ -19,6 +19,7 @@ AM3App::AM3App() {
 	RootComponent->SetMobility(EComponentMobility::Static);
 
 	CoordinatingComponent = CreateDefaultSubobject<UM3CoordinatingComponent>(TEXT("CoordinatingComponent"));
+	CoordinatingComponent->RegisterAllModels();
 
 	TapGestureRecognizerComponent = CreateDefaultSubobject<UM3TapGestureRecognizerComponent>(TEXT("TapGestureRecognizerComponent"));
 	PanGestureRecognizerComponent = CreateDefaultSubobject<UM3PanGestureRecognizerComponent>(TEXT("PanGestureRecognizerComponent"));

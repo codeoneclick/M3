@@ -52,6 +52,9 @@ public:
 	int OppositeRow = -1;
 
 	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
+	float DefaultAnimationDuration = .3f;
+
+	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)
 	FVector2D ElementSize = FVector2D(-1, -1);
 
 	UPROPERTY(Category = "Accessors", VisibleAnywhere, BlueprintReadOnly)

@@ -33,6 +33,8 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void RegisterAllModels();
+
 	void CreateModels();
 	void CreateControllers();
 	void CreateViews(UM3AssetsBundle* AssetsBundle);
