@@ -6,7 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "ISettingsModule.h"
-#include "ModuleManager.h"
+#include "Modules/ModuleManager.h"
 
 class FM3EdModeStyle {
 protected:

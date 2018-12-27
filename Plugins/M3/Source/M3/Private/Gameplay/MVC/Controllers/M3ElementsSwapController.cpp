@@ -9,6 +9,7 @@
 #include "M3View.h"
 #include "M3Element.h"
 #include "M3ElementModel.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "M3InteractionComponent.h"

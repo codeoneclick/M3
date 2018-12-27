@@ -5,7 +5,7 @@
 #if WITH_EDITOR
 
 #include "CoreMinimal.h"
-#include "Editor/UnrealEd/Public/Toolkits/BaseToolkit.h"
+#include "Toolkits/BaseToolkit.h"
 #include "IDetailsView.h"
 #include "M3Scheme.h"
 

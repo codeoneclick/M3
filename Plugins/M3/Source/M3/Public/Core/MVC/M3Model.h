@@ -259,5 +259,5 @@ public:
 };
 
 #define SUBSCRIBE_PROP(__class__, __prop__) \
-Subscribe(Entity->Get()->__prop__, __class__::PROPERTY_ID_##__prop__()); \
+Subscribe(Entity->Get()->__prop__, __class__::PROPERTY_ID_##__prop__());
 

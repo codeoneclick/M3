@@ -2,6 +2,7 @@
 
 #include "M3PanGestureRecognizerComponent.h"
 #include "M3PanGestureResponderComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
 #include "UObject/UObjectIterator.h"
 #include "Engine/World.h"
@@ -91,16 +92,16 @@ bool UM3PanGestureRecognizerComponent::IsFinger2Touched(UWorld* World)
 bool UM3PanGestureRecognizerComponent::IsFinger1Touched(UWorld* World, float& LocationX, float& LocationY)
 {
 	bool bResult;
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	PlayerController->GetInputTouchState(ETouchIndex::Touch1, LocationX, LocationY, bResult);
+	APlayerController* PC = World->GetFirstPlayerController();
+	PC->GetInputTouchState(ETouchIndex::Touch1, LocationX, LocationY, bResult);
 	return bResult;
 }
 
 bool UM3PanGestureRecognizerComponent::IsFinger2Touched(UWorld* World, float& LocationX, float& LocationY)
 {
 	bool bResult;
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	PlayerController->GetInputTouchState(ETouchIndex::Touch2, LocationX, LocationY, bResult);
+	APlayerController* PC = World->GetFirstPlayerController();
+	PC->GetInputTouchState(ETouchIndex::Touch2, LocationX, LocationY, bResult);
 	return bResult;
 }
 

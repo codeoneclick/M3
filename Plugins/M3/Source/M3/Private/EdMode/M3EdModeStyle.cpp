@@ -4,9 +4,9 @@
 
 #if WITH_EDITOR
 
-#include "SlateStyle.h"
-#include "SlateGameResources.h"
-#include "IPluginManager.h"
+#include "Styling/SlateStyle.h"
+#include "Slate/SlateGameResources.h"
+#include "Interfaces/IPluginManager.h"
 #include "Styling/SlateStyleRegistry.h"
 
 #define ICON_TAB_MODE(RelativePath, ...) FSlateImageBrush( FM3EdModeStyle::InContent(RelativePath, ".png" ), __VA_ARGS__ )

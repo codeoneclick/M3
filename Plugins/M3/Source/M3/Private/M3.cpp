@@ -6,7 +6,7 @@
 
 #if WITH_EDITOR
 
-#include "Editor/EditorStyle/Public/EditorStyleSet.h"
+#include "EditorStyleSet.h"
 
 #endif
  

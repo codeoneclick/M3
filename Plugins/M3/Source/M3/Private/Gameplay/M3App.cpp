@@ -6,6 +6,7 @@
 #include "M3AssetsBundle.h"
 #include "M3Scheme.h"
 #include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "M3TapGestureRecognizerComponent.h"
 #include "M3PanGestureRecognizerComponent.h"
 #include "M32TapGestureRecognizerComponent.h"
